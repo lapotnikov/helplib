@@ -1,29 +1,32 @@
 const path = require('path');
-const rimraf = require('rimraf');
-const mergeStream = require('merge-stream');
+//const rimraf = require('rimraf');
+//const mergeStream = require('merge-stream');
 const minimist = require('minimist');
 
 const gulp = require('gulp');
-const gulpif = require('gulp-if');
-const minify = require('gulp-minify');
-const concat = require('gulp-concat');
-const cssnano = require('gulp-cssnano');
-const jsonminify = require('gulp-jsonminify');
-const embedSvg = require('gulp-embed-svg');
-const svgmin = require('gulp-svgmin');
-const foreach = require('gulp-foreach');
-const rename = require("gulp-rename");
-const template = require('gulp-template');
-const fileinclude = require('gulp-file-include');
-const htmlmin = require('gulp-htmlmin');
-const zip = require('gulp-zip');
+//const gulpif = require('gulp-if');
+//const minify = require('gulp-minify');
+//const concat = require('gulp-concat');
+//const cssnano = require('gulp-cssnano');
+//const jsonminify = require('gulp-jsonminify');
+//const embedSvg = require('gulp-embed-svg');
+//const svgmin = require('gulp-svgmin');
+//const foreach = require('gulp-foreach');
+//const rename = require("gulp-rename");
+//const template = require('gulp-template');
+//const fileinclude = require('gulp-file-include');
+//const htmlmin = require('gulp-htmlmin');
+//const zip = require('gulp-zip');
 
 //Init command arguments
 
 const argv = minimist(process.argv.slice(2), {
-	string: ['app', 'state'],
-	default: {app: 'site', 'state': 'dev'}
+	//string: ['app', 'state'],
+	//default: {app: 'site', 'state': 'dev'}
 });
+
+console.log(argv);
+exit();
 
 // Init config files
 

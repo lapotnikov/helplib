@@ -1,23 +1,18 @@
 {
-	"name": "ido",
-	"title": "IDo",
+	"name": "helplib-builder",
+	"title": "helpLib Builder",
 	"description": "",
 	"version": "0.0.1",
 	"private": true,
 
 	"scripts": {
-		"build-site-dev": "gulp --gulpfile ./build.js --app=site --state=dev",
-		"build-site-prod": "gulp --gulpfile ./build.js --app=site --state=prod",
-		"build-dev": "parallelshell \"npm run build-site-dev\"",
-		"build-prod": "parallelshell \"npm run build-site-prod\"",
-
-		"watch-site": "gulp watch --gulpfile ./build.js --app=site --state=dev",
-		"watch": "parallelshell \"npm run watch-site\"",
-
-		"start": "npm run build-dev && npm run watch",
-		"release": "npm run build-prod"
+		"build": "gulp --gulpfile ./build.js --app=site --state=dev",
+		"build-nodejs": "gulp --gulpfile ./build.js --app=site --state=prod",
+		"build-es6": "parallelshell \"npm run build-site-dev\"",
+		"build-min-es6": "parallelshell \"npm run build-site-prod\"",
+		"watch": "parallelshell \"npm run watch-site\""
 	},
-	
+
 	"devDependencies": {
 		"gulp": "^4.0.1",
 		"gulp-concat": "^2.6.1",
