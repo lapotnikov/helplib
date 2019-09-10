@@ -6,7 +6,7 @@
 	"private": true,
 
 	"scripts": {
-		"build": "gulp --gulpfile ./build.js --app=site --state=dev",
+		"build": "gulp",
 		"build-nodejs": "gulp --gulpfile ./build.js --app=site --state=prod",
 		"build-es6": "parallelshell \"npm run build-site-dev\"",
 		"build-min-es6": "parallelshell \"npm run build-site-prod\"",

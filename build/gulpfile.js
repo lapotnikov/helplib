@@ -25,8 +25,9 @@ const argv = minimist(process.argv.slice(2), {
 	//default: {app: 'site', 'state': 'dev'}
 });
 
+
 console.log(argv);
-exit();
+process.exit();
 
 // Init config files
 
