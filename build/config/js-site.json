@@ -1,0 +1,107 @@
+{
+	"libs.js": [
+		"./framework/js/libs/md5.min.js",
+		"./framework/js/libs/socket.io.js",
+
+		"./framework/js/libs/jquery/jquery-3.3.1.min.js",
+		"./framework/js/libs/jquery/jquery-common.js",
+		"./framework/js/libs/jquery/jquery-control.js",
+		"./framework/js/libs/jquery/jquery-move.js",
+
+		"./framework/js/libs/helplib/common.js",
+		"./framework/js/libs/helplib/string.js",
+		"./framework/js/libs/helplib/number.js",
+		"./framework/js/libs/helplib/object.js",
+		"./framework/js/libs/helplib/array.js",
+		"./framework/js/libs/helplib/function.js",
+		"./framework/js/libs/helplib/date.js"
+	],
+
+	"helpers.js": [
+		"./framework/js/helpers/Singleton.js",
+		"./framework/js/helpers/Queue.js",
+
+		"./framework/js/helpers/observer/ClassObserver.js",
+		"./framework/js/helpers/observer/WidgetObserver.js",
+		"./framework/js/helpers/observer/TemplateObserver.js",
+		"./framework/js/helpers/observer/ElementObserver.js",
+		"./framework/js/helpers/observer/CallbackList.js",
+		"./framework/js/helpers/observer/MultiCallbackList.js",
+		"./framework/js/helpers/observer/CallbackObserver.js",
+
+		"./framework/js/helpers/dom/CssClassList.js",
+		"./framework/js/helpers/dom/SelectorList.js",
+
+		"./framework/js/helpers/registry/CommonRegistry.js",
+		"./framework/js/helpers/registry/CommonFileRegistry.js",
+		"./framework/js/helpers/registry/MainRegistry.js",
+
+		"./site/js/helpers/Registry.js",
+		"./site/js/helpers/FileRegistry.js"
+	],
+
+	"elements.js": [
+		"./framework/js/elements/Element.js",
+
+		"./framework/js/elements/list/ItemElement.js",
+		"./framework/js/elements/list/ItemListElement.js",
+		"./framework/js/elements/list/ItemListTabElement.js",
+
+		"./common/js/elements/tasks/TaskElement.js",
+		"./common/js/elements/tasks/TaskListElement.js"
+	],
+
+	"widgets.js": [
+		"./framework/js/widgets/Widget.js",
+		"./framework/js/widgets/FormWidget.js",
+		"./framework/js/widgets/ElementFormWidget.js",
+
+		"./framework/js/widgets/menu/DdMenuWidget.js",
+
+		"./framework/js/widgets/popup/HintWidget.js",
+		"./framework/js/widgets/popup/PopupWidget.js",
+		"./framework/js/widgets/popup/MessageWidget.js",
+		"./framework/js/widgets/popup/QuestionWidget.js",
+
+		"./framework/js/widgets/list/ListWidget.js",
+		"./framework/js/widgets/list/ListTemplateWidget.js",
+		"./framework/js/widgets/list/TabsWidget.js",
+		"./framework/js/widgets/list/TabsTemplateWidget.js",
+
+		"./common/js/widgets/popup/ElementCreatorWidget.js",
+		"./common/js/widgets/popup/ElementConfiguratorWidget.js",
+
+		"./common/js/widgets/list/DashboardTabsWidget.js",
+		"./common/js/widgets/list/ElementTabsWidget.js"
+	],
+
+	"templates.js": [
+		"./framework/js/templates/Template.js",
+		"./framework/js/templates/TabTemplate.js",
+		"./framework/js/templates/PrimaryTemplate.js",
+
+		"./framework/js/templates/list/ItemTemplate.js",
+		"./framework/js/templates/list/ItemListTemplate.js",
+		"./framework/js/templates/list/ItemListTabTemplate.js",
+
+		"./common/js/templates/tasks/TaskTemplate.js",
+		"./common/js/templates/tasks/TaskListTemplate.js",
+
+		"./common/js/templates/MainTemplate.js"
+	],
+
+	"main.js": [
+		"./framework/js/views/CommonView.js",
+		"./framework/js/views/CommonMainView.js",
+
+		"./framework/js/ElementCreator.js",
+		"./framework/js/ElementRegistry.js",
+		"./framework/js/CommonMain.js",
+
+		"./common/js/views/MainView.js",
+
+		"./common/js/Main.js",
+
+		"./site/js/pages/index.js"
+	]
+}

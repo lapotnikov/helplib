@@ -1,0 +1,10 @@
+{
+	"fonts": [
+		"./common/fonts/**/*.*",
+		"./site/fonts/**/*.*"
+	],
+	"img": [
+		"./common/img/**/*.*",
+		"./site/img/**/*.*"
+	]
+}

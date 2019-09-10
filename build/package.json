@@ -1,0 +1,41 @@
+{
+	"name": "ido",
+	"title": "IDo",
+	"description": "",
+	"version": "0.0.1",
+	"private": true,
+
+	"scripts": {
+		"build-site-dev": "gulp --gulpfile ./build.js --app=site --state=dev",
+		"build-site-prod": "gulp --gulpfile ./build.js --app=site --state=prod",
+		"build-dev": "parallelshell \"npm run build-site-dev\"",
+		"build-prod": "parallelshell \"npm run build-site-prod\"",
+
+		"watch-site": "gulp watch --gulpfile ./build.js --app=site --state=dev",
+		"watch": "parallelshell \"npm run watch-site\"",
+
+		"start": "npm run build-dev && npm run watch",
+		"release": "npm run build-prod"
+	},
+	
+	"devDependencies": {
+		"gulp": "^4.0.1",
+		"gulp-concat": "^2.6.1",
+		"gulp-cssnano": "^2.1.3",
+		"gulp-embed-svg": "^1.1.3",
+		"gulp-file-include": "^2.0.1",
+		"gulp-foreach": "^0.1.0",
+		"gulp-htmlmin": "^5.0.1",
+		"gulp-if": "^2.0.2",
+		"gulp-jsonminify": "^1.1.0",
+		"gulp-minify": "^3.1.0",
+		"gulp-rename": "^1.4.0",
+		"gulp-svgmin": "^2.2.0",
+		"gulp-template": "^5.0.0",
+		"gulp-zip": "^4.2.0",
+		"merge-stream": "^1.0.1",
+		"minimist": "^1.2.0",
+		"parallelshell": "^3.0.2",
+		"rimraf": "^2.6.3"
+	}
+}
