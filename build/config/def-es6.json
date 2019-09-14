@@ -1,0 +1,13 @@
+{
+	"namespace": "helLib",
+	"eng": "es6",
+	"min": false,
+
+	"dist": "helplib-es6",
+	"modules": ["string"],
+
+	"path": {
+		"modules": ["src/modules"],
+		"dist": "dist/es6"
+	}
+}

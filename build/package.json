@@ -4,16 +4,17 @@
 	"description": "",
 	"version": "0.0.1",
 	"private": true,
-
 	"scripts": {
-		"build": "gulp",
-		"build-nodejs": "gulp --gulpfile ./build.js --app=site --state=prod",
-		"build-es6": "parallelshell \"npm run build-site-dev\"",
-		"build-min-es6": "parallelshell \"npm run build-site-prod\"",
-		"watch": "parallelshell \"npm run watch-site\""
+		"build": "parallelshell \"npm run build-node\" \"npm run build-es6\" \"npm run build-es6.min\"",
+		"build-node": "gulp --eng=node",
+		"build-es6": "gulp --eng=es6",
+		"build-es6.min": "gulp --eng=es6 --min",
+		"watch": "parallelshell \"npm run watch-nodejs\" \"npm run watch-es6\"",
+		"watch-nodejs": "gulp watch --eng=nodejs --min=0",
+		"watch-es6": "gulp watch --eng=es6 --min=0"
 	},
-
 	"devDependencies": {
+		"browserify": "^16.5.0",
 		"gulp": "^4.0.1",
 		"gulp-concat": "^2.6.1",
 		"gulp-cssnano": "^2.1.3",
@@ -26,6 +27,7 @@
 		"gulp-minify": "^3.1.0",
 		"gulp-rename": "^1.4.0",
 		"gulp-svgmin": "^2.2.0",
+		"gulp-tap": "^2.0.0",
 		"gulp-template": "^5.0.0",
 		"gulp-zip": "^4.2.0",
 		"merge-stream": "^1.0.1",

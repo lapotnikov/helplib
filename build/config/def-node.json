@@ -1,0 +1,13 @@
+{
+	"namespace": "helLib",
+	"eng": "node",
+	"min": false,
+
+	"dist": "helplib-node",
+	"modules": ["string"],
+
+	"path": {
+		"modules": ["src/modules"],
+		"dist": "dist/node"
+	}
+}

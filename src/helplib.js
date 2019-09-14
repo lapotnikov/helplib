@@ -1,7 +1,7 @@
 module.exports = (() => {
 	const NAME_RESERVLIST = [];
 
-	class helLib {
+	class HelLib {
 		construct() {
 			for(let name in this) {
 				NAME_RESERVLIST.push(name);
@@ -112,5 +112,5 @@ module.exports = (() => {
 		}
 	}
 
-	return new helLib;
+	return new HelLib;
 })();

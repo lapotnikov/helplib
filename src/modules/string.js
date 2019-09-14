@@ -1,4 +1,4 @@
-const helpLib = require('../helplib.js');
+const $namespace$ = require('../helplib.js');
 
 ((helpLib) => {
 
@@ -119,4 +119,4 @@ const helpLib = require('../helplib.js');
 		}
 	}
 
-})(helpLib);
+})($namespace$);
