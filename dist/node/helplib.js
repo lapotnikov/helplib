@@ -1,4 +1,4 @@
-const $namespace$ = (() => {
+const helLib = (() => {
 	const NAME_RESERVLIST = [];
 
 	class HelLib {
@@ -115,4 +115,4 @@ const $namespace$ = (() => {
 	return new HelLib;
 })();
 
-module.exports = $namespace$;
+module.exports = helLib;

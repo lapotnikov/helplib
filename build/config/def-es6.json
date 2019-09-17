@@ -7,6 +7,7 @@
 	"modules": ["string"],
 
 	"path": {
+		"core": "src/helplib.js",
 		"modules": ["src/modules"],
 		"dist": "dist/es6"
 	}

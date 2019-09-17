@@ -3,11 +3,13 @@
 	"eng": "node",
 	"min": false,
 
-	"dist": "helplib-node",
-	"modules": ["string"],
+	"dist": "main",
+	"modules": ["string", "number", "object", "array", "function", "date"],
 
 	"path": {
+		"core": "src/helplib.js",
 		"modules": ["src/modules"],
-		"dist": "dist/node"
+		"dist": "dist/node",
+		"modulesDist": "dist/node/modules"
 	}
 }

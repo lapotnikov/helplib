@@ -1,22 +1,11 @@
 const path = require('path');
 const fs = require('fs');
-const rimraf = require('rimraf');
-const mergeStream = require('merge-stream');
 const minimist = require('minimist');
-const browserify = require('browserify');
-
 const gulp = require('gulp');
-const gulpif = require('gulp-if');
-//const minify = require('gulp-minify');
-const rename = require("gulp-rename");
-const tap = require('gulp-tap');
-//const foreach = require('gulp-foreach');
-const template = require('gulp-template');
 
-//const zip = require('gulp-zip');
-
-//Init command arguments
-
+/**
+ * Handling of console arguments
+ */
 const argv = minimist(process.argv.slice(2), {
 	string: ['eng', 'modules', 'namespace', 'dist'],
 	boolean: 'min',
@@ -29,93 +18,98 @@ const argv = minimist(process.argv.slice(2), {
 	}
 });
 
-// Init path
-
+/**
+ * Path handling
+ */
 const rootPath = path.resolve(__dirname, '../');
-const configPath = `./config/def-${argv.eng}${argv.min ? '.min' : ''}.json`;
-const modulePathList = [];
 
+const configPath = `./config/def-${argv.eng}.json`;
 if(fs.existsSync(configPath) == false || (fs.statSync(configPath)).isFile() == false) {
 	throw new TypeError(`The cfiguration file "${configPath}" is not exist"`);
 }
 
-// Init config files
+const corePath = {src: '', name: '', dist: ''};
+const modulePathList = [];
 
-const vars = require(configPath);
+/**
+ * Configuration handling
+ */
+const conf = require(configPath);
 
-vars.namespace = String(argv.namespace || vars.namespace).trim();
-vars.eng = String(vars.eng).trim();
-vars.min = Boolean(argv.min !== null ? argv.min : vars.min);
-
-vars.dist = String(argv.dist || vars.dist).trim();
-vars.modules = Array.from(argv.modules ? argv.modules.split(',') : vars.modules, itm => String(itm).trim());
-
-vars.path = vars.path instanceof Object ? vars.path : {};
-vars.path.dist = path.resolve(rootPath, vars.path.dist);
-vars.path.modules = Array.from(vars.path.modules, itm => path.resolve(rootPath, String(itm).trim()));
-
-if((/^[a-zA-Z_\$][0-9a-zA-Z_\$]*$/u).test(vars.namespace) === false) {
-	throw new TypeError(`The namespace "${vars.namespace}" is not valid"`);
+conf.namespace = String(argv.namespace || conf.namespace).trim();
+if((/^[a-zA-Z_\$][0-9a-zA-Z_\$]*$/u).test(conf.namespace) === false) {
+	throw new TypeError(`The namespace "${conf.namespace}" is not valid"`);
 }
 
+conf.eng = String(conf.eng).trim();
+conf.min = Boolean(argv.min !== null ? argv.min : conf.min);
+conf.dist = String(argv.dist || conf.dist).trim();
+conf.modules = Array.from(argv.modules ? argv.modules.split(',') : conf.modules, itm => String(itm).trim());
+
+conf.path = conf.path instanceof Object ? conf.path : {};
+conf.path.core = path.resolve(rootPath, conf.path.core);
+conf.path.dist = path.resolve(rootPath, conf.path.dist);
+conf.path.modulesDist = conf.path.modulesDist ? path.resolve(rootPath, conf.path.modulesDist) : conf.path.dist;
+conf.path.modules = Array.from(conf.path.modules, itm => path.resolve(rootPath, String(itm).trim()));
+
+/**
+ * Handling of core path
+ */
+(() => {
+	if(fs.existsSync(conf.path.core) && (fs.statSync(conf.path.core)).isFile()) {
+		let ext = path.extname(conf.path.core);
+		corePath.src = conf.path.core;
+		corePath.name = path.basename(conf.path.core, ext) + (conf.min ? '.min' : '') + ext;
+		corePath.dist = `${conf.path.dist}/${corePath.name}`;
+	} else {
+		throw new TypeError(`The core file "${conf.path.core}" is not exist"`);
+	}
+})();
+
+/**
+ * Handling of modules path
+ */
 (() => {
 	let moduleList = [];
 
-	vars.path.modules.forEach((path) => {
+	conf.path.modules.forEach((path) => {
 		if(fs.existsSync(path) && (fs.statSync(path)).isDirectory()) {
 			moduleList = moduleList.concat(fs.readdirSync(path)
-				.filter(file => (fs.statSync(`${path}/${file}`)).isFile())
-				.map(file => [file, `${path}/${file}`])
+				.map(file => `${path}/${file}`)
+				.filter(file => (fs.statSync(file)).isFile())
 			);
 		}
 	});
 
-	vars.modules.forEach((module) => {
-		let itm = moduleList.find(itm => itm[0] === `${module}.js`);
-		if(itm) {
-			modulePathList.push([itm[1], `${vars.dist}-${module}.js`]);
+	conf.modules.forEach((module) => {
+		let file = moduleList.find(file => path.basename(file) === `${module}.js`);
+		if(file) {
+			let ext = path.extname(conf.path.core);
+			let fileName = path.basename(file, ext) + (conf.min ? '.min' : '') + ext;
+			modulePathList.push({
+				src: file,
+				name: fileName,
+				dist: `${conf.path.modulesDist}/${fileName}`
+			});
 		} else {
 			throw new TypeError(`The module "${module}" is not exist"`);
 		}
 	});
 })();
 
-// Init gulp clean task
+/**
+ * Handling of gulp tasks
+ */
+require('./tasks/common.js').clean(gulp, 'clean', conf.path.dist);
+switch(conf.eng) {
+	case 'node':
+		let builder = require('./tasks/node.js');
+		builder.buildCore(gulp, 'build-core', conf.path.dist, corePath, conf);
+		builder.buildModules(gulp, 'build-modules', conf.path.modulesDist, modulePathList, conf);
+		builder.buildMain(gulp, 'build-main', conf.path.dist, corePath, modulePathList, `${conf.dist}.js`, conf);
 
-gulp.task('clean', (callback) => {
-	rimraf(`${vars.path.dist}/*`, callback);
-});
-
-// Init gulp js task
-
-gulp.task('build-js-modules', () => {
-	let streams = new Array();
-	//let monifyConf = {ext: {min: '.js'}, noSource: true, preserveComments: 'some'};
-
-	for(let module of modulePathList) {
-		streams.push(
-			gulp.src(module[0], {cwd: rootPath})
-				.on('error', error => console.error(error))
-				.pipe(template(vars, {interpolate: /\$([a-zA-Z\._]+?)\$/g}))
-				.pipe(gulpif(vars.eng === 'es6', tap((file) => {
-					file.contents = browserify(file.path, {debug: false, bundleExternal: false, standalone: vars.namespace}).bundle();
-				})))
-				.pipe(rename(module[1]))
-				.pipe(gulp.dest(vars.path.dist, {cwd: rootPath}))
-		);
-	}
-
-	return mergeStream.apply(mergeStream, streams);
-});
-
-// Init gulp default task
-
-exports.default = gulp.series('clean', gulp.parallel('build-js-modules'));
-
-//console.log(modulePathList);
-//process.exit();
-/*
-exports.default = argv.state === 'prod' ?
-	gulp.series('clean', gulp.parallel('build-js-files', 'build-css-files', 'build-data-files'), 'build-html-files', 'packing') :
-	gulp.series('clean', gulp.parallel('build-js-files', 'build-css-files', 'build-data-files'), 'build-html-files');
-	*/
+		exports.default = gulp.series('clean', gulp.parallel('build-core', 'build-modules', 'build-main'));
+		break;
+	case 'es6':
+		break;
+}
