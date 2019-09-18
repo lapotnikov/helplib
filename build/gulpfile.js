@@ -4,7 +4,7 @@ const minimist = require('minimist');
 const gulp = require('gulp');
 
 /**
- * Handling of console arguments
+ * Handling of shell parameters
  */
 const argv = minimist(process.argv.slice(2), {
 	string: ['eng', 'modules', 'namespace', 'dist', 'conf'],
