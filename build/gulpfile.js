@@ -7,13 +7,14 @@ const gulp = require('gulp');
  * Handling of console arguments
  */
 const argv = minimist(process.argv.slice(2), {
-	string: ['eng', 'modules', 'namespace', 'dist'],
+	string: ['eng', 'modules', 'namespace', 'dist', 'conf'],
 	boolean: 'min',
 	default: {
 		eng: 'node',
 		modules: '',
 		namespace: '',
 		dist: '',
+		conf: '',
 		min: null
 	}
 });
@@ -23,7 +24,7 @@ const argv = minimist(process.argv.slice(2), {
  */
 const rootPath = path.resolve(__dirname, '../');
 
-const configPath = `./config/def-${argv.eng}.json`;
+const configPath = argv.conf ? path.resolve(__dirname, argv.conf) : `./config/def-${argv.eng}.json`;
 if(fs.existsSync(configPath) == false || (fs.statSync(configPath)).isFile() == false) {
 	throw new TypeError(`The cfiguration file "${configPath}" is not exist"`);
 }
@@ -102,9 +103,8 @@ conf.path.modules = Array.from(conf.path.modules, itm => path.resolve(rootPath, 
 })();
 
 /**
- * Handling of gulp tasks
+ * Handling of gulp building tasks
  */
-
 const common = require('./tasks/common.js');
 const builder = require(`./tasks/${conf.eng}.js`);
 

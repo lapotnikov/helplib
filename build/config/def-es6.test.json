@@ -1,0 +1,15 @@
+{
+	"namespace": "helpLib",
+	"eng": "es6",
+	"min": false,
+
+	"dist": "helplib",
+	"modules": ["string", "number", "object", "array", "function", "date"],
+
+	"path": {
+		"core": "src/helplib.js",
+		"modules": ["src/modules"],
+		"dist": "test/es6/dist",
+		"modulesDist": "test/es6/dist/modules"
+	}
+}
