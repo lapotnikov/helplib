@@ -1,4 +1,4 @@
-const module = (helpLib) => {
+const $moduleNamespace$ = (helpLib) => {
 
 	helpLib.regHelper('str', 'is', null, function(str) {
 		return typeof str === 'string' ? true : false;
@@ -118,4 +118,4 @@ const module = (helpLib) => {
 	}
 };
 
-module.exports = module;
+module.exports = $moduleNamespace$;

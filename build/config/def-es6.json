@@ -1,14 +1,15 @@
 {
-	"namespace": "helLib",
+	"namespace": "helpLib",
 	"eng": "es6",
 	"min": false,
 
-	"dist": "helplib-es6",
-	"modules": ["string"],
+	"dist": "helplib",
+	"modules": ["string", "number", "object", "array", "function", "date"],
 
 	"path": {
 		"core": "src/helplib.js",
 		"modules": ["src/modules"],
-		"dist": "dist/es6"
+		"dist": "dist/es6",
+		"modulesDist": "dist/es6/modules"
 	}
 }

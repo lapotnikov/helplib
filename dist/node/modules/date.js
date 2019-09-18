@@ -1,4 +1,4 @@
-const module = (helpLib) => {
+const helpModule = (helpLib) => {
 
 	helpLib.regHelper('date', 'is', null, function(date) {
 		if(Object.prototype.toString.call(date) === '[object Date]') {
@@ -50,4 +50,4 @@ const module = (helpLib) => {
 	});
 };
 
-module.exports = module;
+module.exports = helpModule;

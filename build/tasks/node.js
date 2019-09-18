@@ -1,13 +1,14 @@
 const path = require('path');
 const stream = require('stream');
 const mergeStream = require('merge-stream');
+const slash = require('slash');
 const rename = require("gulp-rename");
 const template = require('gulp-template');
 const file = require('gulp-file');
 const minify = require('gulp-minify');
 const gulpif = require('gulp-if');
 
-const templateConf = {interpolate: /\$([a-zA-Z\._]+?)\$/g};
+const templateConf = {interpolate: /\$([0-9a-zA-Z\._]+?)\$/g};
 const monifyConf = {
 	ext: {min: '.js'},
 	noSource: true,
@@ -56,9 +57,9 @@ exports.buildModules = (gulp, taskName, distPath, modulePathList, conf) => {
  * Create gulp task for building of main file
  */
 exports.buildMain = (gulp, taskName, distPath, corePath, modulePathList, distFileName, conf) => {
-	let content = `const $namespace$ = require('./${path.relative(distPath, corePath.dist)}');`;
+	let content = `const $namespace$ = require('./${slash(path.relative(distPath, corePath.dist))}');`;
 	for(let modulePath of modulePathList) {
-		content += "\r\n" + `require('./${path.relative(distPath, modulePath.dist)}')($namespace$);`;
+		content += "\r\n" + `require('./${slash(path.relative(distPath, modulePath.dist))}')($namespace$);`;
 	}
 
 	content += "\r\n\r\n" + 'module.exports = $namespace$;';

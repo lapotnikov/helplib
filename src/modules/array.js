@@ -1,4 +1,4 @@
-const module = (helpLib) => {
+const $moduleNamespace$ = (helpLib) => {
 
 	helpLib.regHelper('arr', 'is', null, function(arr) {
 		return Object.prototype.toString.call(arr) === '[object Array]' ? true : false;
@@ -84,4 +84,4 @@ const module = (helpLib) => {
 	});
 };
 
-module.exports = module;
+module.exports = $moduleNamespace$;

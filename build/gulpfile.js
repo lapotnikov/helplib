@@ -41,6 +41,7 @@ if((/^[a-zA-Z_\$][0-9a-zA-Z_\$]*$/u).test(conf.namespace) === false) {
 	throw new TypeError(`The namespace "${conf.namespace}" is not valid"`);
 }
 
+conf.moduleNamespace = `${conf.namespace}Module`;
 conf.eng = String(conf.eng).trim();
 conf.min = Boolean(argv.min !== null ? argv.min : conf.min);
 conf.dist = String(argv.dist || conf.dist).trim();
@@ -58,8 +59,11 @@ conf.path.modules = Array.from(conf.path.modules, itm => path.resolve(rootPath, 
 (() => {
 	if(fs.existsSync(conf.path.core) && (fs.statSync(conf.path.core)).isFile()) {
 		let ext = path.extname(conf.path.core);
+		let fileName = path.basename(conf.path.core, ext).trim();
+		fileName = fileName === conf.dist ? fileName + '-core' : fileName;
+
 		corePath.src = conf.path.core;
-		corePath.name = path.basename(conf.path.core, ext) + (conf.min ? '.min' : '') + ext;
+		corePath.name = fileName + (conf.min ? '.min' : '') + ext;
 		corePath.dist = `${conf.path.dist}/${corePath.name}`;
 	} else {
 		throw new TypeError(`The core file "${conf.path.core}" is not exist"`);
@@ -85,7 +89,7 @@ conf.path.modules = Array.from(conf.path.modules, itm => path.resolve(rootPath, 
 		let file = moduleList.find(file => path.basename(file) === `${module}.js`);
 		if(file) {
 			let ext = path.extname(conf.path.core);
-			let fileName = path.basename(file, ext) + (conf.min ? '.min' : '') + ext;
+			let fileName = path.basename(file, ext).trim() + (conf.min ? '.min' : '') + ext;
 			modulePathList.push({
 				src: file,
 				name: fileName,
@@ -100,16 +104,40 @@ conf.path.modules = Array.from(conf.path.modules, itm => path.resolve(rootPath, 
 /**
  * Handling of gulp tasks
  */
-require('./tasks/common.js').clean(gulp, 'clean', conf.path.dist);
+
+const common = require('./tasks/common.js');
+const builder = require(`./tasks/${conf.eng}.js`);
+
+common.cleanDir(gulp, 'clean-dist', conf.path.dist);
+builder.buildCore(gulp, 'build-core', conf.path.dist, corePath, conf);
+builder.buildModules(gulp, 'build-modules', conf.path.modulesDist, modulePathList, conf);
+
 switch(conf.eng) {
 	case 'node':
-		let builder = require('./tasks/node.js');
-		builder.buildCore(gulp, 'build-core', conf.path.dist, corePath, conf);
-		builder.buildModules(gulp, 'build-modules', conf.path.modulesDist, modulePathList, conf);
-		builder.buildMain(gulp, 'build-main', conf.path.dist, corePath, modulePathList, `${conf.dist}.js`, conf);
+		builder.buildMain(gulp, 'build-main', conf.path.dist, corePath, modulePathList, conf.dist + '.js', conf);
 
-		exports.default = gulp.series('clean', gulp.parallel('build-core', 'build-modules', 'build-main'));
+		exports.default = gulp.series(
+			'clean-dist',
+			gulp.parallel('build-core', 'build-modules', 'build-main')
+		);
+
 		break;
-	case 'es6':
+	case 'es6': {
+		let mainFileName = conf.dist + (conf.min ? '.min' : '') + '.js';
+
+		common.removeItem(gulp, 'remove-core', corePath.dist);
+		common.removeItem(gulp, 'remove-modules', conf.path.modulesDist);
+		builder.buildMain(gulp, 'build-main', conf.path.dist, corePath, modulePathList, mainFileName, conf);
+		builder.concatMain(gulp, 'concat-main', conf.path.dist, mainFileName, conf);
+
+		exports.default = gulp.series(
+			'clean-dist',
+			gulp.parallel('build-core', 'build-modules', 'build-main'),
+			'concat-main',
+			'remove-core',
+			'remove-modules'
+		);
+
 		break;
+	}
 }

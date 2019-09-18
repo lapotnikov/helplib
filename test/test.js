@@ -1,3 +1,3 @@
-const helpLib = require('../src/main.js');
+const helpLib = require('../dist/node/main.js');
 
 console.log(helpLib);
