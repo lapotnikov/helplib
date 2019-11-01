@@ -1,4 +1,4 @@
-const helpModule = (helpLib) => {
+const helpLibModule = (helpLib) => {
 
 	helpLib.regHelper('obj', 'is', null, function(obj) {
 		return typeof obj === 'object' && obj !== null ? true : false;
@@ -165,4 +165,4 @@ const helpModule = (helpLib) => {
 	}
 };
 
-module.exports = helpModule;
+module.exports = helpLibModule;

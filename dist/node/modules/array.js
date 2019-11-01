@@ -1,4 +1,4 @@
-const helpModule = (helpLib) => {
+const helpLibModule = (helpLib) => {
 
 	helpLib.regHelper('arr', 'is', null, function(arr) {
 		return Object.prototype.toString.call(arr) === '[object Array]' ? true : false;
@@ -84,4 +84,4 @@ const helpModule = (helpLib) => {
 	});
 };
 
-module.exports = helpModule;
+module.exports = helpLibModule;

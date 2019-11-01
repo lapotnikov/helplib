@@ -1,4 +1,4 @@
-const helLib = (() => {
+const helpLib = (() => {
 	const NAME_RESERVLIST = [];
 
 	class HelLib {
@@ -115,4 +115,4 @@ const helLib = (() => {
 	return new HelLib;
 })();
 
-module.exports = helLib;
+module.exports = helpLib;

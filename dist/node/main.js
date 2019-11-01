@@ -1,9 +1,9 @@
-const helLib = require('./helplib.js');
-require('./modules/string.js')(helLib);
-require('./modules/number.js')(helLib);
-require('./modules/object.js')(helLib);
-require('./modules/array.js')(helLib);
-require('./modules/function.js')(helLib);
-require('./modules/date.js')(helLib);
+const helpLib = require('./helplib.js');
+require('./modules/string.js')(helpLib);
+require('./modules/number.js')(helpLib);
+require('./modules/object.js')(helpLib);
+require('./modules/array.js')(helpLib);
+require('./modules/function.js')(helpLib);
+require('./modules/date.js')(helpLib);
 
-module.exports = helLib;
+module.exports = helpLib;
