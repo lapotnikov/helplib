@@ -1,0 +1,30 @@
+{
+	"name": "helplib-builder",
+	"title": "helpLib Builder",
+	"description": "",
+	"version": "0.0.2",
+	"private": true,
+	"scripts": {
+		"build": "parallelshell \"gulp --eng=node\" \"gulp --eng=es6 --min\"",
+		"build-node": "gulp --eng=node",
+		"build-es6": "gulp --eng=es6",
+		"build-es6.min": "gulp --eng=es6 --min",
+		"watch": "parallelshell \"npm run watch-nodejs\" \"npm run watch-es6\"",
+		"watch-node": "gulp watch --eng=node",
+		"watch-es6": "gulp watch --eng=es6"
+	},
+	"devDependencies": {
+		"gulp": "^4.0.1",
+		"gulp-file": "^0.4.0",
+		"gulp-if": "^2.0.2",
+		"gulp-inlining-node-require": "^0.1.1",
+		"gulp-minify": "^3.1.0",
+		"gulp-rename": "^1.4.0",
+		"gulp-template": "^5.0.0",
+		"merge-stream": "^1.0.1",
+		"minimist": "^1.2.0",
+		"parallelshell": "^3.0.2",
+		"rimraf": "^2.6.3",
+		"slash": "^3.0.0"
+	}
+}
