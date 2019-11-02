@@ -7,7 +7,10 @@
 		"build": "concurrently \"npm run build-node\" \"npm run build-es6.min\"",
 		"build-node": "gulp --gulpfile ./build/gulpfile.js --eng=node",
 		"build-es6": "gulp --gulpfile ./build/gulpfile.js --eng=es6",
-		"build-es6.min": "gulp --gulpfile ./build/gulpfile.js --eng=es6 --min"
+		"build-es6.min": "gulp --gulpfile ./build/gulpfile.js --eng=es6 --min",
+		"test-node": "npm run build-node -- --conf=\"../test/config/build-node.json\"",
+		"test-es6": "npm run build-es6 -- --conf=\"../test/config/build-es6.json\"",
+		"test-es6.min": "npm run build-es6.min -- --conf=\"../test/config/build-es6.json\""
 	},
 	"devDependencies": {
 		"gulp": "^4.0.1",

@@ -9,7 +9,7 @@
 	"path": {
 		"core": "src/helplib.js",
 		"modules": ["src/modules"],
-		"dist": "test/es6/dist",
-		"modulesDist": "test/es6/dist/modules"
+		"dist": "test/dist/es6",
+		"modulesDist": "test/dist/es6/modules"
 	}
 }

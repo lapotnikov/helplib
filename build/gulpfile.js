@@ -108,12 +108,12 @@ conf.path.modules = Array.from(conf.path.modules, itm => path.resolve(rootPath, 
 const common = require('./tasks/common.js');
 const builder = require(`./tasks/${conf.eng}.js`);
 
-common.cleanDir(gulp, 'clean-dist', conf.path.dist);
 builder.buildCore(gulp, 'build-core', conf.path.dist, corePath, conf);
 builder.buildModules(gulp, 'build-modules', conf.path.modulesDist, modulePathList, conf);
 
 switch(conf.eng) {
 	case 'node':
+		common.cleanDir(gulp, 'clean-dist', conf.path.dist);
 		builder.buildMain(gulp, 'build-main', conf.path.dist, corePath, modulePathList, conf.dist + '.js', conf);
 
 		exports.default = gulp.series(
@@ -125,6 +125,7 @@ switch(conf.eng) {
 	case 'es6': {
 		let mainFileName = conf.dist + (conf.min ? '.min' : '') + '.js';
 
+		common.removeItem(gulp, 'clean-dist', mainFileName);
 		common.removeItem(gulp, 'remove-core', corePath.dist);
 		common.removeItem(gulp, 'remove-modules', conf.path.modulesDist);
 		builder.buildMain(gulp, 'build-main', conf.path.dist, corePath, modulePathList, mainFileName, conf);
