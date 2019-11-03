@@ -1,0 +1,12 @@
+{
+	"eng": "es6",
+	"min": false,
+	"root": "index",
+
+	"path": {
+		"buildConf": "test/config/build-es6.json",
+		"root": "test/src/es6"
+	},
+
+	"clients": []
+}

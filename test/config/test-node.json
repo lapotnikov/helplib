@@ -1,0 +1,12 @@
+{
+	"eng": "node",
+	"min": false,
+	"root": "index",
+
+	"path": {
+		"buildConf": "test/config/build-node.json",
+		"root": "test/src/node"
+	},
+
+	"clients": []
+}

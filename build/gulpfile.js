@@ -31,7 +31,8 @@ if(fs.existsSync(configPath) == false || (fs.statSync(configPath)).isFile() == f
 
 const corePath = {src: '', name: '', dist: ''};
 const modulePathList = [];
-
+throw new Error('!!!!1');
+console.log(configPath);
 /**
  * Configuration handling
  */
