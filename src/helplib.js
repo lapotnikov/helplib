@@ -1,7 +1,7 @@
 const $namespace$ = (() => {
 	const NAME_RESERVLIST = [];
 
-	class HelLib {
+	class HelpLib {
 		construct() {
 			for(let name in this) {
 				NAME_RESERVLIST.push(name);
@@ -112,7 +112,7 @@ const $namespace$ = (() => {
 		}
 	}
 
-	return new HelLib;
+	return new HelpLib;
 })();
 
 module.exports = $namespace$;

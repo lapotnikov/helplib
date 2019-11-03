@@ -4,15 +4,17 @@
 	"description": "",
 	"version": "0.0.3",
 	"scripts": {
-		"build": "concurrently \"npm run build-node\" \"npm run build-es6.min\"",
-		"build-node": "gulp --gulpfile ./build/gulpfile.js --eng=node",
-		"build-es6": "gulp --gulpfile ./build/gulpfile.js --eng=es6",
-		"build-es6.min": "gulp --gulpfile ./build/gulpfile.js --eng=es6 --min",
-		"test-node": "npm run build-node -- --conf=\"../test/config/build-node.json\"",
+		"build": "concurrently \"npm run build-node\" \"npm run build-es6\" \"npm run build-es6.min\"",
+		"build-node": "npx gulp --gulpfile ./build/gulpfile.js --eng=node",
+		"build-es6": "npx gulp --gulpfile ./build/gulpfile.js --eng=es6",
+		"build-es6.min": "npx gulp --gulpfile ./build/gulpfile.js --eng=es6 --min",
+		"test-node": "npm run build-node -- --conf=\"../test/config/build-node.json\" && npx mocha \"./test/src/node/index.js\"",
 		"test-es6": "npm run build-es6 -- --conf=\"../test/config/build-es6.json\"",
 		"test-es6.min": "npm run build-es6.min -- --conf=\"../test/config/build-es6.json\""
 	},
 	"devDependencies": {
+		"chai": "^4.2.0",
+		"concurrently": "^5.0.0",
 		"gulp": "^4.0.1",
 		"gulp-file": "^0.4.0",
 		"gulp-if": "^2.0.2",
@@ -22,7 +24,7 @@
 		"gulp-template": "^5.0.0",
 		"merge-stream": "^1.0.1",
 		"minimist": "^1.2.0",
-		"concurrently": "^5.0.0",
+		"mocha": "^6.2.2",
 		"rimraf": "^2.6.3",
 		"slash": "^3.0.0"
 	}

@@ -1,7 +1,7 @@
 const helpLib = (() => {
 	const NAME_RESERVLIST = [];
 
-	class HelLib {
+	class HelpLib {
 		construct() {
 			for(let name in this) {
 				NAME_RESERVLIST.push(name);
@@ -112,7 +112,7 @@ const helpLib = (() => {
 		}
 	}
 
-	return new HelLib;
+	return new HelpLib;
 })();
 
 module.exports = helpLib;
