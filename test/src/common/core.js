@@ -1,5 +1,11 @@
+/**
+ * Set the export value to a window object in the browser
+ */
 exports = typeof window !== 'undefined' ? window : exports;
 
+/**
+ * Function that starts testing
+ */
 exports.testCore = (describe, it, assert, helpLib) => {
 	describe('Test helpLib core', () => {
 		it('check instance of helpLib variable', () => {

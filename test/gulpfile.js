@@ -27,7 +27,6 @@ if(fs.existsSync(configPath) == false || (fs.statSync(configPath)).isFile() == f
 	throw new TypeError(`The cfiguration file "${configPath}" is not exist"`);
 }
 
-
 /**
  * Configuration handling
  */
@@ -39,8 +38,12 @@ conf.min = Boolean(argv.min !== null ? argv.min : conf.min);
 conf.root = String(argv.root || conf.root).trim();
 
 conf.path = conf.path instanceof Object ? conf.path : {};
-conf.path.buildConf = path.resolve(rootPath, conf.path.buildConf);
 conf.path.root = path.resolve(rootPath, conf.path.root);
+
+conf.path.buildConf = path.resolve(rootPath, conf.path.buildConf);
+if(fs.existsSync(conf.path.buildConf) == false || (fs.statSync(conf.path.buildConf)).isFile() == false) {
+	throw new TypeError(`The build configuration file "${conf.path.buildConf}" is not exist"`);
+}
 
 /**
  * Handling of root file path
@@ -62,6 +65,7 @@ conf.path.root = path.resolve(rootPath, conf.path.root);
  * Handling of gulp testing tasks
  */
 const tester = require(`./tasks/${conf.eng}.js`);
-tester.build(gulp, 'build', rootPath, conf.path.buildConf);
+tester.build(gulp, 'build', rootPath, conf);
+tester.test(gulp, 'test', rootFile, conf);
 
-exports.default = gulp.series('build');
+exports.default = gulp.series('build', 'test');
