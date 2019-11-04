@@ -1,6 +1,8 @@
 {
 	"eng": "node",
 	"min": false,
+	"buildonly": false,
+
 	"root": "index",
 
 	"path": {

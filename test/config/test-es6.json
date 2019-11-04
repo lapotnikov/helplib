@@ -1,6 +1,8 @@
 {
 	"eng": "es6",
 	"min": false,
+	"buildonly": false,
+
 	"root": "index",
 
 	"path": {
@@ -8,5 +10,5 @@
 		"root": "test/src/es6"
 	},
 
-	"clients": []
+	"clients": ["chrome", "firefox", "opera", "iexplore"]
 }

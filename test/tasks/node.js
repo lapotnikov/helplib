@@ -15,7 +15,7 @@ exports.build = (gulp, taskName, rootPath, conf) => {
  * Create gulp task for testing of testing library
  */
 exports.test = (gulp, taskName, rootFilePath, conf) => {
-	gulp.task(taskName,  () => {
+	gulp.task(taskName, () => {
 		return gulp.src(rootFilePath, {read: false, cwd: conf.path.root})
 			.pipe(mocha({reporter: 'spec', ui: 'bdd', color: true, exit: true}));
 	});
