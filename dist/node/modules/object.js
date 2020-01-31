@@ -4,19 +4,19 @@ const helpLibModule = (helpLib) => {
 		return typeof obj === 'object' && obj !== null ? true : false;
 	});
 
-	helpLib.regHelper('obj', 'isSet', null, function(obj) {
+	helpLib.regHelper('obj', 'isSet', {'.': 'isInstance'}, function(obj) {
 		return this.obj.is(obj) && this.isInstance(obj,' Set') ? true : false;
 	});
 
-	helpLib.regHelper('obj', 'isWeakSet', null, function(obj) {
+	helpLib.regHelper('obj', 'isWeakSet', {'.': 'isInstance'}, function(obj) {
 		return this.obj.is(obj) && this.isInstance(obj,' WeakSet') ? true : false;
 	});
 
-	helpLib.regHelper('obj', 'isMap', null, function(obj) {
+	helpLib.regHelper('obj', 'isMap', {'.': 'isInstance'}, function(obj) {
 		return this.obj.is(obj) && this.isInstance(obj,' Map') ? true : false;
 	});
 
-	helpLib.regHelper('obj', 'isWeakMap', null, function(obj) {
+	helpLib.regHelper('obj', 'isWeakMap', {'.': 'isInstance'}, function(obj) {
 		return this.obj.is(obj) && this.isInstance(obj,' WeakMap') ? true : false;
 	});
 
@@ -48,7 +48,7 @@ const helpLibModule = (helpLib) => {
 		return this.obj.isWeakMap(obj) ? obj : defValue;
 	});
 
-	helpLib.regHelper('obj', 'size', null, function(obj) {
+	helpLib.regHelper('obj', 'size', {'.': 'isInstance'}, function(obj) {
 		let ret = 0;
 		objTypify(obj,
 			() => ret = Object.keys(obj).length,
@@ -58,21 +58,22 @@ const helpLibModule = (helpLib) => {
 		return ret;
 	});
 
-	helpLib.regHelper('obj', 'forEach', null, function(obj, callback) {
-		checkCallback(callback);
-		objTypify(obj,
-			() => {
-				for(let prop in obj) {
-					if(Object.prototype.hasOwnProperty.call(obj, prop)) {
-						callback(obj[prop], prop, obj);
+	helpLib.regHelper('obj', 'forEach', {'.': 'isInstance', func: 'is'}, function(obj, callback) {
+		if(this.func.is(callback)) {
+			objTypify(obj,
+				() => {
+					for(let prop in obj) {
+						if(Object.prototype.hasOwnProperty.call(obj, prop)) {
+							callback(obj[prop], prop, obj);
+						}
 					}
-				}
-			},
-			() => obj.forEach(callback)
-		);
+				},
+				() => obj.forEach(callback)
+			);
+		}
 	});
 
-	helpLib.regHelper('obj', 'toArray', null, function(obj) {
+	helpLib.regHelper('obj', 'toArray', {'.': 'isInstance'}, function(obj) {
 		let ret = [];
 		objTypify(obj,
 			() => ret = Object.values(obj),
@@ -82,7 +83,7 @@ const helpLibModule = (helpLib) => {
 		return ret;
 	});
 
-	helpLib.regHelper('obj', 'copy', null, function(obj) {
+	helpLib.regHelper('obj', 'copy', {'.': 'isInstance'}, function(obj) {
 		let ret = {};
 		objTypify(obj,
 			() => ret = Object.assign({}, obj),
@@ -98,7 +99,7 @@ const helpLibModule = (helpLib) => {
 		return ret;
 	});
 
-	helpLib.regHelper('obj', 'merge', null, function(...objList) {
+	helpLib.regHelper('obj', 'merge', {'.': 'isInstance'}, function(...objList) {
 		let ret = {};
 		let collection = 'Object';
 
@@ -155,12 +156,6 @@ const helpLibModule = (helpLib) => {
 			} else {
 				defCallback('Object');
 			}
-		}
-	}
-
-	function checkCallback(callback) {
-		if(typeof callback !== 'function') {
-			throw new TypeError('The callback is not a function');
 		}
 	}
 };

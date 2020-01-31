@@ -27,7 +27,7 @@ const $moduleNamespace$ = (helpLib) => {
 		return Math.round(min - 0.5 + Math.random() * (max - min + 1));
 	});
 
-	helpLib.regHelper('num', 'format', {str: 'check'}, function(value, intSize, fractSize) {
+	helpLib.regHelper('num', 'format', {'.': 'isSet', str: 'check'}, function(value, intSize, fractSize) {
 		let parts = this.str.check(this.num.check(value).toFixed(this.num.check(fractSize))).split('.');
 		intSize = this.num.check(intSize) - parts[0].length;
 		intSize = intSize < 0 ? 0 : intSize;
@@ -40,7 +40,7 @@ const $moduleNamespace$ = (helpLib) => {
 		return ret;
 	});
 
-	helpLib.regHelper('num', 'inInterval', null, function(num, minValue, maxValue, defValue = null) {
+	helpLib.regHelper('num', 'inInterval', {'.': 'isSet'}, function(num, minValue, maxValue, defValue = null) {
 		num = this.num.check(num);
 		minValue = this.isSet(minValue) ? this.num.check(minValue) : null;
 		maxValue = this.isSet(maxValue) ? this.num.check(maxValue) : null;

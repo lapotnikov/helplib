@@ -62,6 +62,7 @@ exports.buildMain = (gulp, taskName, distPath, corePath, modulePathList, distFil
 		content += "\r\n" + `require('./${slash(path.relative(distPath, modulePath.dist))}')($namespace$);`;
 	}
 
+	content += "\r\n" + '$namespace$.init();';
 	content += "\r\n\r\n" + 'module.exports = $namespace$;';
 
 	gulp.task(taskName, () => {

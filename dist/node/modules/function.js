@@ -8,12 +8,12 @@ const helpLibModule = (helpLib) => {
 		return this.func.is(callback) ? callback : defValue;
 	});
 
-	helpLib.regHelper('func', 'apply', {arr: 'check'}, function(scope, callback, args) {
+	helpLib.regHelper('func', 'apply', {'.': 'isSet', arr: 'check'}, function(scope, callback, args) {
 		scope = this.isSet(scope) ? scope : null;
 		return this.func.check(callback).apply(scope, this.arr.check(args));
 	});
 
-	helpLib.regHelper('func', 'saveApply', {arr: 'check'}, function(scope, callback, errorCallback, args) {
+	helpLib.regHelper('func', 'saveApply', {'.': 'isSet', arr: 'check'}, function(scope, callback, errorCallback, args) {
 		scope = this.isSet(scope) ? scope : null;
 		try {
 			return this.func.apply(scope, callback, this.arr.check(args));

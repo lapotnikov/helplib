@@ -4,7 +4,7 @@ const helpLibModule = (helpLib) => {
 		return typeof str === 'string' ? true : false;
 	});
 
-	helpLib.regHelper('str', 'check', null, function(str, defValue = '') {
+	helpLib.regHelper('str', 'check', {'.': 'isSet'}, function(str, defValue = '') {
 		return this.isSet(str) ? String(str) : defValue;
 	});
 
@@ -40,7 +40,7 @@ const helpLibModule = (helpLib) => {
 
 	helpLib.regHelper('str', 'encodeHtmlEntity', null, function(str) {
 		str = this.str.check(str);
-		let buf = new Array();
+		let buf = [];
 		for(let i = str.length - 1; i >= 0; i--) {
 			buf.unshift(`&#${str[i].charCodeAt()};`);
 		}
@@ -72,10 +72,10 @@ const helpLibModule = (helpLib) => {
 		return this.str.test(str, new RegExp(regExp, 'i'));
 	});
 
-	helpLib.regHelper('str', 'isBlackList', null, function(str, list) {
-		checkArray(list, 'list of black values');
-
+	helpLib.regHelper('str', 'isBlackList', {arr: 'check'}, function(str, list) {
+		list = this.arr.check(list);
 		let listSize = list.length;
+
 		for(let i = 0; i < listSize; i++) {
 			list[i] = this.str.check(list[i]);
 			list[i] = list[i].replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -99,10 +99,10 @@ const helpLibModule = (helpLib) => {
 		return this.str.clear(str, new RegExp(exp, 'g'));
 	});
 
-	helpLib.regHelper('str', 'clearBlackList', null, function(str, list) {
-		checkArray(list, 'list of black values');
-
+	helpLib.regHelper('str', 'clearBlackList', {arr: 'check'}, function(str, list) {
+		list = this.arr.check(list);
 		let listSize = list.length;
+
 		for(let i = 0; i < listSize; i++) {
 			list[i] = this.str.check(list[i]);
 			list[i] = list[i].replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -110,12 +110,6 @@ const helpLibModule = (helpLib) => {
 
 		return this.str.clear(str, new RegExp('(?:' + list.join(')|(?:') + ')', 'g'));
 	});
-
-	function checkArray(arr, name) {
-		if(Object.prototype.toString.call(arr) !== '[object Array]') {
-			throw new TypeError(`The ${name} is not a Array`);
-		}
-	}
 };
 
 module.exports = helpLibModule;

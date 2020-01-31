@@ -12,7 +12,7 @@ const helpLibModule = (helpLib) => {
 		try {
 			return Array.from(val);
 		} catch(excep) {
-			return defValue;
+			return [];
 		}
 	});
 
@@ -24,7 +24,7 @@ const helpLibModule = (helpLib) => {
 		return this.arr.check(arr).slice();
 	});
 
-	helpLib.regHelper('arr', 'proection', {str: 'trim', obj: 'is, isMap'}, function(arr, field) {
+	helpLib.regHelper('arr', 'proection', {'.': 'isSet', str: 'trim', obj: 'is, isMap'}, function(arr, field) {
 		let ret = [];
 		arr = this.arr.check(arr);
 		field = this.str.trim(field);

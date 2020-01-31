@@ -8,7 +8,7 @@ const helpLibModule = (helpLib) => {
 		return false;
 	});
 
-	helpLib.regHelper('date', 'check', {str: 'is', num: 'is'}, function(date, defValue = new Date()) {
+	helpLib.regHelper('date', 'check', {'.': 'isInstance', str: 'is', num: 'is'}, function(date, defValue = new Date()) {
 		if(this.isInstance(date, 'Date', true)) {
 			return date;
 		} else if(this.num.is(date) || this.str.is(date)) {

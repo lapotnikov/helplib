@@ -1,15 +1,26 @@
 const $namespace$ = (() => {
 	const NAME_RESERVLIST = [];
+	const NAME_COMMONLIB = '_common';
+	const NAME_ROOTLIB = '.';
 
 	class HelpLib {
 		construct() {
+			this.isInitialize = false;
+			this.libList = {};
+
+			NAME_RESERVLIST.push(NAME_COMMONLIB);
 			for(let name in this) {
 				NAME_RESERVLIST.push(name);
 			}
 		}
 
+		isInit() {
+			return this.isInitialize;
+		}
+
 		regHelper(lib, func, dependence, callback) {
-			lib = this.isSet(lib) ? String(lib).trim() : '';
+			lib = this.isSet(lib) ? String(lib).trim() : NAME_COMMONLIB;
+			lib = lib === NAME_ROOTLIB ? NAME_COMMONLIB : lib;
 			func = String(func).trim();
 
 			if(this.isEmpty(func)) {
@@ -19,100 +30,88 @@ const $namespace$ = (() => {
 				throw new TypeError('The callback of helper is not a function');
 			}
 
-			if(dependence !== null && typeof dependence === 'object') {
-				for(let depLib in dependence) {
-					if(this.checkDependence(depLib, dependence[depLib]) === false) {
-						let funcName = this.isEmpty(lib) ? func : lib + '.' + func;
-						throw new ReferenceError(`Not all dependencies are met for the helper function "${funcName}"`);
-					}
-				}
-			}
-
-			if(this.isEmpty(lib)) {
+			if(lib === NAME_COMMONLIB) {
 				if(NAME_RESERVLIST.indexOf(func) >= 0) {
-					throw new TypeError(`This helper function name "${func}" is reserved`);
-				} else {
-					this[func] = callback.bind(this);
+					throw new TypeError(`The helper function name "${func}" is reserved`);
+				} else if(this.libList[lib] !== undefined && this.libList[lib][func] !== undefined) {
+					throw new TypeError(`The helper function name "${func}" is already exist`);
 				}
 			} else if(NAME_RESERVLIST.indexOf(lib) >= 0) {
-				throw new TypeError(`This helper library name "${lib}" is reserved`);
-			} else {
-				this[lib] = this[lib] === undefined ? new Object() : this[lib];
-				this[lib][func]	= callback.bind(this);
-			}
-		}
-
-		checkDependence(lib, funcs) {
-			lib = this.isSet(lib) ? this[String(lib)] : this;
-			if(lib === undefined) {
-				return false;
+				throw new TypeError(`The library name "${lib}" is reserved`);
+			} else if(this.libList[lib] !== undefined && this.libList[lib][func] !== undefined) {
+				throw new TypeError(`The helper function name "${lib}.${func}" is already exist`);
 			}
 
-			funcs = String(funcs).split(',');
-			for(let i in funcs) {
-				if(lib[funcs[i].trim()] === undefined) {
-					return false;
-				}
+			if(this.isInitialize && dependence !== null && typeof dependence === 'object') {
+				checkDependenceList.call(this, lib, func, dependence);
 			}
 
-			return true;
-		}
+			this.libList[lib] = this.libList[lib] === undefined ? {} : this.libList[lib];
+			this.libList[lib][func] = {
+				callback: callback.bind(this),
+				dependence: dependence !== null && typeof dependence === 'object' ? dependence : null
+			};
 
-		isSet(val) {
-			return val === null || val === undefined ? false : true;
-		}
-
-		isScalar(val) {
-			return (/boolean|number|string/).test(typeof val);
-		}
-
-		isEmpty(val) {
-			if(this.isSet(val) == false) {
-				return true;
-			} else {
-				var type = typeof(val);
-				switch(type) {
-					case 'boolean': return val == false ? true : false;
-					case 'number': return isNaN(val) || val == 0 ? true : false;
-					case 'string': return val.trim().length == 0 ? true : false;
-					case 'object': return Object.keys(val).length == 0 ? true : false;
-					default: return false;
+			if(this.isInitialize) {
+				if(lib === NAME_COMMONLIB) {
+					this[func] = this.libList[lib][func].callback;
+				} else {
+					this[lib] = this[lib] === undefined ? {} : this[lib];
+					this[lib][func] = this.libList[lib][func].callback;
 				}
 			}
 		}
 
-		isInstance(obj, cls, onlyFirstLevel = false) {
-			if(this.isSet(cls)) {
-				cls = null;
-			} else {
-				let clsType = typeof cls;
-				switch(clsType) {
-					case 'string': cls = cls.trim(); break
-					case 'object': cls = cls.constructor.name; break
-					case 'function': cls = cls.name; break
-					default: cls = null;
-				}
-			}
+		init() {
+			if(this.isInitialize === false) {
+				for(let lib in this.libList) {
+					for(let func in this.libList[lib]) {
+						checkDependenceList.call(this, lib, func, this.libList[lib][func].dependence);
 
-			if(typeof obj === 'object' && cls !== null) {
-				while(obj !== null) {
-					if(cls === obj.constructor.name) {
-						return true;
-					} else {
-						obj = obj.__proto__;
-					}
-
-					if(onlyFirstLevel) {
-						break;
+						if(lib === NAME_COMMONLIB) {
+							this[func] = this.libList[lib][func].callback;
+						} else {
+							this[lib] = this[lib] === undefined ? {} : this[lib];
+							this[lib][func] = this.libList[lib][func].callback;
+						}
 					}
 				}
-			}
 
-			return false;
+				this.isInitialize = true;
+			}
 		}
 	}
 
-	return new HelpLib;
+	function checkDependenceList(lib, func, dependence) {
+		if(dependence !== null) {
+			for(let depLib in dependence) {
+				if(checkDependence.call(this, depLib, dependence[depLib]) === false) {
+					let fullName = lib === NAME_COMMONLIB ? func : lib + '.' + func;
+					throw new ReferenceError(`Not all dependencies are met for the helper function "${fullName}"`);
+				}
+			}
+		}
+	}
+
+	function checkDependence(lib, funcs) {
+		lib = String(lib).trim();
+		lib = lib === NAME_ROOTLIB ? NAME_COMMONLIB : lib;
+
+		if(this.libList[lib] === undefined) {
+			return false;
+		}
+
+		funcs = String(funcs).split(',');
+		for(let i in funcs) {
+			if(this.libList[lib][funcs[i].trim()] === undefined) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	return new HelpLib();
 })();
 
 module.exports = $namespace$;

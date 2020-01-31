@@ -1,15 +1,26 @@
 const helpLib = (() => {
 	const NAME_RESERVLIST = [];
+	const NAME_COMMONLIB = '_common';
+	const NAME_ROOTLIB = '.';
 
 	class HelpLib {
 		construct() {
+			this.isInitialize = false;
+			this.libList = {};
+
+			NAME_RESERVLIST.push(NAME_COMMONLIB);
 			for(let name in this) {
 				NAME_RESERVLIST.push(name);
 			}
 		}
 
+		isInit() {
+			return this.isInitialize;
+		}
+
 		regHelper(lib, func, dependence, callback) {
-			lib = this.isSet(lib) ? String(lib).trim() : '';
+			lib = this.isSet(lib) ? String(lib).trim() : NAME_COMMONLIB;
+			lib = lib === NAME_ROOTLIB ? NAME_COMMONLIB : lib;
 			func = String(func).trim();
 
 			if(this.isEmpty(func)) {
@@ -19,101 +30,145 @@ const helpLib = (() => {
 				throw new TypeError('The callback of helper is not a function');
 			}
 
-			if(dependence !== null && typeof dependence === 'object') {
-				for(let depLib in dependence) {
-					if(this.checkDependence(depLib, dependence[depLib]) === false) {
-						let funcName = this.isEmpty(lib) ? func : lib + '.' + func;
-						throw new ReferenceError(`Not all dependencies are met for the helper function "${funcName}"`);
-					}
-				}
-			}
-
-			if(this.isEmpty(lib)) {
+			if(lib === NAME_COMMONLIB) {
 				if(NAME_RESERVLIST.indexOf(func) >= 0) {
-					throw new TypeError(`This helper function name "${func}" is reserved`);
-				} else {
-					this[func] = callback.bind(this);
+					throw new TypeError(`The helper function name "${func}" is reserved`);
+				} else if(this.libList[lib] !== undefined && this.libList[lib][func] !== undefined) {
+					throw new TypeError(`The helper function name "${func}" is already exist`);
 				}
 			} else if(NAME_RESERVLIST.indexOf(lib) >= 0) {
-				throw new TypeError(`This helper library name "${lib}" is reserved`);
-			} else {
-				this[lib] = this[lib] === undefined ? new Object() : this[lib];
-				this[lib][func]	= callback.bind(this);
-			}
-		}
-
-		checkDependence(lib, funcs) {
-			lib = this.isSet(lib) ? this[String(lib)] : this;
-			if(lib === undefined) {
-				return false;
+				throw new TypeError(`The library name "${lib}" is reserved`);
+			} else if(this.libList[lib] !== undefined && this.libList[lib][func] !== undefined) {
+				throw new TypeError(`The helper function name "${lib}.${func}" is already exist`);
 			}
 
-			funcs = String(funcs).split(',');
-			for(let i in funcs) {
-				if(lib[funcs[i].trim()] === undefined) {
-					return false;
-				}
+			if(this.isInitialize && dependence !== null && typeof dependence === 'object') {
+				checkDependenceList.call(this, lib, func, dependence);
 			}
 
-			return true;
-		}
+			this.libList[lib] = this.libList[lib] === undefined ? {} : this.libList[lib];
+			this.libList[lib][func] = {
+				callback: callback.bind(this),
+				dependence: dependence !== null && typeof dependence === 'object' ? dependence : null
+			};
 
-		isSet(val) {
-			return val === null || val === undefined ? false : true;
-		}
-
-		isScalar(val) {
-			return (/boolean|number|string/).test(typeof val);
-		}
-
-		isEmpty(val) {
-			if(this.isSet(val) == false) {
-				return true;
-			} else {
-				var type = typeof(val);
-				switch(type) {
-					case 'boolean': return val == false ? true : false;
-					case 'number': return isNaN(val) || val == 0 ? true : false;
-					case 'string': return val.trim().length == 0 ? true : false;
-					case 'object': return Object.keys(val).length == 0 ? true : false;
-					default: return false;
+			if(this.isInitialize) {
+				if(lib === NAME_COMMONLIB) {
+					this[func] = this.libList[lib][func].callback;
+				} else {
+					this[lib] = this[lib] === undefined ? {} : this[lib];
+					this[lib][func] = this.libList[lib][func].callback;
 				}
 			}
 		}
 
-		isInstance(obj, cls, onlyFirstLevel = false) {
-			if(this.isSet(cls)) {
-				cls = null;
-			} else {
-				let clsType = typeof cls;
-				switch(clsType) {
-					case 'string': cls = cls.trim(); break
-					case 'object': cls = cls.constructor.name; break
-					case 'function': cls = cls.name; break
-					default: cls = null;
-				}
-			}
+		init() {
+			if(this.isInitialize === false) {
+				for(let lib in this.libList) {
+					for(let func in this.libList[lib]) {
+						checkDependenceList.call(this, lib, func, this.libList[lib][func].dependence);
 
-			if(typeof obj === 'object' && cls !== null) {
-				while(obj !== null) {
-					if(cls === obj.constructor.name) {
-						return true;
-					} else {
-						obj = obj.__proto__;
-					}
-
-					if(onlyFirstLevel) {
-						break;
+						if(lib === NAME_COMMONLIB) {
+							this[func] = this.libList[lib][func].callback;
+						} else {
+							this[lib] = this[lib] === undefined ? {} : this[lib];
+							this[lib][func] = this.libList[lib][func].callback;
+						}
 					}
 				}
-			}
 
-			return false;
+				this.isInitialize = true;
+			}
 		}
 	}
 
-	return new HelpLib;
+	function checkDependenceList(lib, func, dependence) {
+		if(dependence !== null) {
+			for(let depLib in dependence) {
+				if(checkDependence.call(this, depLib, dependence[depLib]) === false) {
+					let fullName = lib === NAME_COMMONLIB ? func : lib + '.' + func;
+					throw new ReferenceError(`Not all dependencies are met for the helper function "${fullName}"`);
+				}
+			}
+		}
+	}
+
+	function checkDependence(lib, funcs) {
+		lib = String(lib).trim();
+		lib = lib === NAME_ROOTLIB ? NAME_COMMONLIB : lib;
+
+		if(this.libList[lib] === undefined) {
+			return false;
+		}
+
+		funcs = String(funcs).split(',');
+		for(let i in funcs) {
+			if(this.libList[lib][funcs[i].trim()] === undefined) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	return new HelpLib();
 })();
+
+((core) => {const helpLibModule = (helpLib) => {
+
+	helpLib.regHelper('.', 'isSet', null, function(val) {
+		return val === null || val === undefined ? false : true;
+	});
+
+	helpLib.regHelper('.', 'isScalar', null, function(val) {
+		return (/boolean|number|string/).test(typeof val);
+	});
+
+	helpLib.regHelper('.', 'isEmpty', null, function(val) {
+		if(this.isSet(val) == false) {
+			return true;
+		} else {
+			var type = typeof(val);
+			switch(type) {
+				case 'boolean': return val == false ? true : false;
+				case 'number': return isNaN(val) || val == 0 ? true : false;
+				case 'string': return val.trim().length == 0 ? true : false;
+				case 'object': return Object.keys(val).length == 0 ? true : false;
+				default: return false;
+			}
+		}
+	});
+
+	helpLib.regHelper('.', 'isInstance', null, function(obj, cls, onlyFirstLevel = false) {
+		if(this.isSet(cls)) {
+			cls = null;
+		} else {
+			let clsType = typeof cls;
+			switch(clsType) {
+				case 'string': cls = cls.trim(); break
+				case 'object': cls = cls.constructor.name; break
+				case 'function': cls = cls.name; break
+				default: cls = null;
+			}
+		}
+
+		if(typeof obj === 'object' && cls !== null) {
+			while(obj !== null) {
+				if(cls === obj.constructor.name) {
+					return true;
+				} else {
+					obj = obj.__proto__;
+				}
+
+				if(onlyFirstLevel) {
+					break;
+				}
+			}
+		}
+
+		return false;
+	});
+};helpLibModule(core);})(helpLib);
 
 ((core) => {const helpLibModule = (helpLib) => {
 
@@ -121,7 +176,7 @@ const helpLib = (() => {
 		return typeof str === 'string' ? true : false;
 	});
 
-	helpLib.regHelper('str', 'check', null, function(str, defValue = '') {
+	helpLib.regHelper('str', 'check', {'.': 'isSet'}, function(str, defValue = '') {
 		return this.isSet(str) ? String(str) : defValue;
 	});
 
@@ -157,7 +212,7 @@ const helpLib = (() => {
 
 	helpLib.regHelper('str', 'encodeHtmlEntity', null, function(str) {
 		str = this.str.check(str);
-		let buf = new Array();
+		let buf = [];
 		for(let i = str.length - 1; i >= 0; i--) {
 			buf.unshift(`&#${str[i].charCodeAt()};`);
 		}
@@ -189,10 +244,10 @@ const helpLib = (() => {
 		return this.str.test(str, new RegExp(regExp, 'i'));
 	});
 
-	helpLib.regHelper('str', 'isBlackList', null, function(str, list) {
-		checkArray(list, 'list of black values');
-
+	helpLib.regHelper('str', 'isBlackList', {arr: 'check'}, function(str, list) {
+		list = this.arr.check(list);
 		let listSize = list.length;
+
 		for(let i = 0; i < listSize; i++) {
 			list[i] = this.str.check(list[i]);
 			list[i] = list[i].replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -216,10 +271,10 @@ const helpLib = (() => {
 		return this.str.clear(str, new RegExp(exp, 'g'));
 	});
 
-	helpLib.regHelper('str', 'clearBlackList', null, function(str, list) {
-		checkArray(list, 'list of black values');
-
+	helpLib.regHelper('str', 'clearBlackList', {arr: 'check'}, function(str, list) {
+		list = this.arr.check(list);
 		let listSize = list.length;
+
 		for(let i = 0; i < listSize; i++) {
 			list[i] = this.str.check(list[i]);
 			list[i] = list[i].replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -227,12 +282,6 @@ const helpLib = (() => {
 
 		return this.str.clear(str, new RegExp('(?:' + list.join(')|(?:') + ')', 'g'));
 	});
-
-	function checkArray(arr, name) {
-		if(Object.prototype.toString.call(arr) !== '[object Array]') {
-			throw new TypeError(`The ${name} is not a Array`);
-		}
-	}
 };helpLibModule(core);})(helpLib);
 
 ((core) => {const helpLibModule = (helpLib) => {
@@ -264,7 +313,7 @@ const helpLib = (() => {
 		return Math.round(min - 0.5 + Math.random() * (max - min + 1));
 	});
 
-	helpLib.regHelper('num', 'format', {str: 'check'}, function(value, intSize, fractSize) {
+	helpLib.regHelper('num', 'format', {'.': 'isSet', str: 'check'}, function(value, intSize, fractSize) {
 		let parts = this.str.check(this.num.check(value).toFixed(this.num.check(fractSize))).split('.');
 		intSize = this.num.check(intSize) - parts[0].length;
 		intSize = intSize < 0 ? 0 : intSize;
@@ -277,7 +326,7 @@ const helpLib = (() => {
 		return ret;
 	});
 
-	helpLib.regHelper('num', 'inInterval', null, function(num, minValue, maxValue, defValue = null) {
+	helpLib.regHelper('num', 'inInterval', {'.': 'isSet'}, function(num, minValue, maxValue, defValue = null) {
 		num = this.num.check(num);
 		minValue = this.isSet(minValue) ? this.num.check(minValue) : null;
 		maxValue = this.isSet(maxValue) ? this.num.check(maxValue) : null;
@@ -303,19 +352,19 @@ const helpLib = (() => {
 		return typeof obj === 'object' && obj !== null ? true : false;
 	});
 
-	helpLib.regHelper('obj', 'isSet', null, function(obj) {
+	helpLib.regHelper('obj', 'isSet', {'.': 'isInstance'}, function(obj) {
 		return this.obj.is(obj) && this.isInstance(obj,' Set') ? true : false;
 	});
 
-	helpLib.regHelper('obj', 'isWeakSet', null, function(obj) {
+	helpLib.regHelper('obj', 'isWeakSet', {'.': 'isInstance'}, function(obj) {
 		return this.obj.is(obj) && this.isInstance(obj,' WeakSet') ? true : false;
 	});
 
-	helpLib.regHelper('obj', 'isMap', null, function(obj) {
+	helpLib.regHelper('obj', 'isMap', {'.': 'isInstance'}, function(obj) {
 		return this.obj.is(obj) && this.isInstance(obj,' Map') ? true : false;
 	});
 
-	helpLib.regHelper('obj', 'isWeakMap', null, function(obj) {
+	helpLib.regHelper('obj', 'isWeakMap', {'.': 'isInstance'}, function(obj) {
 		return this.obj.is(obj) && this.isInstance(obj,' WeakMap') ? true : false;
 	});
 
@@ -347,7 +396,7 @@ const helpLib = (() => {
 		return this.obj.isWeakMap(obj) ? obj : defValue;
 	});
 
-	helpLib.regHelper('obj', 'size', null, function(obj) {
+	helpLib.regHelper('obj', 'size', {'.': 'isInstance'}, function(obj) {
 		let ret = 0;
 		objTypify(obj,
 			() => ret = Object.keys(obj).length,
@@ -357,21 +406,22 @@ const helpLib = (() => {
 		return ret;
 	});
 
-	helpLib.regHelper('obj', 'forEach', null, function(obj, callback) {
-		checkCallback(callback);
-		objTypify(obj,
-			() => {
-				for(let prop in obj) {
-					if(Object.prototype.hasOwnProperty.call(obj, prop)) {
-						callback(obj[prop], prop, obj);
+	helpLib.regHelper('obj', 'forEach', {'.': 'isInstance', func: 'is'}, function(obj, callback) {
+		if(this.func.is(callback)) {
+			objTypify(obj,
+				() => {
+					for(let prop in obj) {
+						if(Object.prototype.hasOwnProperty.call(obj, prop)) {
+							callback(obj[prop], prop, obj);
+						}
 					}
-				}
-			},
-			() => obj.forEach(callback)
-		);
+				},
+				() => obj.forEach(callback)
+			);
+		}
 	});
 
-	helpLib.regHelper('obj', 'toArray', null, function(obj) {
+	helpLib.regHelper('obj', 'toArray', {'.': 'isInstance'}, function(obj) {
 		let ret = [];
 		objTypify(obj,
 			() => ret = Object.values(obj),
@@ -381,7 +431,7 @@ const helpLib = (() => {
 		return ret;
 	});
 
-	helpLib.regHelper('obj', 'copy', null, function(obj) {
+	helpLib.regHelper('obj', 'copy', {'.': 'isInstance'}, function(obj) {
 		let ret = {};
 		objTypify(obj,
 			() => ret = Object.assign({}, obj),
@@ -397,7 +447,7 @@ const helpLib = (() => {
 		return ret;
 	});
 
-	helpLib.regHelper('obj', 'merge', null, function(...objList) {
+	helpLib.regHelper('obj', 'merge', {'.': 'isInstance'}, function(...objList) {
 		let ret = {};
 		let collection = 'Object';
 
@@ -456,12 +506,6 @@ const helpLib = (() => {
 			}
 		}
 	}
-
-	function checkCallback(callback) {
-		if(typeof callback !== 'function') {
-			throw new TypeError('The callback is not a function');
-		}
-	}
 };helpLibModule(core);})(helpLib);
 
 ((core) => {const helpLibModule = (helpLib) => {
@@ -478,7 +522,7 @@ const helpLib = (() => {
 		try {
 			return Array.from(val);
 		} catch(excep) {
-			return defValue;
+			return [];
 		}
 	});
 
@@ -490,7 +534,7 @@ const helpLib = (() => {
 		return this.arr.check(arr).slice();
 	});
 
-	helpLib.regHelper('arr', 'proection', {str: 'trim', obj: 'is, isMap'}, function(arr, field) {
+	helpLib.regHelper('arr', 'proection', {'.': 'isSet', str: 'trim', obj: 'is, isMap'}, function(arr, field) {
 		let ret = [];
 		arr = this.arr.check(arr);
 		field = this.str.trim(field);
@@ -560,12 +604,12 @@ const helpLib = (() => {
 		return this.func.is(callback) ? callback : defValue;
 	});
 
-	helpLib.regHelper('func', 'apply', {arr: 'check'}, function(scope, callback, args) {
+	helpLib.regHelper('func', 'apply', {'.': 'isSet', arr: 'check'}, function(scope, callback, args) {
 		scope = this.isSet(scope) ? scope : null;
 		return this.func.check(callback).apply(scope, this.arr.check(args));
 	});
 
-	helpLib.regHelper('func', 'saveApply', {arr: 'check'}, function(scope, callback, errorCallback, args) {
+	helpLib.regHelper('func', 'saveApply', {'.': 'isSet', arr: 'check'}, function(scope, callback, errorCallback, args) {
 		scope = this.isSet(scope) ? scope : null;
 		try {
 			return this.func.apply(scope, callback, this.arr.check(args));
@@ -593,7 +637,7 @@ const helpLib = (() => {
 		return false;
 	});
 
-	helpLib.regHelper('date', 'check', {str: 'is', num: 'is'}, function(date, defValue = new Date()) {
+	helpLib.regHelper('date', 'check', {'.': 'isInstance', str: 'is', num: 'is'}, function(date, defValue = new Date()) {
 		if(this.isInstance(date, 'Date', true)) {
 			return date;
 		} else if(this.num.is(date) || this.str.is(date)) {
@@ -634,3 +678,5 @@ const helpLib = (() => {
 		return date;
 	});
 };helpLibModule(core);})(helpLib);
+
+helpLib.init();

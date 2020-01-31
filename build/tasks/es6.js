@@ -64,6 +64,8 @@ exports.buildMain = (gulp, taskName, distPath, corePath, modulePathList, distFil
 				'$moduleNamespace$(core);' +
 			'})($namespace$);';
 	}
+	
+	content += "\r\n\r\n" + '$namespace$.init();';
 
 	gulp.task(taskName, () => {
 		return file(distFileName, content, {src: true})

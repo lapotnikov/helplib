@@ -4,7 +4,7 @@
 	"min": false,
 
 	"dist": "helplib",
-	"modules": ["string", "number", "object", "array", "function", "date"],
+	"modules": ["common", "string", "number", "object", "array", "function", "date"],
 
 	"path": {
 		"core": "src/helplib.js",
