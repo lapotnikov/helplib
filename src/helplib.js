@@ -4,7 +4,7 @@ const $namespace$ = (() => {
 	const NAME_ROOTLIB = '.';
 
 	class HelpLib {
-		construct() {
+		constructor() {
 			this.isInitialize = false;
 			this.libList = {};
 
@@ -19,11 +19,11 @@ const $namespace$ = (() => {
 		}
 
 		regHelper(lib, func, dependence, callback) {
-			lib = this.isSet(lib) ? String(lib).trim() : NAME_COMMONLIB;
+			lib = lib === null || lib === undefined ? NAME_COMMONLIB : String(lib).trim();
 			lib = lib === NAME_ROOTLIB ? NAME_COMMONLIB : lib;
 			func = String(func).trim();
 
-			if(this.isEmpty(func)) {
+			if(func.length == 0) {
 				throw new TypeError('The helper function name is empty');
 			}
 			if(typeof callback !== 'function') {

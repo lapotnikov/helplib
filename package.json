@@ -3,6 +3,7 @@
 	"title": "helpLib",
 	"description": "",
 	"version": "0.1.0",
+	"main": "dist/node/main.js",
 	"scripts": {
 		"build": "concurrently \"npm run build-node\" \"npm run build-es6\" \"npm run build-es6.min\"",
 		"build-node": "npx gulp --gulpfile ./build/gulpfile.js --eng=node",
