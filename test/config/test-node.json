@@ -1,7 +1,7 @@
 {
 	"eng": "node",
 	"min": false,
-	"buildonly": false,
+	"testonly": false,
 
 	"root": "index",
 

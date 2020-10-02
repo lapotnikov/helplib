@@ -1,7 +1,7 @@
 {
 	"eng": "es6",
 	"min": false,
-	"buildonly": false,
+	"testonly": false,
 
 	"root": "index",
 

@@ -9,9 +9,7 @@ const $namespace$ = (() => {
 			this.libList = {};
 
 			NAME_RESERVLIST.push(NAME_COMMONLIB);
-			for(let name in this) {
-				NAME_RESERVLIST.push(name);
-			}
+			NAME_RESERVLIST.push.apply(NAME_RESERVLIST, getOwnPropertyList.call(this));
 		}
 
 		isInit() {
@@ -19,9 +17,20 @@ const $namespace$ = (() => {
 		}
 
 		regHelper(lib, func, dependence, callback) {
-			lib = lib === null || lib === undefined ? NAME_COMMONLIB : String(lib).trim();
+			if(lib !== null && lib !== undefined && typeof lib !== 'string') {
+				throw new TypeError('The library name is incorrect');
+			}
+			if(typeof func !== 'string') {
+				throw new TypeError('The helper function name is incorrect');
+			}
+			if(dependence !== null && dependence !== undefined && typeof dependence !== 'object') {
+				throw new TypeError('The dependence value is incorrect');
+			}
+
+			lib = lib === null || lib === undefined ? NAME_COMMONLIB : lib.trim();
+			lib = lib.length == 0 ? NAME_COMMONLIB : lib;
 			lib = lib === NAME_ROOTLIB ? NAME_COMMONLIB : lib;
-			func = String(func).trim();
+			func = func.trim();
 
 			if(func.length == 0) {
 				throw new TypeError('The helper function name is empty');
@@ -42,14 +51,14 @@ const $namespace$ = (() => {
 				throw new TypeError(`The helper function name "${lib}.${func}" is already exist`);
 			}
 
-			if(this.isInitialize && dependence !== null && typeof dependence === 'object') {
+			if(this.isInitialize && dependence !== null && dependence !== undefined) {
 				checkDependenceList.call(this, lib, func, dependence);
 			}
 
 			this.libList[lib] = this.libList[lib] === undefined ? {} : this.libList[lib];
 			this.libList[lib][func] = {
 				callback: callback.bind(this),
-				dependence: dependence !== null && typeof dependence === 'object' ? dependence : null
+				dependence: dependence !== null && dependence !== undefined ? dependence : null
 			};
 
 			if(this.isInitialize) {
@@ -96,19 +105,34 @@ const $namespace$ = (() => {
 	function checkDependence(lib, funcs) {
 		lib = String(lib).trim();
 		lib = lib === NAME_ROOTLIB ? NAME_COMMONLIB : lib;
+		funcs = String(funcs).trim();
 
 		if(this.libList[lib] === undefined) {
 			return false;
 		}
 
-		funcs = String(funcs).split(',');
-		for(let i in funcs) {
-			if(this.libList[lib][funcs[i].trim()] === undefined) {
-				return false;
+		if(funcs.length > 0) {
+			funcs = String(funcs).split(',');
+			for(let i in funcs) {
+				funcs[i] = funcs[i].trim();
+				if(funcs[i].length > 0 && this.libList[lib][funcs[i]] === undefined) {
+					return false;
+				}
 			}
 		}
 
 		return true;
+	}
+
+	function getOwnPropertyList() {
+		let curObj = this;
+		let propList = [];
+
+		do {
+			propList = propList.concat(Object.getOwnPropertyNames(curObj))
+		} while(curObj = Object.getPrototypeOf(curObj));
+
+		return propList;
 	}
 
 	return new HelpLib();

@@ -25,8 +25,6 @@ const $moduleNamespace$ = (helpLib) => {
 
 	helpLib.regHelper('.', 'isInstance', null, function(obj, cls, onlyFirstLevel = false) {
 		if(this.isSet(cls)) {
-			cls = null;
-		} else {
 			let clsType = typeof cls;
 			switch(clsType) {
 				case 'string': cls = cls.trim(); break
@@ -34,6 +32,8 @@ const $moduleNamespace$ = (helpLib) => {
 				case 'function': cls = cls.name; break
 				default: cls = null;
 			}
+		} else {
+			cls = null;
 		}
 
 		if(typeof obj === 'object' && cls !== null) {

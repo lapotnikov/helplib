@@ -17,6 +17,7 @@ exports.build = (gulp, taskName, rootPath, conf) => {
 exports.test = (gulp, taskName, rootFilePath, conf) => {
 	gulp.task(taskName, () => {
 		return gulp.src(rootFilePath, {read: false, cwd: conf.path.root})
-			.pipe(mocha({reporter: 'spec', ui: 'bdd', color: true, exit: true}));
+			.pipe(mocha({reporter: 'spec', ui: 'bdd', color: true, exit: true}))
+			.on('error', error => console.error(error));
 	});
 };

@@ -8,13 +8,13 @@ const gulp = require('gulp');
  */
 const argv = minimist(process.argv.slice(2), {
 	string: ['eng', 'conf', 'clients'],
-	boolean: ['min', 'buildonly'],
+	boolean: ['min', 'testonly'],
 	default: {
 		eng: 'node',
 		conf: '',
 		clients: '',
 		min: null,
-		buildonly: null
+		testonly: null
 	}
 });
 
@@ -37,7 +37,7 @@ const conf = require(configPath);
 conf.moduleNamespace = `${conf.namespace}Module`;
 conf.eng = String(conf.eng).trim();
 conf.min = Boolean(argv.min !== null ? argv.min : conf.min);
-conf.buildonly = Boolean(argv.buildonly !== null ? argv.buildonly : conf.buildonly);
+conf.testonly = Boolean(argv.testonly !== null ? argv.testonly : conf.testonly);
 conf.root = String(argv.root || conf.root).trim();
 conf.clients = Array.from(argv.clients ? argv.clients.split(',') : conf.clients, itm => String(itm).trim());
 
@@ -69,11 +69,11 @@ if(fs.existsSync(conf.path.buildConf) == false || (fs.statSync(conf.path.buildCo
  * Handling of gulp testing tasks
  */
 const tester = require(`./tasks/${conf.eng}.js`);
-tester.build(gulp, 'build', rootPath, conf);
+tester.test(gulp, 'test', rootFile, conf);
 
-if(conf.buildonly) {
-	exports.default = gulp.series('build');
+if(conf.testonly) {
+	exports.default = gulp.series('test');
 } else {
-	tester.test(gulp, 'test', rootFile, conf);
+	tester.build(gulp, 'build', rootPath, conf);
 	exports.default = gulp.series('build', 'test');
 }
