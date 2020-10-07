@@ -8,17 +8,21 @@ const $moduleNamespace$ = (helpLib) => {
 		return this.func.is(callback) ? callback : defValue;
 	});
 
-	helpLib.regHelper('func', 'apply', {'.': 'isSet', arr: 'check'}, function(scope, callback, args) {
+	helpLib.regHelper('func', 'apply', {'.': 'isSet', arr: 'check', obj: 'is'}, function(scope, callback, args = []) {
 		scope = this.isSet(scope) ? scope : null;
-		return this.func.check(callback).apply(scope, this.arr.check(args));
+		scope = this.obj.is(scope) || this.func.is(scope) ? scope : null;
+
+		return this.func.is(callback) ? callback.apply(scope, this.arr.check(args)) : false;
 	});
 
-	helpLib.regHelper('func', 'saveApply', {'.': 'isSet', arr: 'check'}, function(scope, callback, errorCallback, args) {
+	helpLib.regHelper('func', 'saveApply', {'.': 'isSet', arr: 'check', obj: 'is'}, function(scope, callback, errorCallback = function() {}, args = []) {
 		scope = this.isSet(scope) ? scope : null;
+		scope = this.obj.is(scope) || this.func.is(scope) ? scope : null;
+
 		try {
-			return this.func.apply(scope, callback, this.arr.check(args));
+			return this.func.is(callback) ? callback.apply(scope, this.arr.check(args)) : false;
 		} catch(excep) {
-			return this.func.check(errorCallback).call(scope, excep);
+			return this.func.is(errorCallback) ? errorCallback.call(scope, excep) : false;
 		}
 	});
 
