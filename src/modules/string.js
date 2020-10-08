@@ -13,7 +13,8 @@ const $moduleNamespace$ = (helpLib) => {
 	});
 
 	helpLib.regHelper('str', 'clearDoubleSpace', null, function(str) {
-		return this.str.check(str).replace(/]\s\s+/g, ' ');
+		str = this.str.check(str);
+		return str.replace(/\t+/g, ' ').replace(/  +/g, ' ');
 	});
 
 	helpLib.regHelper('str', 'ucFirst', null, function(str) {
@@ -55,10 +56,6 @@ const $moduleNamespace$ = (helpLib) => {
 		} catch(excep) {
 			return false;
 		}
-	});
-
-	helpLib.regHelper('str', 'isHostname', null, function(str) {
-		return this.str.test(str, /^[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
 	});
 
 	helpLib.regHelper('str', 'isEmail', null, function(str) {

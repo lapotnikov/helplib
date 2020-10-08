@@ -4,7 +4,7 @@ const $moduleNamespace$ = (helpLib) => {
 		let type = typeof num;
 		switch(type) {
 			case 'number': return true;
-			case 'string': return isNaN(Number(num)) ? false : true;
+			case 'string': return num.trim().length == 0 || isNaN(Number(num)) ? false : true;
 			default: return false;
 		}
 	});
