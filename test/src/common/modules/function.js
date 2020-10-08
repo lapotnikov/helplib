@@ -72,8 +72,8 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 				assert.isFalse(helpLib.func.is(true), 'result with "(bool) true" parameter is incorrect');
 				assert.isFalse(helpLib.func.is(false), 'result with "(bool) false" parameter is incorrect');
 
-				assert.isFalse(helpLib.func.is(0), 'result with "(int) 0" parameter is incorrect');
-				assert.isFalse(helpLib.func.is(1), 'result with "(int) 1" parameter is incorrect');
+				assert.isFalse(helpLib.func.is(0), 'result with "(number) 0" parameter is incorrect');
+				assert.isFalse(helpLib.func.is(1), 'result with "(number) 1" parameter is incorrect');
 
 				assert.isFalse(helpLib.func.is(''), 'result with "(string) \'\'" parameter is incorrect');
 				assert.isFalse(helpLib.func.is('test'), 'result with "(string) \'test\'" parameter is incorrect');
@@ -136,9 +136,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "(bool) false" parameter is incorrect');
 
 				assert.isFunction(helpLib.func.check(0),
-					'result with "(int) 0" parameter is incorrect');
+					'result with "(number) 0" parameter is incorrect');
 				assert.isFunction(helpLib.func.check(1),
-					'result with "(int) 1" parameter is incorrect');
+					'result with "(number) 1" parameter is incorrect');
 
 				assert.isFunction(helpLib.func.check(''),
 					'result with "(string) \'\'" parameter is incorrect');
@@ -176,9 +176,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "(bool) false, null" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.check(0, 'test'), 'test',
-					'result with "(int) 0, (string) \'test\'" parameters is incorrect');
+					'result with "(number) 0, (string) \'test\'" parameters is incorrect');
 				assert.strictEqual(helpLib.func.check(1, 'test'), 'test',
-					'result with "(int) 1, (string) \'test\'" parameters is incorrect');
+					'result with "(number) 1, (string) \'test\'" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.check('', 'test'), 'test',
 					'result with "(string) \'\', (string) \'test\'" parameters is incorrect');
@@ -404,9 +404,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "(bool) false, (function) sf1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.apply(0, fs.sf1), globalScope,
-					'result with "(int) 0, (function) sf1" parameters is incorrect');
+					'result with "(number) 0, (function) sf1" parameters is incorrect');
 				assert.strictEqual(helpLib.func.apply(1, fs.sf1), globalScope,
-					'result with "(int) 1, (function) sf1" parameters is incorrect');
+					'result with "(number) 1, (function) sf1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.apply('', fs.sf1), globalScope,
 					'result with "(string) \'\', (function) sf1" parameters is incorrect');
@@ -426,9 +426,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "null, (bool) false" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.apply(null, 0), false,
-					'result with "null, (int) 0" parameters is incorrect');
+					'result with "null, (number) 0" parameters is incorrect');
 				assert.strictEqual(helpLib.func.apply(null, 1), false,
-					'result with "null, (int) 1" parameters is incorrect');
+					'result with "null, (number) 1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.apply(null, ''), false,
 					'result with "null, (string) \'\'" parameters is incorrect');
@@ -466,9 +466,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "null, (function) f1, (bool) true" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.apply(null, fs.f1, 0), 'f1',
-					'result with "null, (function) f1, (int) 0" parameters is incorrect');
+					'result with "null, (function) f1, (number) 0" parameters is incorrect');
 				assert.strictEqual(helpLib.func.apply(null, fs.f1, 1), 'f1',
-					'result with "null, (function) f1, (int) 1" parameters is incorrect');
+					'result with "null, (function) f1, (number) 1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.apply(null, fs.f1, ''), 'f1',
 					'result with "null, (function) f1, (string) \'\'" parameters is incorrect');
@@ -813,9 +813,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "(bool) false, (function) sf1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveApply(0, fs.sf1), globalScope,
-					'result with "(int) 0, (function) sf1" parameters is incorrect');
+					'result with "(number) 0, (function) sf1" parameters is incorrect');
 				assert.strictEqual(helpLib.func.saveApply(1, fs.sf1), globalScope,
-					'result with "(int) 1, (function) sf1" parameters is incorrect');
+					'result with "(number) 1, (function) sf1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveApply('', fs.sf1), globalScope,
 					'result with "(string) \'\', (function) sf1" parameters is incorrect');
@@ -833,9 +833,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "(bool) false, (function) tf1, (function) sf1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveApply(0, fs.tf1, fs.sf1), globalScope,
-					'result with "(int) 0, (function) tf1, (function) sf1" parameters is incorrect');
+					'result with "(number) 0, (function) tf1, (function) sf1" parameters is incorrect');
 				assert.strictEqual(helpLib.func.saveApply(1, fs.tf1, fs.sf1), globalScope,
-					'result with "(int) 1, (function) tf1, (function) sf1" parameters is incorrect');
+					'result with "(number) 1, (function) tf1, (function) sf1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveApply('', fs.tf1, fs.sf1), globalScope,
 					'result with "(string) \'\', (function) tf1, (function) sf1" parameters is incorrect');
@@ -855,9 +855,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "null, (bool) false" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveApply(null, 0), false,
-					'result with "null, (int) 0" parameters is incorrect');
+					'result with "null, (number) 0" parameters is incorrect');
 				assert.strictEqual(helpLib.func.saveApply(null, 1), false,
-					'result with "null, (int) 1" parameters is incorrect');
+					'result with "null, (number) 1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveApply(null, ''), false,
 					'result with "null, (string) \'\'" parameters is incorrect');
@@ -895,9 +895,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "null, (function) tf1, (bool) false" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveApply(null, fs.tf1, 0), false,
-					'result with "null, (function) tf1, (int) 0" parameters is incorrect');
+					'result with "null, (function) tf1, (number) 0" parameters is incorrect');
 				assert.strictEqual(helpLib.func.saveApply(null, fs.tf1, 1), false,
-					'result with "null, (function) tf1, (int) 1" parameters is incorrect');
+					'result with "null, (function) tf1, (number) 1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveApply(null, fs.tf1, ''), false,
 					'result with "null, (function) tf1, (string) \'\'" parameters is incorrect');
@@ -939,9 +939,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "null, (function) f1, (function) rtf1, (bool) true" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveApply(null, fs.f1, fs.rtf1, 0), 'f1',
-					'result with "null, (function) f1, (function) rtf1, (int) 0" parameters is incorrect');
+					'result with "null, (function) f1, (function) rtf1, (number) 0" parameters is incorrect');
 				assert.strictEqual(helpLib.func.saveApply(null, fs.f1, fs.rtf1, 1), 'f1',
-					'result with "null, (function) f1, (function) rtf1, (int) 1" parameters is incorrect');
+					'result with "null, (function) f1, (function) rtf1, (number) 1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveApply(null, fs.f1, fs.rtf1, ''), 'f1',
 					'result with "null, (function) f1, (function) rtf1, (string) \'\'" parameters is incorrect');
@@ -1191,9 +1191,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "(bool) false, (function) sf1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.call(0, fs.sf1), globalScope,
-					'result with "(int) 0, (function) sf1" parameters is incorrect');
+					'result with "(number) 0, (function) sf1" parameters is incorrect');
 				assert.strictEqual(helpLib.func.call(1, fs.sf1), globalScope,
-					'result with "(int) 1, (function) sf1" parameters is incorrect');
+					'result with "(number) 1, (function) sf1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.call('', fs.sf1), globalScope,
 					'result with "(string) \'\', (function) sf1" parameters is incorrect');
@@ -1213,9 +1213,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "null, (bool) false" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.call(null, 0), false,
-					'result with "null, (int) 0" parameters is incorrect');
+					'result with "null, (number) 0" parameters is incorrect');
 				assert.strictEqual(helpLib.func.call(null, 1), false,
-					'result with "null, (int) 1" parameters is incorrect');
+					'result with "null, (number) 1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.call(null, ''), false,
 					'result with "null, (string) \'\'" parameters is incorrect');
@@ -1572,9 +1572,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "(bool) false, (function) sf1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveCall(0, fs.sf1), globalScope,
-					'result with "(int) 0, (function) sf1" parameters is incorrect');
+					'result with "(number) 0, (function) sf1" parameters is incorrect');
 				assert.strictEqual(helpLib.func.saveCall(1, fs.sf1), globalScope,
-					'result with "(int) 1, (function) sf1" parameters is incorrect');
+					'result with "(number) 1, (function) sf1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveCall('', fs.sf1), globalScope,
 					'result with "(string) \'\', (function) sf1" parameters is incorrect');
@@ -1592,9 +1592,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "(bool) false, (function) tf1, (function) sf1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveCall(0, fs.tf1, fs.sf1), globalScope,
-					'result with "(int) 0, (function) tf1, (function) sf1" parameters is incorrect');
+					'result with "(number) 0, (function) tf1, (function) sf1" parameters is incorrect');
 				assert.strictEqual(helpLib.func.saveCall(1, fs.tf1, fs.sf1), globalScope,
-					'result with "(int) 1, (function) tf1, (function) sf1" parameters is incorrect');
+					'result with "(number) 1, (function) tf1, (function) sf1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveCall('', fs.tf1, fs.sf1), globalScope,
 					'result with "(string) \'\', (function) tf1, (function) sf1" parameters is incorrect');
@@ -1614,9 +1614,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "null, (bool) false" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveCall(null, 0), false,
-					'result with "null, (int) 0" parameters is incorrect');
+					'result with "null, (number) 0" parameters is incorrect');
 				assert.strictEqual(helpLib.func.saveCall(null, 1), false,
-					'result with "null, (int) 1" parameters is incorrect');
+					'result with "null, (number) 1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveCall(null, ''), false,
 					'result with "null, (string) \'\'" parameters is incorrect');
@@ -1654,9 +1654,9 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 					'result with "null, (function) tf1, (bool) false" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveCall(null, fs.tf1, 0), false,
-					'result with "null, (function) tf1, (int) 0" parameters is incorrect');
+					'result with "null, (function) tf1, (number) 0" parameters is incorrect');
 				assert.strictEqual(helpLib.func.saveCall(null, fs.tf1, 1), false,
-					'result with "null, (function) tf1, (int) 1" parameters is incorrect');
+					'result with "null, (function) tf1, (number) 1" parameters is incorrect');
 
 				assert.strictEqual(helpLib.func.saveCall(null, fs.tf1, ''), false,
 					'result with "null, (function) tf1, (string) \'\'" parameters is incorrect');

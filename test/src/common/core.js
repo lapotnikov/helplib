@@ -77,7 +77,7 @@ exports.testCore = (describe, it, assert, helpLib) => {
 
 			it('registration with incorrect "lib" parameter', () => {
 				assert.throws(helpLib.regHelper.bind(helpLib, true, 'test', null, () => 1), TypeError, null, 'call with "(bool) true" value');
-				assert.throws(helpLib.regHelper.bind(helpLib, 1, 'test', null, () => 1), TypeError, null, 'call with "(int) 1" value');
+				assert.throws(helpLib.regHelper.bind(helpLib, 1, 'test', null, () => 1), TypeError, null, 'call with "(number) 1" value');
 				assert.throws(helpLib.regHelper.bind(helpLib, {}, 'test', null, () => 1), TypeError, null, 'call with "(object) {}" value');
 				assert.throws(helpLib.regHelper.bind(helpLib, [], 'test', null, () => 1), TypeError, null, 'call with "(array) []" value');
 			});
@@ -86,7 +86,7 @@ exports.testCore = (describe, it, assert, helpLib) => {
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', undefined, null, () => 1), TypeError, null, 'call with "undefined" value');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', null, null, () => 1), TypeError, null, 'call with "null" value');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', true, null, () => 1), TypeError, null, 'call with "(bool) true" value');
-				assert.throws(helpLib.regHelper.bind(helpLib, '.', 1, null, () => 1), TypeError, null, 'call with "(int) 1" value');
+				assert.throws(helpLib.regHelper.bind(helpLib, '.', 1, null, () => 1), TypeError, null, 'call with "(number) 1" value');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', '', null, () => 1), TypeError, null, 'call with "(string) \'\'" value');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', {}, null, () => 1), TypeError, null, 'call with "(object) {}" value');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', [], null, () => 1), TypeError, null, 'call with "(array) []" value');
@@ -94,7 +94,7 @@ exports.testCore = (describe, it, assert, helpLib) => {
 
 			it('registration with incorrect "dependence" parameter', () => {
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', true, () => 1), TypeError, null, 'call with "(bool) true" value');
-				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', 1, () => 1), TypeError, null, 'call with "(int) 1" value');
+				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', 1, () => 1), TypeError, null, 'call with "(number) 1" value');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', '', () => 1), TypeError, null, 'call with "(string) \'\'" value');
 			});
 
@@ -102,7 +102,7 @@ exports.testCore = (describe, it, assert, helpLib) => {
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {}, undefined), TypeError, null, 'call with "undefined" value');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {}, null), TypeError, null, 'call with "null" value');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {}, true), TypeError, null, 'call with "(bool) true" value');
-				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {}, 1), TypeError, null, 'call with "(int) 1" value');
+				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {}, 1), TypeError, null, 'call with "(number) 1" value');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {}, ''), TypeError, null, 'call with "(string) \'\'" value');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {}, {}), TypeError, null, 'call with "(object) {}" value');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {}, []), TypeError, null, 'call with "(array) []" value');

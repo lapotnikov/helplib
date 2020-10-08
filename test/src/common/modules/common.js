@@ -28,15 +28,21 @@ exports.testCommon = (describe, it, assert, helpLib) => {
 			it('call with parameters who must exist', () => {
 				assert.isTrue(helpLib.isSet(true), 'result with "(bool) true" parameter is incorrect');
 				assert.isTrue(helpLib.isSet(false), 'result with "(bool) false" parameter is incorrect');
-				assert.isTrue(helpLib.isSet(0), 'result with "(int) 0" parameter is incorrect');
-				assert.isTrue(helpLib.isSet(1), 'result with "(int) 1" parameter is incorrect');
+
+				assert.isTrue(helpLib.isSet(0), 'result with "(number) 0" parameter is incorrect');
+				assert.isTrue(helpLib.isSet(1), 'result with "(number) 1" parameter is incorrect');
+
 				assert.isTrue(helpLib.isSet(''), 'result with "(string) \'\'" parameter is incorrect');
 				assert.isTrue(helpLib.isSet('test'), 'result with "(string) \'test\'" parameter is incorrect');
+
 				assert.isTrue(helpLib.isSet([]), 'result with "(array) []" parameter is incorrect');
 				assert.isTrue(helpLib.isSet(['test']), 'result with "(array) [\'test\']" parameter is incorrect');
+
 				assert.isTrue(helpLib.isSet({}), 'result with "(object) {}" parameter is incorrect');
 				assert.isTrue(helpLib.isSet({test: 'test'}), 'result with "(object) {test: \'test\'}" parameter is incorrect');
+
 				assert.isTrue(helpLib.isSet(() => {}), 'result with "function" parameter is incorrect');
+
 				assert.isTrue(helpLib.isSet(NaN), 'result with "NaN" parameter is incorrect');
 				assert.isTrue(helpLib.isSet(Infinity), 'result with "Infinity" parameter is incorrect');
 			});
@@ -55,10 +61,13 @@ exports.testCommon = (describe, it, assert, helpLib) => {
 			it('call with scalar parameters', () => {
 				assert.isTrue(helpLib.isScalar(true), 'result with "(bool) true" parameter is incorrect');
 				assert.isTrue(helpLib.isScalar(false), 'result with "(bool) false" parameter is incorrect');
-				assert.isTrue(helpLib.isScalar(0), 'result with "(int) 0" parameter is incorrect');
-				assert.isTrue(helpLib.isScalar(1), 'result with "(int) 1" parameter is incorrect');
+
+				assert.isTrue(helpLib.isScalar(0), 'result with "(number) 0" parameter is incorrect');
+				assert.isTrue(helpLib.isScalar(1), 'result with "(number) 1" parameter is incorrect');
+
 				assert.isTrue(helpLib.isScalar(''), 'result with "(string) \'\'" parameter is incorrect');
 				assert.isTrue(helpLib.isScalar('test'), 'result with "(string) \'test\'" parameter is incorrect');
+
 				assert.isTrue(helpLib.isScalar(NaN), 'result with "NaN" parameter is incorrect');
 				assert.isTrue(helpLib.isScalar(Infinity), 'result with "Infinity" parameter is incorrect');
 			});
@@ -66,9 +75,12 @@ exports.testCommon = (describe, it, assert, helpLib) => {
 			it('call with not scalar parameters', () => {
 				assert.isFalse(helpLib.isScalar([]), 'result with "(array) []" parameter is incorrect');
 				assert.isFalse(helpLib.isScalar(['test']), 'result with "(array) [\'test\'])" parameter is incorrect');
+
 				assert.isFalse(helpLib.isScalar({}), 'result with "(object) {}" parameter is incorrect');
 				assert.isFalse(helpLib.isScalar({test: 'test'}), 'result with "(object) {test: \'test\'}" parameter is incorrect');
+
 				assert.isFalse(helpLib.isScalar(() => {}), 'result with "function" parameter is incorrect');
+
 				assert.isFalse(helpLib.isScalar(undefined), 'result with "undefined" parameter is incorrect');
 				assert.isFalse(helpLib.isScalar(null), 'result with "null" parameter is incorrect');
 			});
@@ -81,14 +93,16 @@ exports.testCommon = (describe, it, assert, helpLib) => {
 
 			it('call with parameters who must be empty', () => {
 				assert.isTrue(helpLib.isEmpty(false), 'result with "(bool) false" parameter is incorrect');
-				assert.isTrue(helpLib.isEmpty(0), 'result with "(int) 0" parameter is incorrect');
+				assert.isTrue(helpLib.isEmpty(0), 'result with "(number) 0" parameter is incorrect');
 				assert.isTrue(helpLib.isEmpty(''), 'result with "(string) \'\'" parameter is incorrect');
 				assert.isTrue(helpLib.isEmpty('  '), 'result with "(string) \'  \'" parameter is incorrect');
 				assert.isTrue(helpLib.isEmpty("\n"), 'result with "(string) \'\n\'" parameter is incorrect');
 				assert.isTrue(helpLib.isEmpty("\t"), 'result with "(string) \'\t\'" parameter is incorrect');
 				assert.isTrue(helpLib.isEmpty("\n \t \n"), 'result with "(string) \'\n \t \n\'" parameter is incorrect');
+
 				assert.isTrue(helpLib.isEmpty([]), 'result with "(array) []" parameter is incorrect');
 				assert.isTrue(helpLib.isEmpty({}), 'result with "(object) {}" parameter is incorrect');
+
 				assert.isTrue(helpLib.isEmpty(NaN), 'result with "NaN" parameter is incorrect');
 				assert.isTrue(helpLib.isEmpty(undefined), 'result with "undefined" parameter is incorrect');
 				assert.isTrue(helpLib.isEmpty(null), 'result with "null" parameter is incorrect');
@@ -96,14 +110,16 @@ exports.testCommon = (describe, it, assert, helpLib) => {
 
 			it('call with parameters who must not be empty', () => {
 				assert.isFalse(helpLib.isEmpty(true), 'result with "(bool) true" parameter is incorrect');
-				assert.isFalse(helpLib.isEmpty(1), 'result with "(int) 1" parameter is incorrect');
-				assert.isFalse(helpLib.isEmpty(-1), 'result with "(int) -1" parameter is incorrect');
+				assert.isFalse(helpLib.isEmpty(1), 'result with "(number) 1" parameter is incorrect');
+				assert.isFalse(helpLib.isEmpty(-1), 'result with "(number) -1" parameter is incorrect');
 				assert.isFalse(helpLib.isEmpty('test'), 'result with "(string) \'test\'" parameter is incorrect');
 				assert.isFalse(helpLib.isEmpty('0'), 'result with "(string) \'0\'" parameter is incorrect');
 				assert.isFalse(helpLib.isEmpty('  1  '), 'result with "(string) \'  1  \'" parameter is incorrect');
+
 				assert.isFalse(helpLib.isEmpty(['test']), 'result with "(array) [\'test\'])" parameter is incorrect');
 				assert.isFalse(helpLib.isEmpty({test: 'test'}), 'result with "(object) {test: \'test\'}" parameter is incorrect');
 				assert.isFalse(helpLib.isEmpty(() => {}), 'result with "function" parameter is incorrect');
+
 				assert.isFalse(helpLib.isEmpty(Infinity), 'result with "Infinity" parameter is incorrect');
 			});
 		});
@@ -236,9 +252,9 @@ exports.testCommon = (describe, it, assert, helpLib) => {
 				assert.isFalse(helpLib.isInstance(true, Boolean), 'result with "(bool) true, (object) Boolean" parameters is incorrect');
 				assert.isFalse(helpLib.isInstance(true, 'boolean'), 'result with "(bool) true, (string) \'boolean\'" parameters is incorrect');
 
-				assert.isFalse(helpLib.isInstance(0, {}), 'result with "(int) 0, (object) {}" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(0, Number), 'result with "(int) 0, (object) Number" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(0, 'number'), 'result with "(int) 0, (string) \'number\'" parameters is incorrect');
+				assert.isFalse(helpLib.isInstance(0, {}), 'result with "(number) 0, (object) {}" parameters is incorrect');
+				assert.isFalse(helpLib.isInstance(0, Number), 'result with "(number) 0, (object) Number" parameters is incorrect');
+				assert.isFalse(helpLib.isInstance(0, 'number'), 'result with "(number) 0, (string) \'number\'" parameters is incorrect');
 
 				assert.isFalse(helpLib.isInstance('', {}), 'result with "(object) \'\', (object) {}" parameters is incorrect');
 				assert.isFalse(helpLib.isInstance('', String), 'result with "(object) \'\', (object) String" parameters is incorrect');
