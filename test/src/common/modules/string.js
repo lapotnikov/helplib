@@ -33,7 +33,7 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				assert.isTrue(helpLib.str.is(`test`), 'result with "(string) ` `" parameter is incorrect');
 				assert.isTrue(helpLib.str.is('test'), 'result with "(string) \'test\'" parameter is incorrect');
 				assert.isTrue(helpLib.str.is("test"), 'result with "(string) "test"" parameter is incorrect');
-				assert.isTrue(helpLib.str.is("\n\t"), 'result with "(string) "\n\t"" parameter is incorrect');
+				assert.isTrue(helpLib.str.is("\n\t"), 'result with "(string) "\\n\\t"" parameter is incorrect');
 			});
 
 			it('call with not a string parameters', () => {
@@ -156,15 +156,23 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				assert.strictEqual(helpLib.str.trim(' test   test '), 'test   test',
 					'result with "(string) \' test   test \'" parameter is incorrect');
 				assert.strictEqual(helpLib.str.trim("\t"), '',
-					'result with "(string) "\t"" parameter is incorrect');
+					'result with "(string) "\\t"" parameter is incorrect');
 				assert.strictEqual(helpLib.str.trim("\n"), '',
-					'result with "(string) "\n"" parameter is incorrect');
+					'result with "(string) "\\n"" parameter is incorrect');
 				assert.strictEqual(helpLib.str.trim("\t\n   \t   \r\n\t"), '',
-					'result with "(string) "\t\n   \t   \r\n\t"" parameter is incorrect');
+					'result with "(string) "\\t\\n   \\t   \\r\\n\\t"" parameter is incorrect');
 				assert.strictEqual(helpLib.str.trim("\t\t\ttest\t\t\t"), 'test',
-					'result with "(string) "\t\t\ttest\t\t\t"" parameter is incorrect');
+					'result with "(string) "\\t\\t\\ttest\\t\\t\\t"" parameter is incorrect');
 				assert.strictEqual(helpLib.str.trim("\ttest\t\t\t\r\n\t\t\ttest\t"), "test\t\t\t\r\n\t\t\ttest",
-					'result with "(string) "\ttest\t\t\t\r\n\t\t\ttest\t"" parameter is incorrect');
+					'result with "(string) "\\ttest\\t\\t\\t\\r\\n\\t\\t\\ttest\\t"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.trim("\u00A0\u00A0"), "",
+					'result with "(string) "\\u00A0\\u00A0"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.trim("\u00A0test\u00A0"), "test",
+					'result with "(string) "\\u00A0test\\u00A0"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.trim("\u00A0test\u00A0 \t\u00A0"), "test",
+					'result with "(string) "\\u00A0test\\u00A0 \\t\\u00A0"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.trim("\u00A0test\u00A0test\n\u00A0"), "test\u00A0test",
+					'result with "(string) "\\u00A0test\\u00A0test\\n\\u00A0"" parameter is incorrect');
 
 				assert.strictEqual(helpLib.str.trim([]), '',
 					'result with "(array) []" parameter is incorrect');
@@ -225,19 +233,29 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				assert.strictEqual(helpLib.str.clearDoubleSpace('   test    test   '), ' test test ',
 					'result with "(string) \'   test    test   \'" parameter is incorrect');
 				assert.strictEqual(helpLib.str.clearDoubleSpace("\t"), ' ',
-					'result with "(string) "\t"" parameter is incorrect');
+					'result with "(string) "\\t"" parameter is incorrect');
 				assert.strictEqual(helpLib.str.clearDoubleSpace("\t\t"), ' ',
-					'result with "(string) "\t\t"" parameter is incorrect');
+					'result with "(string) "\\t\\t"" parameter is incorrect');
 				assert.strictEqual(helpLib.str.clearDoubleSpace(" \t \t \t "), ' ',
-					'result with "(string) " \t \t \t "" parameter is incorrect');
+					'result with "(string) " \\t \\t \\t "" parameter is incorrect');
 				assert.strictEqual(helpLib.str.clearDoubleSpace("\t \n \t \t   \t\r\n\t\t "), " \n \r\n ",
-					'result with "(string) "\t \n \t \t   \t\r\n\t\t "" parameter is incorrect');
+					'result with "(string) "\\t \\n \\t \\t   \\t\\r\\n\\t\\t "" parameter is incorrect');
 				assert.strictEqual(helpLib.str.clearDoubleSpace("\ttest\t \t\t"), ' test ',
-					'result with "(string) "\ttest\t \t\t"" parameter is incorrect');
+					'result with "(string) "\\ttest\\t \\t\\t"" parameter is incorrect');
 				assert.strictEqual(helpLib.str.clearDoubleSpace("test\t \n  \t\t"), "test \n ",
-					'result with "(string) "test\t \n  \t\t"" parameter is incorrect');
+					'result with "(string) "test\\t \\n  \\t\\t"" parameter is incorrect');
 				assert.strictEqual(helpLib.str.clearDoubleSpace(" test\r\n \r\n\t\n"), " test\r\n \r\n \n",
-					'result with "(string) " test\r\n \r\n\t\n"" parameter is incorrect');
+					'result with "(string) " test\\r\\n \\r\\n\\t\\n"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.clearDoubleSpace("\u00A0"), " ",
+					'result with "(string) "\\u00A0"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.clearDoubleSpace("\u00A0\u00A0"), " ",
+					'result with "(string) "\\u00A0\\u00A0"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.clearDoubleSpace("\u00A0 \u00A0\t\u00A0 "), " ",
+					'result with "(string) "\\u00A0 \\u00A0\\t\\u00A0 "" parameter is incorrect');
+				assert.strictEqual(helpLib.str.clearDoubleSpace("\u00A0test\u00A0"), " test ",
+					'result with "(string) "\\u00A0test\\u00A0"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.clearDoubleSpace("\u00A0 \ttest\u00A0 \t\u00A0 test"), " test test",
+					'result with "(string) "\\u00A0 \\ttest\\u00A0 \\t\\u00A0 test"" parameter is incorrect');
 
 				assert.strictEqual(helpLib.str.clearDoubleSpace([]), '',
 					'result with "(array) []" parameter is incorrect');
@@ -293,10 +311,10 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				assert.strictEqual(helpLib.str.ucFirst('100test'), '100test', 'result with "(string) \'100test\'" parameter is incorrect');
 				assert.strictEqual(helpLib.str.ucFirst('(test)'), '(test)', 'result with "(string) \'(test)\'" parameter is incorrect');
 				assert.strictEqual(helpLib.str.ucFirst('#test'), '#test', 'result with "(string) \'#test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst("\ttest"), "\ttest", 'result with "(string) "\ttest"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst("test\t"), "Test\t", 'result with "(string) "test\t"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst("\ntest"), "\ntest", 'result with "(string) "\ntest"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst("test\n"), "Test\n", 'result with "(string) "test\n"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.ucFirst("\ttest"), "\ttest", 'result with "(string) "\\ttest"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.ucFirst("test\t"), "Test\t", 'result with "(string) "test\\t"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.ucFirst("\ntest"), "\ntest", 'result with "(string) "\\ntest"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.ucFirst("test\n"), "Test\n", 'result with "(string) "test\\n"" parameter is incorrect');
 
 				assert.strictEqual(helpLib.str.ucFirst([]), '',
 					'result with "(array) []" parameter is incorrect');
@@ -348,10 +366,10 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				assert.strictEqual(helpLib.str.lcFirst('100Test'), '100Test', 'result with "(string) \'100Test\'" parameter is incorrect');
 				assert.strictEqual(helpLib.str.lcFirst('(Test)'), '(Test)', 'result with "(string) \'(Test)\'" parameter is incorrect');
 				assert.strictEqual(helpLib.str.lcFirst('#Test'), '#Test', 'result with "(string) \'#Test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst("\tTest"), "\tTest", 'result with "(string) "\tTest"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst("Test\t"), "test\t", 'result with "(string) "Test\t"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst("\nTest"), "\nTest", 'result with "(string) "\nTest"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst("Test\n"), "test\n", 'result with "(string) "Test\n"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.lcFirst("\tTest"), "\tTest", 'result with "(string) "\\tTest"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.lcFirst("Test\t"), "test\t", 'result with "(string) "Test\\t"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.lcFirst("\nTest"), "\nTest", 'result with "(string) "\\nTest"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.lcFirst("Test\n"), "test\n", 'result with "(string) "Test\\n"" parameter is incorrect');
 
 				assert.strictEqual(helpLib.str.lcFirst([]), '',
 					'result with "(array) []" parameter is incorrect');
@@ -400,10 +418,10 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				assert.strictEqual(helpLib.str.reverse('Test'), 'tseT', 'result with "(string) \'Test\'" parameter is incorrect');
 				assert.strictEqual(helpLib.str.reverse(' Test'), 'tseT ', 'result with "(string) \' Test\'" parameter is incorrect');
 				assert.strictEqual(helpLib.str.reverse('test Test '), ' tseT tset', 'result with "(string) \'test Test \'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse("\ttest"), "tset\t", 'result with "(string) "\ttest"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse("Test\t"), "\ttseT", 'result with "(string) "Test\t"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse("\ntest"), "tset\n", 'result with "(string) "\ntest"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse("Test\n"), "\ntseT", 'result with "(string) "Test\n"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.reverse("\ttest"), "tset\t", 'result with "(string) "\\ttest"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.reverse("Test\t"), "\ttseT", 'result with "(string) "Test\\t"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.reverse("\ntest"), "tset\n", 'result with "(string) "\\ntest"" parameter is incorrect');
+				assert.strictEqual(helpLib.str.reverse("Test\n"), "\ntseT", 'result with "(string) "Test\\n"" parameter is incorrect');
 
 				assert.strictEqual(helpLib.str.reverse([]), '',
 					'result with "(array) []" parameter is incorrect');

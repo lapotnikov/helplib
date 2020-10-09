@@ -14,7 +14,7 @@ const $moduleNamespace$ = (helpLib) => {
 
 	helpLib.regHelper('str', 'clearDoubleSpace', null, function(str) {
 		str = this.str.check(str);
-		return str.replace(/\t+/g, ' ').replace(/  +/g, ' ');
+		return str.replace(/[\t\xA0]+/g, ' ').replace(/  +/g, ' ');
 	});
 
 	helpLib.regHelper('str', 'ucFirst', null, function(str) {
