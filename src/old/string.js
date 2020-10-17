@@ -17,3 +17,22 @@ module.exports.uniqid = function(prefix) {
 
 	return prefix + module.exports.md5(String(m) + String(k));
 };
+
+
+
+	helpLib.regHelper('str', 'decodeHtmlEntity', null, function(str) {
+		str = this.str.check(str);
+		return str.replace(/&#(\d+);/g, (match, dec) => {
+			return String.fromCharCode(dec);
+		});
+	});
+
+	helpLib.regHelper('str', 'encodeHtmlEntity', null, function(str) {
+		str = this.str.check(str);
+		let buf = [];
+		for(let i = str.length - 1; i >= 0; i--) {
+			buf.unshift(`&#${str[i].charCodeAt()};`);
+		}
+
+		return buf.join('');
+	});

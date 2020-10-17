@@ -32,23 +32,6 @@ const $moduleNamespace$ = (helpLib) => {
 		return str.split('').reverse().join('');
 	});
 
-	helpLib.regHelper('str', 'decodeHtmlEntity', null, function(str) {
-		str = this.str.check(str);
-		return str.replace(/&#(\d+);/g, (match, dec) => {
-			return String.fromCharCode(dec);
-		});
-	});
-
-	helpLib.regHelper('str', 'encodeHtmlEntity', null, function(str) {
-		str = this.str.check(str);
-		let buf = [];
-		for(let i = str.length - 1; i >= 0; i--) {
-			buf.unshift(`&#${str[i].charCodeAt()};`);
-		}
-
-		return buf.join('');
-	});
-
 	helpLib.regHelper('str', 'test', null, function(str, regExp) {
 		try {
 			regExp = regExp instanceof RegExp ? regExp : new RegExp(regExp);
