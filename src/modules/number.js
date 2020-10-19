@@ -73,23 +73,18 @@ const $moduleNamespace$ = (helpLib) => {
 		return isMinus ? ('-' + ret) : ret;
 	});
 
-	helpLib.regHelper('num', 'inInterval', null, function(num, minValue, maxValue = null, defValue = null) {
-		num = this.num.check(num);
+	helpLib.regHelper('num', 'inInterval', null, function(num, minValue, maxValue = null, defValue = undefined) {
+		num = this.num.check(num, 0);
 		minValue = this.num.check(minValue, null);
 		maxValue = this.num.check(maxValue, null);
-		defValue = this.num.check(defValue, null);
 
 		if(minValue !== null && num < minValue) {
-			return defValue !== null ? defValue : false;
+			return defValue !== undefined ? defValue : false;
 		} else if(maxValue !== null && num > maxValue) {
-			return defValue !== null ? defValue : false;
+			return defValue !== undefined ? defValue : false;
 		} else {
-			return defValue !== null ? num : true;
+			return defValue !== undefined ? num : true;
 		}
-	});
-
-	helpLib.regHelper('num', 'toFlag', null, function(num) {
-		return Number(Boolean(num));
 	});
 
 	function parseStrNum(num) {
