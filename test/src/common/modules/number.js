@@ -674,7 +674,7 @@ exports.testNum = (describe, it, assert, helpLib) => {
 				}
 			});
 
-			it('call with not a finite numeric value as "num" parameter and some value as "intSize" and "fractSize" parameters', () => {
+			it('call with not a finite numeric value as "num" parameter and some values as "intSize" and "fractSize" parameters', () => {
 				for(let p1 in params.notfin) {
 					for(let p2 in params.num) {
 						for(let p3 in params.num) {
@@ -686,7 +686,7 @@ exports.testNum = (describe, it, assert, helpLib) => {
 				}
 			});
 
-			it('call with not a finite numeric value as "intSize" parameter and some value as "num" and "fractSize" parameters', () => {
+			it('call with not a finite numeric value as "intSize" parameter and some values as "num" and "fractSize" parameters', () => {
 				for(let p1 in params.notfin) {
 					for(let p2 in params.num) {
 						for(let p3 in params.num) {
@@ -698,7 +698,7 @@ exports.testNum = (describe, it, assert, helpLib) => {
 				}
 			});
 
-			it('call with not a finite numeric value as "fractSize" parameter and some value as "num" and "intSize" parameters', () => {
+			it('call with not a finite numeric value as "fractSize" parameter and some values as "num" and "intSize" parameters', () => {
 				for(let p1 in params.notfin) {
 					for(let p2 in params.num) {
 						for(let p3 in params.num) {
@@ -710,7 +710,7 @@ exports.testNum = (describe, it, assert, helpLib) => {
 				}
 			});
 
-			it('call with not a finite numeric value as "fractSize", "num" and "intSize" parameters', () => {
+			it('call with not a finite numeric values as "fractSize", "num" and "intSize" parameters', () => {
 				for(let p1 in params.notfin) {
 					for(let p2 in params.notfin) {
 						for(let p3 in params.notfin) {
@@ -721,7 +721,7 @@ exports.testNum = (describe, it, assert, helpLib) => {
 				}
 			});
 
-			it('call with not a numeric as "num" parameter and some value as "intSize" and "fractSize" parameters', () => {
+			it('call with not a numeric as "num" parameter and some values as "intSize" and "fractSize" parameters', () => {
 				for(let p1 in params.notnum) {
 					for(let p2 in params.num) {
 						for(let p3 in params.num) {
@@ -733,7 +733,7 @@ exports.testNum = (describe, it, assert, helpLib) => {
 				}
 			});
 
-			it('call with not a numeric as "intSize" parameter and some value as "num" and "fractSize" parameters', () => {
+			it('call with not a numeric as "intSize" parameter and some values as "num" and "fractSize" parameters', () => {
 				for(let p1 in params.notnum) {
 					for(let p2 in params.num) {
 						for(let p3 in params.num) {
@@ -745,7 +745,7 @@ exports.testNum = (describe, it, assert, helpLib) => {
 				}
 			});
 
-			it('call with not a numeric as "fractSize" parameter and some value as "num" and "intSize" parameters', () => {
+			it('call with not a numeric as "fractSize" parameter and some values as "num" and "intSize" parameters', () => {
 				for(let p1 in params.notnum) {
 					for(let p2 in params.num) {
 						for(let p3 in params.num) {
@@ -762,6 +762,241 @@ exports.testNum = (describe, it, assert, helpLib) => {
 					for(let p2 in params.notnum) {
 						for(let p3 in params.notnum) {
 							assert.strictEqual(helpLib.num.format(params.notnum[p1][0], params.notnum[p2][0], params.notnum[p3][0]), '0',
+								`result with "${params.notnum[p1][1]}, ${params.notnum[p2][1]}, ${params.notnum[p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+		});
+
+		describe('checking "inInterval" function', () => {
+			it('function instance', () => {
+				assert.isFunction(helpLib.num.inInterval, 'function "inInterval" is not added or is not a function');
+			});
+
+			let params = getParams();
+
+			params.unset = [
+				[[], `without parameters`],
+				[[null], `with "null" parameter`], [[null, null], `with "null, null" parameters`], ,
+				[[null, null, null], `with "null, null, null" parameters`],
+				[[null, null, null, null], `with "null, null, null, null" parameters`],
+				[[undefined], `with "undefined" parameter`], [[undefined, undefined], `with "undefined, undefined" parameters`],
+				[[undefined, undefined, undefined], `with "undefined, undefined, undefined" parameters`],
+				[[undefined, undefined, undefined, undefined], `with "undefined, undefined, undefined, undefined" parameters`]
+			];
+
+			function getIntervalParams(num) {
+				return [
+					[num - 100, num + 100, `(number) ${(num - 100)}`, `(number) ${(num + 100)}`],
+					[num - 10, num + 10, `(number) ${(num - 10)}`, `(number) ${(num + 10)}`],
+					[num - 1, num + 1, `(number) ${(num - 1)}`, `(number) ${(num + 1)}`],
+
+					[num - 0.1, num + 0.1, `(number) ${(num - 0.1)}`, `(number) ${(num + 0.1)}`],
+					[num - 0.0001, num + 0.0001, `(number) ${(num - 0.0001)}`, `(number) ${(num + 0.0001)}`],
+					[num - 0.0000000001, num + 0.0000000001, `(number) ${(num - 0.0000000001)}`, `(number) ${(num + 0.0000000001)}`],
+
+					[num + 100, num + 1000, `(number) ${(num + 100)}`, `(number) ${(num + 1000)}`],
+					[num + 1, num + 10, `(number) ${(num + 1)}`, `(number) ${(num + 10)}`],
+					[num + 0.1, num + 1, `(number) ${(num + 0.1)}`, `(number) ${(num + 1)}`],
+					[num + 0.0000000001, num + 1, `(number) ${(num + 0.0000000001)}`, `(number) ${(num + 1)}`],
+
+					[num - 1000, num - 100, `(number) ${(num - 1000)}`, `(number) ${(num - 100)}`],
+					[num - 10, num - 1, `(number) ${(num - 10)}`, `(number) ${(num - 1)}`],
+					[num - 1, num - 0.1, `(number) ${(num - 1)}`, `(number) ${(num - 0.1)}`],
+					[num - 1, num - 0.0000000001, `(number) ${(num - 1)}`, `(number) ${(num - 0000000001)}`]
+				];
+			}
+
+			it('call with a numeric as "num" parameter and some value as "minValue" parameter', () => {
+				let numParams = params.int.concat(params.float);
+				for(let p1 in numParams) {
+					let iParams = getIntervalParams(numParams[p1][2]);
+					for(let p2 in iParams) {
+						let res = numParams[p1][2] >= iParams[p2][0] ? true : false;
+						assert.strictEqual(helpLib.num.inInterval(numParams[p1][0], iParams[p2][0]), res,
+							`result with "${numParams[p1][1]}, ${iParams[p2][2]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with a numeric as "num" parameter and some values as "minValue" and "defValue" parameters', () => {
+				let numParams = params.int.concat(params.float);
+				for(let p1 in numParams) {
+					let iParams = getIntervalParams(numParams[p1][2]);
+					for(let p2 in iParams) {
+						let res = numParams[p1][2] >= iParams[p2][0] ? numParams[p1][2] : null;
+						assert.strictEqual(helpLib.num.inInterval(numParams[p1][0], iParams[p2][0], null, null), res,
+							`result with "${numParams[p1][1]}, ${iParams[p2][2]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with a numeric as "num" parameter and some values as "minValue" and "maxValue" parameters', () => {
+				let numParams = params.int.concat(params.float);
+				for(let p1 in numParams) {
+					let iParams = getIntervalParams(numParams[p1][2]);
+					for(let p2 in iParams) {
+						let res = numParams[p1][2] >= iParams[p2][0] && numParams[p1][2] <= iParams[p2][1] ? true : false;
+						assert.strictEqual(helpLib.num.inInterval(numParams[p1][0], iParams[p2][0], iParams[p2][1]), res,
+							`result with "${numParams[p1][1]}, ${iParams[p2][2]}, ${iParams[p2][3]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with a numeric as "num" parameter and some values as "minValue", "maxValue" and "defValue" parameters', () => {
+				let numParams = params.int.concat(params.float);
+				for(let p1 in numParams) {
+					let iParams = getIntervalParams(numParams[p1][2]);
+					for(let p2 in iParams) {
+						let res = numParams[p1][2] >= iParams[p2][0] && numParams[p1][2] <= iParams[p2][1] ? numParams[p1][2] : null;
+						assert.strictEqual(helpLib.num.inInterval(numParams[p1][0], iParams[p2][0], iParams[p2][1], null), res,
+							`result with "${numParams[p1][1]}, ${iParams[p2][2]}, ${iParams[p2][3]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with a numeric as "minValue" parameter and some values as "num" parameter', () => {
+				let numParams = params.int.concat(params.float);
+				for(let p in numParams) {
+					let res = 0 >= numParams[p][2] ? true : false;
+					assert.strictEqual(helpLib.num.inInterval(0, numParams[p][0]), res,
+						`result with "(number) 0, ${numParams[p][1]}" parameters is incorrect`);
+				}
+			});
+
+			it('call with a numeric as "maxValue" parameter and some values as "num" and "minValue" parameter', () => {
+				let numParams = params.int.concat(params.float);
+				for(let p in numParams) {
+					let res = 0 <= numParams[p][2] ? true : false;
+					assert.strictEqual(helpLib.num.inInterval(0, -1, numParams[p][0]), res,
+						`result with "(number) 0, (number) -1, ${numParams[p][1]}" parameters is incorrect`);
+				}
+			});
+
+			it('call with a numeric as "num" parameter and with "minValue" parameter who more than "maxValue" parameter', () => {
+				let numParams = params.int.concat(params.float);
+				for(let p1 in numParams) {
+					let iParams = getIntervalParams(numParams[p1][2]);
+					for(let p2 in iParams) {
+						let res = numParams[p1][2] >= iParams[p2][1] && numParams[p1][2] <= iParams[p2][0] ? true : false;
+						assert.strictEqual(helpLib.num.inInterval(numParams[p1][0], iParams[p2][1], iParams[p2][0]), res,
+							`result with "${numParams[p1][1]}, ${iParams[p2][3]}, ${iParams[p2][2]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call without parameters or with null or undefined values', () => {
+				for(let p in params.unset) {
+					let res = params.unset[p][0][3] === null ? 0 : true;
+					assert.strictEqual(helpLib.num.inInterval.apply(helpLib, params.unset[p][0]), res, `result ${params.unset[p][1]} is incorrect`);
+				}
+			});
+
+			it('call with not a finite numeric value as "num" parameter and some values as "minValue" and "maxValue" parameters', () => {
+				for(let p1 in params.notfin) {
+					let iParams = getIntervalParams(0);
+					for(let p2 in iParams) {
+						let res = 0 >= iParams[p2][0] && 0 <= iParams[p2][1] ? true : false;
+						assert.strictEqual(helpLib.num.inInterval(params.notfin[p1][0], iParams[p2][0], iParams[p2][1]), res,
+							`result with "${params.notfin[p1][1]}, ${iParams[p2][2]}, ${iParams[p2][3]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with not a finite numeric value as "minValue" parameter and some values as "num" and "maxValue" parameters', () => {
+				for(let p1 in params.notfin) {
+					let iParams = getIntervalParams(-1000);
+					for(let p2 in iParams) {
+						let res = -1000 <= iParams[p2][1] ? true : false;
+						assert.strictEqual(helpLib.num.inInterval(-1000, params.notfin[p1][0], iParams[p2][1]), res,
+							`result with "(number) -1000, ${params.notfin[p1][1]}, ${iParams[p2][3]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with not a finite numeric value as "maxValue" parameter and some values as "num" and "minValue" parameters', () => {
+				for(let p1 in params.notfin) {
+					let iParams = getIntervalParams(1000);
+					for(let p2 in iParams) {
+						let res = 1000 >= iParams[p2][0] ? true : false;
+						assert.strictEqual(helpLib.num.inInterval(1000, iParams[p2][0], params.notfin[p1][0]), res,
+							`result with "(number) 1000, ${iParams[p2][2]}, ${params.notfin[p1][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with not a finite numeric values as "num", "minValue" and "maxValue" parameters', () => {
+				for(let p1 in params.notfin) {
+					for(let p2 in params.notfin) {
+						for(let p3 in params.notfin) {
+							assert.strictEqual(helpLib.num.inInterval(params.notfin[p1][0], params.notfin[p2][0], params.notfin[p3][0]), true,
+								`result with "${params.notfin[p1][1]}, ${params.notfin[p2][1]}, ${params.notfin[p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('call with not a finite numeric values as "num", "minValue", "maxValue" parameters and some value as "defValue" parameter', () => {
+				for(let p1 in params.notfin) {
+					for(let p2 in params.notfin) {
+						for(let p3 in params.notfin) {
+							assert.strictEqual(helpLib.num.inInterval(params.notfin[p1][0], params.notfin[p2][0], params.notfin[p3][0], null), 0,
+								`result with "${params.notfin[p1][1]}, ${params.notfin[p2][1]}, ${params.notfin[p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('call with not a numeric as "num" parameter and some values as "minValue" and "maxValue" parameters', () => {
+				for(let p1 in params.notnum) {
+					let iParams = getIntervalParams(0);
+					for(let p2 in iParams) {
+						let res = 0 >= iParams[p2][0] && 0 <= iParams[p2][1] ? true : false;
+						assert.strictEqual(helpLib.num.inInterval(params.notnum[p1][0], iParams[p2][0], iParams[p2][1]), res,
+							`result with "${params.notnum[p1][1]}, ${iParams[p2][2]}, ${iParams[p2][3]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with not a numeric as "minValue" parameter and some values as "num" and "maxValue" parameters', () => {
+				for(let p1 in params.notnum) {
+					let iParams = getIntervalParams(-1000);
+					for(let p2 in iParams) {
+						let res = -1000 <= iParams[p2][1] ? true : false;
+						assert.strictEqual(helpLib.num.inInterval(-1000, params.notnum[p1][0], iParams[p2][1]), res,
+							`result with "(number) -1000, ${params.notnum[p1][1]}, ${iParams[p2][3]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with not a numeric as "maxValue" parameter and some values as "num" and "minValue" parameters', () => {
+				for(let p1 in params.notnum) {
+					let iParams = getIntervalParams(1000);
+					for(let p2 in iParams) {
+						let res = 1000 >= iParams[p2][0] ? true : false;
+						assert.strictEqual(helpLib.num.inInterval(1000, iParams[p2][0], params.notnum[p1][0]), res,
+							`result with "(number) 1000, ${iParams[p2][2]}, ${params.notnum[p1][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with not a numeric as "num", "minValue" and "maxValue" parameters', () => {
+				for(let p1 in params.notnum) {
+					for(let p2 in params.notnum) {
+						for(let p3 in params.notnum) {
+							assert.strictEqual(helpLib.num.inInterval(params.notnum[p1][0], params.notnum[p2][0], params.notnum[p3][0]), true,
+								`result with "${params.notnum[p1][1]}, ${params.notnum[p2][1]}, ${params.notnum[p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('call with not a numeric as "num", "minValue", "maxValue" parameters and some value as "defValue" parameter', () => {
+				for(let p1 in params.notnum) {
+					for(let p2 in params.notnum) {
+						for(let p3 in params.notnum) {
+							assert.strictEqual(helpLib.num.inInterval(params.notnum[p1][0], params.notnum[p2][0], params.notnum[p3][0], null), 0,
 								`result with "${params.notnum[p1][1]}, ${params.notnum[p2][1]}, ${params.notnum[p3][1]}" parameters is incorrect`);
 						}
 					}
