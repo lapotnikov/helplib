@@ -59,19 +59,21 @@ const $moduleNamespace$ = (helpLib) => {
 		fractSize = fractSize !== null && fractSize < 0 ? 0 : fractSize;
 		fractSize = fractSize !== null && fractSize > 20 ? 20 : fractSize;
 
-		let parts = this.str.check(fractSize !== null ? num.toFixed(fractSize) : num).split('.');
+		let isMinus = Number(fractSize !== null ? num.toFixed(fractSize) : num) < 0 ? true : false;
+		let parts = this.str.check(fractSize !== null ? Math.abs(num).toFixed(fractSize) : Math.abs(num)).split('.');
 		intSize = this.num.check(intSize, 0) - parts[0].length;
 		intSize = intSize < 0 ? 0 : intSize;
+		intSize = intSize + parts[0].length > 100 ? 100 - parts[0].length : intSize;
 
 		let ret = '0'.repeat(intSize) + parts[0];
 		if(this.isSet(parts[1])) {
 			ret += '.' + parts[1];
 		}
 
-		return ret;
+		return isMinus ? ('-' + ret) : ret;
 	});
 
-	helpLib.regHelper('num', 'inInterval', {'.': 'isSet'}, function(num, minValue, maxValue = null, defValue = null) {
+	helpLib.regHelper('num', 'inInterval', null, function(num, minValue, maxValue = null, defValue = null) {
 		num = this.num.check(num);
 		minValue = this.num.check(minValue, null);
 		maxValue = this.num.check(maxValue, null);

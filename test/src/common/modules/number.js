@@ -28,6 +28,7 @@ exports.testNum = (describe, it, assert, helpLib) => {
 			int: [
 				[0, `(number) 0`, 0], [-0, `(number) -0`, 0],
 				[1, `(number) 1`, 1], [-1, `(number) -1`, -1],
+				[5, `(number) 5`, 5], [-5, `(number) -5`, -5],
 				[1e2, `(number) 1e2`, 1e2], [-1e2, `(number) -1e2`, -1e2],
 				[0xff, `(number) 0xff`, 0xff], [-0xff, `(number) -0xff`, -0xff],
 				[Number.MAX_SAFE_INTEGER, `(number) ${Number.MAX_SAFE_INTEGER}`, Number.MAX_SAFE_INTEGER],
@@ -35,8 +36,10 @@ exports.testNum = (describe, it, assert, helpLib) => {
 
 				[`0`, `(string) '0'`, 0], [` 0 `, `(string) ' 0 '`, 0],
 				[`1`, `(string) '1'`, 1], [` 1 `, `(string) ' 1 '`, 1],
+				[`5`, `(string) '5'`, 5], [` 5 `, `(string) ' 5 '`, 5],
 				[`-0`, `(string) '-0'`, 0], [` -0 `, `(string) ' -0 '`, 0],
 				[`-1`, `(string) '-1'`, -1], [` -1 `, `(string) ' -1 '`, -1],
+				[`-5`, `(string) '-5'`, -5], [` -5 `, `(string) ' -5 '`, -5],
 				[`1e2`, `(string) '1e2'`, 1e2], [`1e2 `, `(string) '1e2 '`, 1e2], [` 1e2`, `(string) ' 1e2'`, 1e2],
 				[`-1e2`, `(string) '-1e2'`, -1e2], [`-1e2 `, `(string) '-1e2 '`, -1e2], [` -1e2`, `(string) ' -1e2'`, -1e2],
 				[`0.5e2`, `(string) '0.5e2'`, 0.5e2], [`0.5e2 `, `(string) '0.5e2 '`, 0.5e2], [` 0.5e2`, `(string) ' 0.5e2'`, 0.5e2],
@@ -48,11 +51,11 @@ exports.testNum = (describe, it, assert, helpLib) => {
 				[`\t-1`, `(string) '\\t-1'`, -1], [`\n-1`, `(string) '\\n-1'`, -1],
 				[`\t\n1`, `(string) '\\t\\\n1'`, 1], [`\n\t1`, `(string) '\\n\\t1'`, 1],
 				[`\t\n-1`, `(string) '\\t\\\n-1'`, -1], [`\n\t-1`, `(string) '\\n\\t-1'`, -1],
-				[`1\t`, `(string) '1\\t'`, 1], [`1\n`, `(string) '1\\n'`, 1],
-				[`-1\t`, `(string) '-1\\t'`, -1], [`-1\n`, `(string) '-1\\n'`, -1],
-				[`1\t\n`, `(string) '1\\t\\n'`, 1], [`1\n\t`, `(string) '1\\n\\t'`, 1],
-				[`-1\t\n`, `(string) '-1\\t\\n'`, -1], [`-1\n\t`, `(string) '-1\\n\\t'`, -1],
-				[`\n 1\t`, `(string) '\\n 1\\t'`, 1], [`\n  -1\n \t`, `(string) '\\n  -1\\n \\t'`, -1]
+				[`3\t`, `(string) '3\\t'`, 3], [`3\n`, `(string) '3\\n'`, 3],
+				[`-3\t`, `(string) '-3\\t'`, -3], [`-3\n`, `(string) '-3\\n'`, -3],
+				[`3\t\n`, `(string) '3\\t\\n'`, 3], [`3\n\t`, `(string) '3\\n\\t'`, 3],
+				[`-3\t\n`, `(string) '-3\\t\\n'`, -3], [`-3\n\t`, `(string) '-3\\n\\t'`, -3],
+				[`\n 2\t`, `(string) '\\n 2\\t'`, 2], [`\n  -2\n \t`, `(string) '\\n  -2\\n \\t'`, -2]
 			],
 
 			float: [
@@ -70,6 +73,8 @@ exports.testNum = (describe, it, assert, helpLib) => {
 
 				[`\t0.5`, `(string) '\\t0.5'`, 0.5], [`\n0.5`, `(string) '\\n0.5'`, 0.5],
 				[`\t-0.5`, `(string) '\\t-0.5'`, -0.5], [`\n-0.5`, `(string) '\\n-0.5'`, -0.5],
+				[`\t15.9999`, `(string) '\\t15.9999'`, 15.9999], [`\n15.9999`, `(string) '\\n15.9999'`, 15.9999],
+				[`\t-15.9999`, `(string) '\\t-15.9999'`, -15.9999], [`\n-15.9999`, `(string) '\\n-15.9999'`, -15.9999],
 				[`\t\n1e-2`, `(string) '\\t\\\n1e-2'`, 1e-2], [`\n\t1e-2`, `(string) '\\n\\t1e-2'`, 1e-2],
 				[`\t\n-1e-2`, `(string) '\\t\\\n-1e-2'`, -1e-2], [`\n\t-1e-2`, `(string) '\\n\\t-1e-2'`, -1e-2]
 			],
@@ -265,7 +270,7 @@ exports.testNum = (describe, it, assert, helpLib) => {
 			});
 
 			let iterationsCount = 100;
-			let matchPrc = 0.85;
+			let uniquePrc = 0.85;
 			let min = Number.MIN_SAFE_INTEGER;
 			let max = Number.MAX_SAFE_INTEGER;
 			let params = getParams();
@@ -346,8 +351,8 @@ exports.testNum = (describe, it, assert, helpLib) => {
 
 					let count = Math.round(max - numParams[p][2]) + 1;
 					let prc = [...new Set(values)].length / (count > iterationsCount ? iterationsCount : count);
-					assert.isAtLeast(prc, matchPrc,
-						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - matchPrc)}`);
+					assert.isAtLeast(prc, uniquePrc,
+						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - uniquePrc)}`);
 				}
 			});
 
@@ -371,8 +376,8 @@ exports.testNum = (describe, it, assert, helpLib) => {
 
 					let count = Math.round(numParams[p][2] - min) + 1;
 					let prc = [...new Set(values)].length / (count > iterationsCount ? iterationsCount : count);
-					assert.isAtLeast(prc, matchPrc,
-						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - matchPrc)}`);
+					assert.isAtLeast(prc, uniquePrc,
+						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - uniquePrc)}`);
 				}
 			});
 
@@ -396,8 +401,8 @@ exports.testNum = (describe, it, assert, helpLib) => {
 
 					let count = Math.round(max - numParams[p][2]) + 1;
 					let prc = [...new Set(values)].length / (count > iterationsCount ? iterationsCount : count);
-					assert.isAtLeast(prc, matchPrc,
-						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - matchPrc)}`);
+					assert.isAtLeast(prc, uniquePrc,
+						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - uniquePrc)}`);
 				}
 			});
 
@@ -416,8 +421,8 @@ exports.testNum = (describe, it, assert, helpLib) => {
 
 					let count = Math.round(max - 0) + 1;
 					let prc = [...new Set(values)].length / (count > iterationsCount ? iterationsCount : count);
-					assert.isAtLeast(prc, matchPrc,
-						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - matchPrc)}`);
+					assert.isAtLeast(prc, uniquePrc,
+						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - uniquePrc)}`);
 				}
 			});
 
@@ -436,8 +441,8 @@ exports.testNum = (describe, it, assert, helpLib) => {
 
 					let count = Math.round(max - 0) + 1;
 					let prc = [...new Set(values)].length / (count > iterationsCount ? iterationsCount : count);
-					assert.isAtLeast(prc, matchPrc,
-						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - matchPrc)}`);
+					assert.isAtLeast(prc, uniquePrc,
+						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - uniquePrc)}`);
 				}
 			});
 
@@ -460,8 +465,8 @@ exports.testNum = (describe, it, assert, helpLib) => {
 
 					let count = Math.round(max - (max - 10)) + 1;
 					let prc = [...new Set(values)].length / (count > iterationsCount ? iterationsCount : count);
-					assert.isAtLeast(prc, matchPrc,
-						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - matchPrc)}`);
+					assert.isAtLeast(prc, uniquePrc,
+						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - uniquePrc)}`);
 				}
 			});
 
@@ -484,8 +489,8 @@ exports.testNum = (describe, it, assert, helpLib) => {
 
 					let count = Math.round(max - 0) + 1;
 					let prc = [...new Set(values)].length / (count > iterationsCount ? iterationsCount : count);
-					assert.isAtLeast(prc, matchPrc,
-						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - matchPrc)}`);
+					assert.isAtLeast(prc, uniquePrc,
+						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - uniquePrc)}`);
 				}
 			});
 
@@ -508,8 +513,8 @@ exports.testNum = (describe, it, assert, helpLib) => {
 
 					let count = Math.round(max - (max - 10)) + 1;
 					let prc = [...new Set(values)].length / (count > iterationsCount ? iterationsCount : count);
-					assert.isAtLeast(prc, matchPrc,
-						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - matchPrc)}`);
+					assert.isAtLeast(prc, uniquePrc,
+						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - uniquePrc)}`);
 				}
 			});
 
@@ -528,8 +533,8 @@ exports.testNum = (describe, it, assert, helpLib) => {
 
 					let count = Math.round(max - 0) + 1;
 					let prc = [...new Set(values)].length / (count > iterationsCount ? iterationsCount : count);
-					assert.isAtLeast(prc, matchPrc,
-						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - matchPrc)}`);
+					assert.isAtLeast(prc, uniquePrc,
+						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - uniquePrc)}`);
 				}
 			});
 
@@ -552,8 +557,214 @@ exports.testNum = (describe, it, assert, helpLib) => {
 
 					let count = Math.round(max - 0) + 1;
 					let prc = [...new Set(values)].length / (count > iterationsCount ? iterationsCount : count);
-					assert.isAtLeast(prc, matchPrc,
-						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - matchPrc)}`);
+					assert.isAtLeast(prc, uniquePrc,
+						`The percentage of matches ${(1 - prc)} is bellow allowable percentage ${(1 - uniquePrc)}`);
+				}
+			});
+		});
+
+		describe('checking "format" function', () => {
+			it('function instance', () => {
+				assert.isFunction(helpLib.num.format, 'function "format" is not added or is not a function');
+			});
+
+			let minIntSize = 0;
+			let maxIntSize = 100;
+			let minFractSize = 0;
+			let maxFractSize = 20;
+			let params = getParams();
+
+			params.num = [
+				[0, `(number) 0`, 0], [-0, `(number) -0`, 0],
+				[1, `(number) 1`, 1], [-1, `(number) -1`, -1],
+				[5, `(number) 5`, 5],
+				[200, `(number) 200`, 200],
+
+				[0.3, `(number) 0.3`, 0.3], [-0.3, `(number) -0.3`, -0.3],
+				[3.9999, `(number) 3.9999`, 3.9999],
+				[7.0001, `(number) 7.0001`, 7.0001]
+			];
+
+			params.unset = [
+				[[], `without parameters`],
+				[[null], `with "null" parameter`], [[null, null], `with "null, null" parameters`], ,
+				[[null, null, null], `with "null, null, null" parameters`],
+				[[undefined], `with "undefined" parameter`], [[undefined, undefined], `with "undefined, undefined" parameters`],
+				[[undefined, undefined, undefined], `with "undefined, undefined, undefined" parameters`]
+			];
+
+			function strFormat(num, intSize, fractSize) {
+				fractSize = fractSize !== null && fractSize < minFractSize ? minFractSize : fractSize;
+				fractSize = fractSize !== null && fractSize > maxFractSize ? maxFractSize : fractSize;
+
+				let isMinus = (fractSize !== null ? num.toFixed(fractSize) : num) < 0 ? true : false;
+				let res = String(fractSize !== null ? Math.abs(num).toFixed(fractSize) : Math.abs(num));
+
+				let intLength = res.split('.')[0].length;
+				intSize = intSize - intLength < minIntSize ? minIntSize : intSize - intLength;
+				intSize = intSize + intLength > maxIntSize ? (maxIntSize - intLength) : intSize;
+
+				return (isMinus ? '-' : '') + '0'.repeat(intSize) + res;
+			}
+
+			it('call with a numeric as "num" parameter and some value as "intSize" parameter', () => {
+				let numParams = params.int.concat(params.float);
+				for(let p1 in numParams) {
+					for(let p2 in params.num) {
+						let res = strFormat(numParams[p1][2], params.num[p2][2], null);
+						assert.strictEqual(helpLib.num.format(numParams[p1][0], params.num[p2][0]), res,
+							`result with "${numParams[p1][1]}, ${params.num[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with a numeric as "num" parameter, and some values as "intSize" and "fractSize" parameters', () => {
+				let numParams = params.int.concat(params.float);
+				for(let p1 in numParams) {
+					for(let p2 in params.num) {
+						for(let p3 in params.num) {
+							let res = strFormat(numParams[p1][2], params.num[p2][2], params.num[p3][0]);
+							assert.strictEqual(helpLib.num.format(numParams[p1][0], params.num[p2][0], params.num[p3][0]), res,
+								`result with "${numParams[p1][1]}, ${params.num[p2][1]}, ${params.num[p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('call with a numeric as "intSize" parameter and some value as "num" parameter', () => {
+				let numParams = params.int.concat(params.float);
+				for(let p1 in numParams) {
+					for(let p2 in params.num) {
+						let res = strFormat(params.num[p2][2], numParams[p1][2], null);
+						assert.strictEqual(helpLib.num.format(params.num[p2][0], numParams[p1][0]), res,
+							`result with "${params.num[p2][1]}, ${numParams[p1][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with a numeric as "intSize" parameter, and some values as "num" and "fractSize" parameters', () => {
+				let numParams = params.int.concat(params.float);
+				for(let p1 in numParams) {
+					for(let p2 in params.num) {
+						for(let p3 in params.num) {
+							let res = strFormat(params.num[p2][2], numParams[p1][2], params.num[p3][0]);
+							assert.strictEqual(helpLib.num.format(params.num[p2][0], numParams[p1][0], params.num[p3][0]), res,
+								`result with "${params.num[p2][1]}, ${numParams[p1][1]}, ${params.num[p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('call with a numeric as "fractSize" parameter, and some values as "num" and "intSize" parameters', () => {
+				let numParams = params.int.concat(params.float);
+				for(let p1 in numParams) {
+					for(let p2 in params.num) {
+						for(let p3 in params.num) {
+							let res = strFormat(params.num[p2][2], params.num[p3][0], numParams[p1][2]);
+							assert.strictEqual(helpLib.num.format(params.num[p2][0], params.num[p3][0], numParams[p1][0]), res,
+								`result with "${params.num[p2][1]}, ${params.num[p3][1]}, ${numParams[p1][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('call without parameters or with null or undefined values', () => {
+				for(let p in params.unset) {
+					assert.strictEqual(helpLib.num.format.apply(helpLib, params.unset[p][0]), '0', `result ${params.unset[p][1]} is incorrect`);
+				}
+			});
+
+			it('call with not a finite numeric value as "num" parameter and some value as "intSize" and "fractSize" parameters', () => {
+				for(let p1 in params.notfin) {
+					for(let p2 in params.num) {
+						for(let p3 in params.num) {
+							let res = strFormat(0, params.num[p2][2], params.num[p3][2]);
+							assert.strictEqual(helpLib.num.format(params.notfin[p1][0], params.num[p2][0], params.num[p3][0]), res,
+								`result with "${params.notfin[p1][1]}, ${params.num[p2][1]}, ${params.num[p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('call with not a finite numeric value as "intSize" parameter and some value as "num" and "fractSize" parameters', () => {
+				for(let p1 in params.notfin) {
+					for(let p2 in params.num) {
+						for(let p3 in params.num) {
+							let res = strFormat(params.num[p2][2], 0, params.num[p3][2]);
+							assert.strictEqual(helpLib.num.format(params.num[p2][0], params.notfin[p1][0], params.num[p3][0]), res,
+								`result with "${params.num[p2][1]}, ${params.notfin[p1][1]}, ${params.num[p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('call with not a finite numeric value as "fractSize" parameter and some value as "num" and "intSize" parameters', () => {
+				for(let p1 in params.notfin) {
+					for(let p2 in params.num) {
+						for(let p3 in params.num) {
+							let res = strFormat(params.num[p2][2], params.num[p3][2], null);
+							assert.strictEqual(helpLib.num.format(params.num[p2][0], params.num[p3][0], params.notfin[p1][0]), res,
+								`result with "${params.num[p2][1]}, ${params.num[p3][1]}, ${params.notfin[p1][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('call with not a finite numeric value as "fractSize", "num" and "intSize" parameters', () => {
+				for(let p1 in params.notfin) {
+					for(let p2 in params.notfin) {
+						for(let p3 in params.notfin) {
+							assert.strictEqual(helpLib.num.format(params.notfin[p1][0], params.notfin[p2][0], params.notfin[p3][0]), '0',
+								`result with "${params.notfin[p1][1]}, ${params.notfin[p2][1]}, ${params.notfin[p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('call with not a numeric as "num" parameter and some value as "intSize" and "fractSize" parameters', () => {
+				for(let p1 in params.notnum) {
+					for(let p2 in params.num) {
+						for(let p3 in params.num) {
+							let res = strFormat(0, params.num[p2][2], params.num[p3][2]);
+							assert.strictEqual(helpLib.num.format(params.notnum[p1][0], params.num[p2][0], params.num[p3][0]), res,
+								`result with "${params.notnum[p1][1]}, ${params.num[p2][1]}, ${params.num[p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('call with not a numeric as "intSize" parameter and some value as "num" and "fractSize" parameters', () => {
+				for(let p1 in params.notnum) {
+					for(let p2 in params.num) {
+						for(let p3 in params.num) {
+							let res = strFormat(params.num[p2][2], 0, params.num[p3][2]);
+							assert.strictEqual(helpLib.num.format(params.num[p2][0], params.notnum[p1][0], params.num[p3][0]), res,
+								`result with "${params.num[p2][1]}, ${params.notnum[p1][1]}, ${params.num[p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('call with not a numeric as "fractSize" parameter and some value as "num" and "intSize" parameters', () => {
+				for(let p1 in params.notnum) {
+					for(let p2 in params.num) {
+						for(let p3 in params.num) {
+							let res = strFormat(params.num[p2][2], params.num[p3][2], null);
+							assert.strictEqual(helpLib.num.format(params.num[p2][0], params.num[p3][0], params.notnum[p1][0]), res,
+								`result with "${params.num[p2][1]}, ${params.num[p3][1]}, ${params.notnum[p1][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('call with not a numeric as "fractSize", "num" and "intSize" parameters', () => {
+				for(let p1 in params.notnum) {
+					for(let p2 in params.notnum) {
+						for(let p3 in params.notnum) {
+							assert.strictEqual(helpLib.num.format(params.notnum[p1][0], params.notnum[p2][0], params.notnum[p3][0]), '0',
+								`result with "${params.notnum[p1][1]}, ${params.notnum[p2][1]}, ${params.notnum[p3][1]}" parameters is incorrect`);
+						}
+					}
 				}
 			});
 		});
