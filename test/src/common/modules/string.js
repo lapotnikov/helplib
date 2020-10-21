@@ -112,7 +112,7 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				[['tesT'], `(array) ['tesT']`, `tesT`],
 				[['tEst'], `(array) ['tEst']`, `tEst`],
 
-				[['  test  '], `(array) ['  test  ']`, `  test  `],
+				[[' test '], `(array) [' test ']`, ` test `],
 				[[' test ', ' test '], `(array) [' test ', ' test ']`, ` test , test `],
 				[[' ', 'test', ' '], `(array) [' ', 'test', ' ']`, ` ,test, `],
 				[['\t', 'test', '\t'], `(array) ['\\t', 'test', '\\t']`, `\t,test,\t`],
@@ -245,7 +245,7 @@ exports.testStr = (describe, it, assert, helpLib) => {
 							[vp1[0] + vp2[0], `(string) '${dp1}${dp2}'`, vp2[2]],
 							[vp2[0] + vp1[0], `(string) '${dp2}${dp1}'`, vp2[2]],
 							[vp1[0] + vp2[0] + vp1[0], `(string) '${dp1}${dp2}${dp1}'`, vp2[2]],
-							[vp1[0] + vp2[0] + vp1[0] + vp2[0] + vp1[0], `(string) '${dp1}${dp2}${dp1}${dp2}${dp1}'`,vp2[0] + vp1[0] + vp2[0]]
+							[vp1[0] + vp2[0] + vp1[0] + vp2[0] + vp1[0], `(string) '${dp1}${dp2}${dp1}${dp2}${dp1}'`, vp2[2] + vp1[2] + vp2[2]]
 						];
 
 						for(let p3 in comboParams) {
@@ -275,81 +275,127 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				assert.isFunction(helpLib.str.clearDoubleSpace, 'function "clearDoubleSpace" is not added or is not a function');
 			});
 
+			let params = getParams();
+
+			params.strE = [
+				['', `(string) ''`, ``], ["", `(string) ""`, ``], [``, `(string) \`\``, ``],
+				['  ', `(string) '  '`, ` `], ["  ", `(string) "  "`, ` `], [`  `, `(string) \`  \``, ` `],
+				['   ', `(string) '   '`, ` `], ["   ", `(string) "   "`, ` `], [`   `, `(string) \`   \``, ` `],
+
+				['\t', `(string) '\\t'`, ` `], ["\t", `(string) "\\t"`, ` `], [`\t`, `(string) \`\\t\``, ` `],
+				['  \t', `(string) '  \\t'`, ` `], ["  \t", `(string) "  \\t"`, ` `], [`  \t`, `(string) \`  \\t\``, ` `],
+				['\t\t', `(string) '\\t\\t'`, ` `], ["\t\t", `(string) "\\t\\t"`, ` `], [`\t\t`, `(string) \`\\t\\t\``, ` `],
+				['\t \t', `(string) '\\t \\t'`, ` `], ["\t \t", `(string) "\\t \\t"`, ` `], [`\t \t`, `(string) \`\\t \\t\``, ` `],
+				['  \t \t', `(string) '  \\t \\t'`, ` `], ["  \t \t", `(string) "  \\t \\t"`, ` `], [`  \t \t`, `(string) \`  \\t \\t\``, ` `],
+				['\t\t\t', `(string) '\\t\\t\\t'`, ` `], ["\t\t\t", `(string) "\\t\\t\\t"`, ` `], [`\t\t\t`, `(string) \`\\t\\t\\t\``, ` `],
+
+				['\n', `(string) '\\n'`, `\n`], ["\n", `(string) "\\n"`, `\n`], [`\n`, `(string) \`\\n\``, `\n`],
+				['\n ', `(string) '\\n '`, `\n `], ["\n ", `(string) "\\n "`, `\n `], [`\n `, `(string) \`\\n \``, `\n `],
+				['  \n', `(string) '  \\n'`, ` \n`], ["  \n", `(string) "  \\n"`, ` \n`], [`  \n`, `(string) \`  \\n\``, ` \n`],
+				['\n  \n   ', `(string) '\\n  \\n   '`, `\n \n `], ["\n  \n   ", `(string) "\\n  \\n   "`, `\n \n `],
+				[`\n  \n   `, `(string) \`\\n  \\n   \``, `\n \n `],
+
+				['\n\t', `(string) '\\n\\t'`, `\n `], ["\n\t", `(string) "\\n\\t"`, `\n `], [`\n\t`, `(string) \`\\n\\t\``, `\n `],
+				['\t \n', `(string) '\\t \\n'`, ` \n`], ["\t \n", `(string) "\\t \\n"`, ` \n`], [`\t \n`, `(string) \`\\t \\n\``, ` \n`],
+				['\t\t\n', `(string) '\\t\\t\\n'`, ` \n`],
+				["\t\t\n", `(string) "\\t\\t\\n"`, ` \n`],
+				[`\t\t\n`, `(string) \`\\t\\t\\n\``, ` \n`],
+				['\n\t\t\n\t\t\t', `(string) '\\n\\t\\t\\n\\t\\t\\t'`, `\n \n `],
+				["\n\t\t\n\t\t\t", `(string) "\\n\\t\\t\\n\\t\\t\\t"`, `\n \n `],
+				[`\n\t\t\n\t\t\t`, `(string) \`\\n\\t\\t\\n\\t\\t\\t\``, `\n \n `],
+				['\n\t \n\t  ', `(string) '\\n\\t \\n\\t  '`, `\n \n `],
+				["\n\t \n\t  ", `(string) "\\n\\t \\n\\t  "`, `\n \n `],
+				[`\n\t \n\t  `, `(string) \`\\n\\t \\n\\t  \``, `\n \n `],
+
+
+				['\u00A0', `(string) '\\u00A0'`, ` `], ["\u00A0", `(string) "\\u00A0"`, ` `], [`\u00A0`, `(string) \`\\u00A0\``, ` `],
+				['\u00A0\u00A0', `(string) '\\u00A0\\u00A0'`, ` `],
+				["\u00A0\u00A0", `(string) "\\u00A0\\u00A0"`, ` `],
+				[`\u00A0\u00A0`, `(string) \`\\u00A0\\u00A0\``, ` `],
+				[' \u00A0 \u00A0', `(string) ' \\u00A0 \\u00A0'`, ` `],
+				[" \u00A0 \u00A0", `(string) " \\u00A0 \\u00A0"`, ` `],
+				[` \u00A0 \u00A0`, `(string) \` \\u00A0 \\u00A0\``, ` `],
+				['\u00A0\u00A0   \u00A0', `(string) '\\u00A0\\u00A0   \\u00A0'`, ` `],
+				["\u00A0\u00A0   \u00A0", `(string) "\\u00A0\\u00A0   \\u00A0"`, ` `],
+				[`\u00A0\u00A0   \u00A0`, `(string) \`\\u00A0\\u00A0   \\u00A0\``, ` `],
+
+				[' \u00A0\t\u00A0', `(string) ' \\u00A0\\t\\u00A0'`, ` `],
+				[" \u00A0\t\u00A0", `(string) " \\u00A0\\t\\u00A0"`, ` `],
+				[` \u00A0\t\u00A0`, `(string) \` \\u00A0\\t\\u00A0\``, ` `],
+				['\u00A0\u00A0\t \t\u00A0\t', `(string) '\\u00A0\\u00A0\\t \\t\\u00A0\\t'`, ` `],
+				["\u00A0\u00A0\t \t\u00A0\t", `(string) "\\u00A0\\u00A0\\t \\t\\u00A0\\t"`, ` `],
+				[`\u00A0\u00A0\t \t\u00A0\t`, `(string) \`\\u00A0\\u00A0\\t \\t\\u00A0\\t\``, ` `],
+				['\t\u00A0\t\t\u00A0  \t', `(string) '\\t\\u00A0\\t\\t\\u00A0  \\t'`, ` `],
+				["\t\u00A0\t\t\u00A0  \t", `(string) "\\t\\u00A0\\t\\t\\u00A0  \\t"`, ` `],
+				[`\t\u00A0\t\t\u00A0  \t`, `(string) \`\\t\\u00A0\\t\\t\\u00A0  \\t\``, ` `],
+
+				['\u00A0\t \n\u00A0\u00A0\t\u00A0', `(string) '\\u00A0\\t \\n\\u00A0\\u00A0\\t\\u00A0'`, ` \n `],
+				["\u00A0\t \n\u00A0\u00A0\t\u00A0", `(string) "\\u00A0\\t \\n\\u00A0\\u00A0\\t\\u00A0"`, ` \n `],
+				[`\u00A0\t \n\u00A0\u00A0\t\u00A0`, `(string) \`\\u00A0\\t \\n\\u00A0\\u00A0\\t\\u00A0\``, ` \n `],
+				['\u00A0\n\t\u00A0 \n  ', `(string) '\\u00A0\\n\\t\\u00A0 \\n  '`, ` \n \n `],
+				["\u00A0\n\t\u00A0 \n  ", `(string) "\\u00A0\\n\\t\\u00A0 \\n  "`, ` \n \n `],
+				[`\u00A0\n\t\u00A0 \n  `, `(string) \`\\u00A0\\n\\t\\u00A0 \\n  \``, ` \n \n `],
+				['\n\u00A0\t \u00A0\n\u00A0\t\u00A0\n', `(string) '\\n\\u00A0\\t \\u00A0\\n\\u00A0\\t\\u00A0\\n'`, `\n \n \n`],
+				["\n\u00A0\t \u00A0\n\u00A0\t\u00A0\n", `(string) "\\n\\u00A0\\t \\u00A0\\n\\u00A0\\t\\u00A0\\n"`, `\n \n \n`],
+				[`\n\u00A0\t \u00A0\n\u00A0\t\u00A0\n`, `(string) \`\\n\\u00A0\\t \\u00A0\\n\\u00A0\\t\\u00A0\\n\``, `\n \n \n`]
+			],
+
+			params.arr.push(
+				[['   test   '], `(array) ['   test   ']`, ` test `],
+				[['test  ', '  test'], `(array) ['test  ', '  test']`, `test , test`],
+				[['  test   ', '   test  '], `(array) ['  test   ', '   test  ']`, ` test , test `],
+				[['\t\t ', 'test', ' \t\t'], `(array) ['\\t\\t ', 'test', ' \\t\\t']`, ` ,test, `],
+				[['\u00A0\u00A0 ', 'test', ' \u00A0\u00A0'], `(array) ['\\u00A0\\u00A0 ', 'test', ' \\u00A0\\u00A0']`, ` ,test, `]
+			);
+
+			params.obj.push(
+				[{toString: () => '   test   '}, `(object) {toString: () => '   test   '}`, ` test `],
+				[{toString: () => 'test  test'}, `(object) {toString: () => 'test  test'}`, `test test`],
+				[{toString: () => '  test   test  '}, `(object) {toString: () => '  test   test  '}`, ` test test `],
+				[{toString: () => '\t\t test \t\t'}, `(object) {toString: () => '\\t\\t test \\t\\t'}`, ` test `],
+				[{toString: () => '\u00A0\u00A0 test \u00A0\u00A0'}, `(object) {toString: () => '\\u00A0\\u00A0 test \\u00A0\\u00A0'}`, ` test `]
+			);
+
 			it('call with parameters who can convert to string', () => {
-				assert.strictEqual(helpLib.str.clearDoubleSpace(true), 'true', 'result with "(bool) true" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace(false), 'false', 'result with "(bool) false" parameter is incorrect');
+				for(let p1 in params.strE) {
+					assert.strictEqual(helpLib.str.clearDoubleSpace(params.strE[p1][0]), params.strE[p1][2],
+						`result with "${params.strE[p1][1]}" parameter is incorrect`);
 
-				assert.strictEqual(helpLib.str.clearDoubleSpace(0), '0', 'result with "(number) 0" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace(1), '1', 'result with "(number) 1" parameter is incorrect');
+					let strParams = params.strT.concat(params.strN, params.strS, params.num, params.bool);
+					for(let p2 in strParams) {
+						let vp1 = params.strE[p1];
+						let vp2 = strParams[p2];
+						let dp1 = vp1[1].replace(/^\(string\)\s['"`](.*)['"`]$/, '$1');
+						let dp2 = vp2[1].replace(/^\(string\)\s['"`](.*)['"`]$/, '$1').replace(/^\((?:(?:number)|(?:bool))\)\s(.*)$/, '$1');
+						let comboParams  = [
+							vp2,
+							[vp1[0] + vp2[0], `(string) '${dp1}${dp2}'`, vp1[2] + vp2[2]],
+							[vp2[0] + vp1[0], `(string) '${dp2}${dp1}'`, vp2[2] + vp1[2]],
+							[vp1[0] + vp2[0] + vp1[0], `(string) '${dp1}${dp2}${dp1}'`, vp1[2] + vp2[2] + vp1[2]],
+							[vp2[0] + vp1[0] + vp2[0], `(string) '${dp2}${dp1}${dp2}'`, vp2[2] + vp1[2] + vp2[2]],
+							[vp1[0] + vp2[0] + vp1[0] + vp2[0] + vp1[0], `(string) '${dp1}${dp2}${dp1}${dp2}${dp1}'`, vp1[2]+ vp2[2] + vp1[2] + vp2[2] + vp1[2]]
+						];
 
-				assert.strictEqual(helpLib.str.clearDoubleSpace(''), '',
-					'result with "(string) \'\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace(' '), ' ',
-					'result with "(string) \'  \'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace('  '), ' ',
-					'result with "(string) \'   \'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace('   '), ' ',
-					'result with "(string) \'    \'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace('test'), 'test',
-					'result with "(string) \'test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace(' test '), ' test ',
-					'result with "(string) \' test \'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace('   test    test   '), ' test test ',
-					'result with "(string) \'   test    test   \'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace("\t"), ' ',
-					'result with "(string) "\\t"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace("\t\t"), ' ',
-					'result with "(string) "\\t\\t"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace(" \t \t \t "), ' ',
-					'result with "(string) " \\t \\t \\t "" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace("\t \n \t \t   \t\r\n\t\t "), " \n \r\n ",
-					'result with "(string) "\\t \\n \\t \\t   \\t\\r\\n\\t\\t "" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace("\ttest\t \t\t"), ' test ',
-					'result with "(string) "\\ttest\\t \\t\\t"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace("test\t \n  \t\t"), "test \n ",
-					'result with "(string) "test\\t \\n  \\t\\t"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace(" test\r\n \r\n\t\n"), " test\r\n \r\n \n",
-					'result with "(string) " test\\r\\n \\r\\n\\t\\n"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace("\u00A0"), " ",
-					'result with "(string) "\\u00A0"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace("\u00A0\u00A0"), " ",
-					'result with "(string) "\\u00A0\\u00A0"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace("\u00A0 \u00A0\t\u00A0 "), " ",
-					'result with "(string) "\\u00A0 \\u00A0\\t\\u00A0 "" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace("\u00A0test\u00A0"), " test ",
-					'result with "(string) "\\u00A0test\\u00A0"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace("\u00A0 \ttest\u00A0 \t\u00A0 test"), " test test",
-					'result with "(string) "\\u00A0 \\ttest\\u00A0 \\t\\u00A0 test"" parameter is incorrect');
+						for(let p3 in comboParams) {
+							assert.strictEqual(helpLib.str.clearDoubleSpace(comboParams[p3][0]), comboParams[p3][2],
+								`result with "${comboParams[p3][1]}" parameter is incorrect`);
+						}
+					}
+				}
 
-				assert.strictEqual(helpLib.str.clearDoubleSpace([]), '',
-					'result with "(array) []" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace(['test']), 'test',
-					'result with "(array) [\'test\']" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace(['   test   ']), ' test ',
-					'result with "(array) [\'   test   \']" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace([' test   ', '     test ']), ' test , test ',
-					'result with "(array) [\' test   \', \'        test \']" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.clearDoubleSpace({}), '[object Object]',
-					'result with "(object) {}" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace({test: 'test'}), '[object Object]',
-					'result with "(object) {test: \'test\'}" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace({toString: () => 'test'}), 'test',
-					'result with "(object) {toString: () => \'test\'}" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace({toString: () => '   test   '}), ' test ',
-					'result with "(object) {toString: () => \'   test   \'}" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace({toString: () => ' test   test '}), ' test test ',
-					'result with "(object) {toString: () => \' test   test \'}" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.clearDoubleSpace(() => {}), '() => {}', 'result with "function" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.clearDoubleSpace(NaN), 'NaN', 'result with "NaN" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace(Infinity), 'Infinity', 'result with "Infinity" parameter is incorrect');
+				let otheParams = params.arr.concat(params.obj, params.func);
+				for(let p in otheParams) {
+					let res = otheParams[p][2].replace(/[\t\u00A0]+/g, ' ');
+					assert.strictEqual(helpLib.str.clearDoubleSpace(otheParams[p][0]), res,
+						`result with "${otheParams[p][1]}" parameter is incorrect`);
+				}
 			});
 
 			it('call with parameters who can not convert to string', () => {
-				assert.strictEqual(helpLib.str.clearDoubleSpace(undefined), '', 'result with "undefined" parameter is incorrect');
-				assert.strictEqual(helpLib.str.clearDoubleSpace(null), '', 'result with "null" parameter is incorrect');
+				for(let p in params.notset) {
+					assert.strictEqual(helpLib.str.clearDoubleSpace(params.notset[p][0]), params.notset[p][2],
+						`result with "${params.notset[p][1]}" parameter is incorrect`);
+				}
 			});
 		});
 
@@ -358,53 +404,37 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				assert.isFunction(helpLib.str.ucFirst, 'function "ucFirst" is not added or is not a function');
 			});
 
+			let params = getParams();
+
+			params.strUC = [
+				['test', `(string) 'test'`, `Test`], ['Test', `(string) 'Test'`, `Test`],
+				['tesT', `(string) 'tesT'`, `TesT`], ['tEst', `(string) 'tEst'`, `TEst`],
+
+				['test test', `(string) 'test test'`, `Test test`], [' test test', `(string) ' test test'`, ` test test`],
+				['\ttest test', `(string) '\\ttest test'`, `\ttest test`], ['\ntest test', `(string) '\\ntest test'`, `\ntest test`],
+				['\u00A0test test', `(string) '\\u00A0test test'`, `\u00A0test test`]
+			],
+
 			it('call with parameters who can convert to string', () => {
-				assert.strictEqual(helpLib.str.ucFirst(true), 'True', 'result with "(bool) true" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst(false), 'False', 'result with "(bool) false" parameter is incorrect');
+				let changedParams = params.strT.concat(params.arr, params.obj, params.func, params.bool);
+				for(let p in changedParams) {
+					let res = changedParams[p][2].length > 0 ? (changedParams[p][2][0].toUpperCase() + changedParams[p][2].substr(1)) : '';
+					assert.strictEqual(helpLib.str.ucFirst(changedParams[p][0]), res,
+						`result with "${changedParams[p][1]}" parameter is incorrect`);
+				}
 
-				assert.strictEqual(helpLib.str.ucFirst(0), '0', 'result with "(number) 0" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst(1), '1', 'result with "(number) 1" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.ucFirst(''), '', 'result with "(string) \'\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst(' '), ' ', 'result with "(string) \'  \'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst('test'), 'Test', 'result with "(string) \'test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst('Test'), 'Test', 'result with "(string) \'Test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst('TEST'), 'TEST', 'result with "(string) \'TEST\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst(' test '), ' test ', 'result with "(string) \' test \'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst('test test'), 'Test test', 'result with "(string) \'test test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst('100test'), '100test', 'result with "(string) \'100test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst('(test)'), '(test)', 'result with "(string) \'(test)\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst('#test'), '#test', 'result with "(string) \'#test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst("\ttest"), "\ttest", 'result with "(string) "\\ttest"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst("test\t"), "Test\t", 'result with "(string) "test\\t"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst("\ntest"), "\ntest", 'result with "(string) "\\ntest"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst("test\n"), "Test\n", 'result with "(string) "test\\n"" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.ucFirst([]), '',
-					'result with "(array) []" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst(['test']), 'Test',
-					'result with "(array) [\'test\']" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst(['test', 'test']), 'Test,test',
-					'result with "(array) [\'test\', \'test\']" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.ucFirst({}), '[object Object]',
-					'result with "(object) {}" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst({test: 'test'}), '[object Object]',
-					'result with "(object) {test: \'test\'}" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst({toString: () => 'test'}), 'Test',
-					'result with "(object) {toString: () => \'test\'}" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst({toString: () => 'test test'}), 'Test test',
-					'result with "(object) {toString: () => \'test test\'}" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.ucFirst(() => {}), '() => {}', 'result with "function" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.ucFirst(NaN), 'NaN', 'result with "NaN" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst(Infinity), 'Infinity', 'result with "Infinity" parameter is incorrect');
+				let noChangedParams = params.strE.concat(params.strN, params.strS, params.num, params.strUC);
+				for(let p in noChangedParams) {
+					assert.strictEqual(helpLib.str.ucFirst(noChangedParams[p][0]), noChangedParams[p][2],
+						`result with "${noChangedParams[p][1]}" parameter is incorrect`);
+				}
 			});
 
 			it('call with parameters who can not convert to string', () => {
-				assert.strictEqual(helpLib.str.ucFirst(undefined), '', 'result with "undefined" parameter is incorrect');
-				assert.strictEqual(helpLib.str.ucFirst(null), '', 'result with "null" parameter is incorrect');
+				for(let p in params.notset) {
+					assert.strictEqual(helpLib.str.ucFirst(params.notset[p][0]), params.notset[p][2],
+						`result with "${params.notset[p][1]}" parameter is incorrect`);
+				}
 			});
 		});
 
@@ -413,53 +443,37 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				assert.isFunction(helpLib.str.lcFirst, 'function "lcFirst" is not added or is not a function');
 			});
 
+			let params = getParams();
+
+			params.strLC = [
+				['test', `(string) 'test'`, `test`], ['Test', `(string) 'Test'`, `test`],
+				['TesT', `(string) 'TesT'`, `tesT`], ['TEst', `(string) 'TEst'`, `tEst`],
+
+				['Test Test', `(string) 'Test Test'`, `test Test`], [' Test Test', `(string) ' Test Test'`, ` Test Test`],
+				['\tTest Test', `(string) '\\tTest Test'`, `\tTest Test`], ['\nTest Test', `(string) '\\nTest Test'`, `\nTest Test`],
+				['\u00A0Test Test', `(string) '\\u00A0Test Test'`, `\u00A0Test Test`]
+			],
+
 			it('call with parameters who can convert to string', () => {
-				assert.strictEqual(helpLib.str.lcFirst(true), 'true', 'result with "(bool) true" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst(false), 'false', 'result with "(bool) false" parameter is incorrect');
+				let changedParams = params.strT.concat(params.arr, params.obj, params.num);
+				for(let p in changedParams) {
+					let res = changedParams[p][2].length > 0 ? (changedParams[p][2][0].toLowerCase() + changedParams[p][2].substr(1)) : '';
+					assert.strictEqual(helpLib.str.lcFirst(changedParams[p][0]), res,
+						`result with "${changedParams[p][1]}" parameter is incorrect`);
+				}
 
-				assert.strictEqual(helpLib.str.lcFirst(0), '0', 'result with "(number) 0" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst(1), '1', 'result with "(number) 1" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.lcFirst(''), '', 'result with "(string) \'\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst(' '), ' ', 'result with "(string) \'  \'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst('test'), 'test', 'result with "(string) \'test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst('Test'), 'test', 'result with "(string) \'Test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst('TEST'), 'tEST', 'result with "(string) \'TEST\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst(' Test '), ' Test ', 'result with "(string) \' Test \'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst('Test Test'), 'test Test', 'result with "(string) \'Test Test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst('100Test'), '100Test', 'result with "(string) \'100Test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst('(Test)'), '(Test)', 'result with "(string) \'(Test)\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst('#Test'), '#Test', 'result with "(string) \'#Test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst("\tTest"), "\tTest", 'result with "(string) "\\tTest"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst("Test\t"), "test\t", 'result with "(string) "Test\\t"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst("\nTest"), "\nTest", 'result with "(string) "\\nTest"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst("Test\n"), "test\n", 'result with "(string) "Test\\n"" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.lcFirst([]), '',
-					'result with "(array) []" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst(['Test']), 'test',
-					'result with "(array) [\'Test\']" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst(['Test', 'Test']), 'test,Test',
-					'result with "(array) [\'Test\', \'Test\']" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.lcFirst({}), '[object Object]',
-					'result with "(object) {}" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst({test: 'test'}), '[object Object]',
-					'result with "(object) {test: \'test\'}" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst({toString: () => 'Test'}), 'test',
-					'result with "(object) {toString: () => \'Test\'}" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst({toString: () => 'Test Test'}), 'test Test',
-					'result with "(object) {toString: () => \'Test Test\'}" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.lcFirst(() => {}), '() => {}', 'result with "function" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.lcFirst(NaN), 'naN', 'result with "NaN" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst(Infinity), 'infinity', 'result with "Infinity" parameter is incorrect');
+				let noChangedParams = params.strE.concat(params.strN, params.strS, params.func, params.bool, params.strLC);
+				for(let p in noChangedParams) {
+					assert.strictEqual(helpLib.str.lcFirst(noChangedParams[p][0]), noChangedParams[p][2],
+						`result with "${noChangedParams[p][1]}" parameter is incorrect`);
+				}
 			});
 
 			it('call with parameters who can not convert to string', () => {
-				assert.strictEqual(helpLib.str.lcFirst(undefined), '', 'result with "undefined" parameter is incorrect');
-				assert.strictEqual(helpLib.str.lcFirst(null), '', 'result with "null" parameter is incorrect');
+				for(let p in params.notset) {
+					assert.strictEqual(helpLib.str.lcFirst(params.notset[p][0]), params.notset[p][2],
+						`result with "${params.notset[p][1]}" parameter is incorrect`);
+				}
 			});
 		});
 
@@ -468,48 +482,42 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				assert.isFunction(helpLib.str.reverse, 'function "reverse" is not added or is not a function');
 			});
 
+			let params = getParams();
+
+			params.strR = [
+				['test', `(string) 'test'`, `tset`], ['Test', `(string) 'Test'`, `tseT`],
+				['tesT', `(string) 'tesT'`, `Tset`], ['tEst', `(string) 'tEst'`, `tsEt`],
+				['#test', `(string) '#test'`, `tset#`], ['test#', `(string) 'test#'`, `#tset`],
+
+				['test test', `(string) 'test test'`, `tset tset`], [' test test', `(string) ' test test'`, `tset tset `],
+				['\ttest test', `(string) '\\ttest test'`, `tset tset\t`], ['\ntest test', `(string) '\\ntest test'`, `tset tset\n`],
+				['\u00A0test test', `(string) '\\u00A0test test'`, `tset tset\u00A0`],
+
+				['100', `(string) '100'`, `001`], ['-0xff', `(string) '-0xff'`, `ffx0-`]
+			],
+
+
 			it('call with parameters who can convert to string', () => {
-				assert.strictEqual(helpLib.str.reverse(true), 'eurt', 'result with "(bool) true" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse(false), 'eslaf', 'result with "(bool) false" parameter is incorrect');
+				let changedParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
 
-				assert.strictEqual(helpLib.str.reverse(0), '0', 'result with "(number) 0" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse(1), '1', 'result with "(number) 1" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse(9870), '0789', 'result with "(number) 9870" parameter is incorrect');
+				for(let p in changedParams) {
+					let res = Array.from(changedParams[p][2]).reverse().join('');
+					assert.strictEqual(helpLib.str.reverse(changedParams[p][0]), res,
+						`result with "${changedParams[p][1]}" parameter is incorrect`);
+				}
 
-				assert.strictEqual(helpLib.str.reverse(''), '', 'result with "(string) \'\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse(' '), ' ', 'result with "(string) \'  \'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse('test'), 'tset', 'result with "(string) \'test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse('Test'), 'tseT', 'result with "(string) \'Test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse(' Test'), 'tseT ', 'result with "(string) \' Test\'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse('test Test '), ' tseT tset', 'result with "(string) \'test Test \'" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse("\ttest"), "tset\t", 'result with "(string) "\\ttest"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse("Test\t"), "\ttseT", 'result with "(string) "Test\\t"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse("\ntest"), "tset\n", 'result with "(string) "\\ntest"" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse("Test\n"), "\ntseT", 'result with "(string) "Test\\n"" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.reverse([]), '',
-					'result with "(array) []" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse(['test']), 'tset',
-					'result with "(array) [\'test\']" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse(['Test', 'test']), 'tset,tseT',
-					'result with "(array) [\'Test\', \'test\']" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.reverse({}), ']tcejbO tcejbo[',
-					'result with "(object) {}" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse({test: 'test'}), ']tcejbO tcejbo[',
-					'result with "(object) {test: \'test\'}" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse({toString: () => 'test'}), 'tset',
-					'result with "(object) {toString: () => \'test\'}" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.reverse(() => {}), '}{ >= )(', 'result with "function" parameter is incorrect');
-
-				assert.strictEqual(helpLib.str.reverse(NaN), 'NaN', 'result with "NaN" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse(Infinity), 'ytinifnI', 'result with "Infinity" parameter is incorrect');
+				for(let p in params.strR) {
+					assert.strictEqual(helpLib.str.reverse(params.strR[p][0]), params.strR[p][2],
+						`result with "${params.strR[p][1]}" parameter is incorrect`);
+				}
 			});
 
 			it('call with parameters who can not convert to string', () => {
-				assert.strictEqual(helpLib.str.reverse(undefined), '', 'result with "undefined" parameter is incorrect');
-				assert.strictEqual(helpLib.str.reverse(null), '', 'result with "null" parameter is incorrect');
+				for(let p in params.notset) {
+					assert.strictEqual(helpLib.str.reverse(params.notset[p][0]), params.notset[p][2],
+						`result with "${params.notset[p][1]}" parameter is incorrect`);
+				}
 			});
 		});
 	});
