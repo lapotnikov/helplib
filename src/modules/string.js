@@ -32,63 +32,80 @@ const $moduleNamespace$ = (helpLib) => {
 		return str.split('').reverse().join('');
 	});
 
-	helpLib.regHelper('str', 'test', null, function(str, regExp) {
+	helpLib.regHelper('str', 'test', {'.': 'isSet'}, function(str, regExp) {
+		if(this.isSet(str) == false || this.isSet(regExp) == false) {
+			return false;
+		}
+
 		try {
-			regExp = regExp instanceof RegExp ? regExp : new RegExp(regExp);
+			regExp = regExp instanceof RegExp ? regExp : new RegExp(this.str.check(regExp));
 			return regExp.test(this.str.check(str));
 		} catch(excep) {
 			return false;
 		}
 	});
 
-	helpLib.regHelper('str', 'isEmail', null, function(str) {
-		let regExp = '^(("[\\w-\\s]+")|([\\w-]+(?:\\.[\\w-]+)*)|("[\\w-\\s]+")([\\w-]+(?:\\.[\\w-]+)*))' +
-			'(@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([a-z]{2,6}(?:\\.[a-z]{2})?)$)|' +
-			'(@\\[?((25[0-5]\\.|2[0-4][0-9]\\.|1[0-9]{2}\\.|[0-9]{1,2}\\.))' +
-				'((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\\.){2}' +
-				'(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})' +
-			'\\]?$)';
+	helpLib.regHelper('str', 'testList', {'.': 'isSet', arr: 'check'}, function(str, list) {
+		if(this.isSet(str) == false) {
+			return false;
+		}
 
-		return this.str.test(str, new RegExp(regExp, 'i'));
-	});
-
-	helpLib.regHelper('str', 'isBlackList', {arr: 'check'}, function(str, list) {
+		str = this.str.check(str, '');
 		list = this.arr.check(list);
 		let listSize = list.length;
 
 		for(let i = 0; i < listSize; i++) {
-			list[i] = this.str.check(list[i]);
-			list[i] = list[i].replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
+			if(this.str.test(str, list[i])) {
+				return true;
+			}
 		}
 
-		return this.str.test(str, '(?:' + list.join(')|(?:') + ')');
+		return false;
 	});
 
-	helpLib.regHelper('str', 'clear', null, function(str, regExp) {
-		try {
-			str = this.str.check(str);
-			regExp = regExp instanceof RegExp ? regExp : new RegExp(regExp);
-			return str.replace(regExp, '');
-		} catch(excep) {
+	helpLib.regHelper('str', 'isEmail', null, function(str) {
+		let addr = '[а-я\\w!#$%&\'*\\-/=?^`{|}~]';
+		let dom1 = '[а-яa-z0-9\\-]';
+		let dom2 = '[а-яa-z]';
+		let regExp = `^((${addr}+(\\.${addr}+)*)|((${addr}+(\\.${addr}+)*)+(\\+${addr}+)*))` +
+			`(@((${dom1}+\\.)*${dom2}${dom1}{0,66})\\.(${dom2}{2,6}(\\.${dom2}{2})?)$)|` +
+			`(@\\[?((25[0-5]\\.|2[0-4][0-9]\\.|1[0-9]{2}\\.|[0-9]{1,2}\\.))` +
+				`((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\\.){2}` +
+				`(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})` +
+			`\\]?$)`;
+
+		if(this.str.test(str, new RegExp(regExp, 'i'))) {
+			return this.str.check(str).split(/@[^@]+$/)[0].length <= 64 ? true : false;
+		} else {
 			return false;
 		}
 	});
 
-	helpLib.regHelper('str', 'clearLow', null, function(str, withNewLines) {
-		let exp = withNewLines ? '[\\x00-\\x09\\x0B\\x0C\\x0E-\\x1F\\x7F]+' : '[\\x00-\\x1F\\x7F]+';
-		return this.str.clear(str, new RegExp(exp, 'g'));
-	});
-
-	helpLib.regHelper('str', 'clearBlackList', {arr: 'check'}, function(str, list) {
-		list = this.arr.check(list);
-		let listSize = list.length;
-
-		for(let i = 0; i < listSize; i++) {
-			list[i] = this.str.check(list[i]);
-			list[i] = list[i].replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
+	helpLib.regHelper('str', 'clear', {'.': 'isSet'}, function(str, regExp) {
+		if(this.isSet(str) == false || this.isSet(regExp) == false) {
+			return this.str.check(str);
 		}
 
-		return this.str.clear(str, new RegExp('(?:' + list.join(')|(?:') + ')', 'g'));
+		try {
+			regExp = new RegExp(regExp instanceof RegExp ? regExp.source : this.str.check(regExp), 'g');
+			return this.str.check(str).replace(regExp, '');
+		} catch(excep) {
+			return this.str.check(str);
+		}
+	});
+
+	helpLib.regHelper('str', 'clearList', {arr: 'check'}, function(str, list) {
+		str = this.str.check(str, '');
+		if(str.length > 0) {
+			list = this.arr.check(list);
+			let listSize = list.length;
+
+			for(let i = 0; i < listSize; i++) {
+				str = this.str.clear(str, list[i]);
+			}
+		}
+
+		return str;
 	});
 };
 

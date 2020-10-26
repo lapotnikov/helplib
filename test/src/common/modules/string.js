@@ -338,7 +338,7 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				['\n\u00A0\t \u00A0\n\u00A0\t\u00A0\n', `(string) '\\n\\u00A0\\t \\u00A0\\n\\u00A0\\t\\u00A0\\n'`, `\n \n \n`],
 				["\n\u00A0\t \u00A0\n\u00A0\t\u00A0\n", `(string) "\\n\\u00A0\\t \\u00A0\\n\\u00A0\\t\\u00A0\\n"`, `\n \n \n`],
 				[`\n\u00A0\t \u00A0\n\u00A0\t\u00A0\n`, `(string) \`\\n\\u00A0\\t \\u00A0\\n\\u00A0\\t\\u00A0\\n\``, `\n \n \n`]
-			],
+			];
 
 			params.arr.push(
 				[['   test   '], `(array) ['   test   ']`, ` test `],
@@ -413,7 +413,7 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				['test test', `(string) 'test test'`, `Test test`], [' test test', `(string) ' test test'`, ` test test`],
 				['\ttest test', `(string) '\\ttest test'`, `\ttest test`], ['\ntest test', `(string) '\\ntest test'`, `\ntest test`],
 				['\u00A0test test', `(string) '\\u00A0test test'`, `\u00A0test test`]
-			],
+			];
 
 			it('call with parameters who can convert to string', () => {
 				let changedParams = params.strT.concat(params.arr, params.obj, params.func, params.bool);
@@ -452,7 +452,7 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				['Test Test', `(string) 'Test Test'`, `test Test`], [' Test Test', `(string) ' Test Test'`, ` Test Test`],
 				['\tTest Test', `(string) '\\tTest Test'`, `\tTest Test`], ['\nTest Test', `(string) '\\nTest Test'`, `\nTest Test`],
 				['\u00A0Test Test', `(string) '\\u00A0Test Test'`, `\u00A0Test Test`]
-			],
+			];
 
 			it('call with parameters who can convert to string', () => {
 				let changedParams = params.strT.concat(params.arr, params.obj, params.num);
@@ -494,7 +494,7 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				['\u00A0test test', `(string) '\\u00A0test test'`, `tset tset\u00A0`],
 
 				['100', `(string) '100'`, `001`], ['-0xff', `(string) '-0xff'`, `ffx0-`]
-			],
+			];
 
 
 			it('call with parameters who can convert to string', () => {
@@ -517,6 +517,908 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				for(let p in params.notset) {
 					assert.strictEqual(helpLib.str.reverse(params.notset[p][0]), params.notset[p][2],
 						`result with "${params.notset[p][1]}" parameter is incorrect`);
+				}
+			});
+		});
+
+		describe('checking "test" function', () => {
+			it('function instance', () => {
+				assert.isFunction(helpLib.str.test, 'function "test" is not added or is not a function');
+			});
+
+			let params = getParams();
+
+			params.findReg = [
+				[/^$/, `(RegExp) /^$/`, /^$/], [/\s$/, `(RegExp) /\\s$/`, /\s$/], [/\s\n/, `(RegExp) /\\s\\n/`, /\s\n/],
+				[/^[tT]/, `(RegExp) /^[tT]/`, /^[tT]/], [/esT$/, `(RegExp) /esT$/`, /esT$/],
+				[/\d/, `(RegExp) /\\d/`, /\d/], [/^\-?0x/, `(RegExp) /^\\-?0x/`, /^\-?0x/],
+				[/[Nn]a[Nn]/, `(RegExp) /[Nn]a[Nn]/`, /[Nn]a[Nn]/], [/-?[Ii]\w{7}/, `(RegExp) /-?[Ii]\\w{7}/`, /-?[Ii]\w{7}/],
+				[/^([\("'#])\w+([\)"'])?$/, `(RegExp) /^([\\("'#])\\w+([\\)"'])?$/`, /^([\("'#])\w+([\)"'])?$/],
+				[/\{[^\}]*\}$/, `(RegExp) /\\{[^\\}]*\\}$/`, /\{[^\}]*\}$/],
+				[/(obj)|(ret)|(\)\s+=>)/, `(RegExp) /(obj)|(ret)|(\\)\\s+=>)/`, /(obj)|(ret)|(\)\s+=>)/],
+				[/^((fal)|(tr))\w{2}$/, `(RegExp) /^(fal)|(tr)\w{2}$/`, /^((fal)|(tr))\w{2}$/]
+			];
+
+			params.notFindReg = [
+				[/\?/, `(RegExp) /\\?/`], [/^[BbWw]/, `(RegExp) /^[BbWw]/`],
+				[/^\s\d/, `(RegExp) /^\\s\\d/`], [/\d[az]$/, `(RegExp) /\\d[az]$/`],
+				[/\+[Ii]\w{7}/, `(RegExp) /\\+[Ii]\\w{7}/`],
+				[/(oBj)|(reT)|(\)=>)/, `(RegExp) /(oBj)|(reT)|(\\)=>)/`],
+				[/^((fal)|(tr))\w{3,}$/, `(RegExp) /^((fal)|(tr))\\w{3,}$/`]
+			];
+
+			params.findRegStr = [
+				['^$', `(string) '^$'`, /^$/], ['\\s$', `(string) '\\s$'`, /\s$/], ['\\s\\n', `(string) '\\s\\n'`, /\s\n/],
+				['^[tT]', `(string) '^[tT]'`, /^[tT]/], ['esT$', `(string) 'esT$'`, /esT$/],
+				['\\d', `(string) '\\d'`, /\d/], ['^\\-?0x', `(string) '^\\-?0x'`, /^\-?0x/],
+				['[Nn]a[Nn]', `(string) '[Nn]a[Nn]'`, /[Nn]a[Nn]/], ['-?[Ii]\\w{7}', `(string) '-?[Ii]\\w{7}'`, /-?[Ii]\w{7}/],
+				['^([\\("\'#])\\w+([\\)"\'])?$', `(string) '^([\\("'#])\\w+([\\)"'])?$'`, /^([\("'#])\w+([\)"'])?$/],
+				['\\{[^\\}]*\\}$', `(string) '\\{[^\\}]*\\}$'`, /\{[^\}]*\}$/],
+				['(obj)|(ret)|(\\)\\s+=>)', `(string) '(obj)|(ret)|(\\)\\s+=>)'`, /(obj)|(ret)|(\)\s+=>)/],
+				['^((fal)|(tr))\\w{2}$', `(string) '^((fal)|(tr))\\w{2}$'`, /^((fal)|(tr))\w{2}$/]
+			];
+
+			params.notFindRegStr = [
+				['\\?', `(RegExp) '\\?'`], ['^[BbWw]', `(RegExp) '^[BbWw]'`],
+				['^\\s\\d', `(RegExp) '^\\s\\d'`], ['\\d[az]$', `(RegExp) '\\d[az]$'`],
+				['\\+[Ii]\\w{7}', `(RegExp) '\\+[Ii]\\w{7}'`],
+				['(oBj)|(reT)|(\\)=>)', `(RegExp) '(oBj)|(reT)|(\\)=>)'`],
+				['^((fal)|(tr))\\w{3,}$', `(RegExp) '^((fal)|(tr))\\w{3,}$'`]
+			];
+
+			params.badRegStr = [
+				['^[tT', `(string) '^[tT'`], ['[tT]{', `(string) '[tT]{'`],
+				['esT)', `(string) 'esT)'`], ['(?tT)', `(string) '(?tT)'`]
+			];
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and regular expression who must find something as "regExp" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					let regRes = false;
+					for(let p2 in params.findReg) {
+						let res = params.findReg[p2][2].test(strParams[p1][2]);
+						regRes = regRes === false && res ? true : regRes;
+
+						assert.strictEqual(helpLib.str.test(strParams[p1][0], params.findReg[p2][0]), res,
+							`result with "${strParams[p1][1]}, ${params.findReg[p2][1]}" parameters is incorrect`);
+					}
+
+					assert.isTrue(regRes, `not one of the search options are not triggered with "${strParams[p1][1]}" as "str" parameter`);
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and regular expression who not must find something as "regExp" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.notFindReg) {
+						assert.isFalse(helpLib.str.test(strParams[p1][0], params.notFindReg[p2][0]),
+							`result with "${strParams[p1][1]}, ${params.notFindReg[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and string with regular expression who must find something as "regExp" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					let regRes = false;
+					for(let p2 in params.findRegStr) {
+						let res = params.findRegStr[p2][2].test(strParams[p1][2]);
+						regRes = regRes == false && res ? true : regRes;
+
+						assert.strictEqual(helpLib.str.test(strParams[p1][0], params.findRegStr[p2][0]), res,
+							`result with "${strParams[p1][1]}, ${params.findRegStr[p2][1]}" parameters is incorrect`);
+					}
+
+					assert.isTrue(regRes, `not one of the search options are not triggered with "${strParams[p1][1]}" as "str" parameter`);
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and string with regular expression who not must find something as "regExp" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.notFindRegStr) {
+						assert.isFalse(helpLib.str.test(strParams[p1][0], params.notFindRegStr[p2][0]),
+							`result with "${strParams[p1][1]}, ${params.notFindRegStr[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" and "regExp" parameters', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.bool);
+
+				for(let p1 in strParams) {
+					let regRes = false;
+					for(let p2 in strParams) {
+						let res = (new RegExp(strParams[p1][2])).test(strParams[p2][2]);
+						regRes = regRes == false && res ? true : regRes;
+
+						assert.strictEqual(helpLib.str.test(strParams[p2][0], strParams[p1][0]), res,
+							`result with "${strParams[p2][1]}, ${strParams[p1][1]}" parameters is incorrect`);
+					}
+
+					assert.isTrue(regRes, `none of the string did not match the search option "${strParams[p1][1]}" as "regExp" parameter`);
+				}
+			});
+
+			it('call without parameters or with null or undefined values', () => {
+				assert.isFalse(helpLib.str.test(), 'result without parameter is incorrect');
+
+				assert.isFalse(helpLib.str.test(undefined), 'result with "undefined" parameter is incorrect');
+				assert.isFalse(helpLib.str.test(undefined, undefined), 'result with "undefined, undefined" parameters is incorrect');
+
+				assert.isFalse(helpLib.str.test(null), 'result with "null" parameter is incorrect');
+				assert.isFalse(helpLib.str.test(null, null), 'result with "null, null" parameters is incorrect');
+			});
+
+			it('call with values who can not convert to string as "str" parameter and some "regExp" parameter', () => {
+				for(let p in params.notset) {
+					assert.isFalse(helpLib.str.test(params.notset[p][0], /^.*$/),
+						`result with "${params.notset[p][1]}, (RegExp) /^.*$/" parameters is incorrect`);
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and string with invalid regular expression as "regExp" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.badRegStr) {
+						assert.isFalse(helpLib.str.test(strParams[p1][0], params.badRegStr[p2][0]),
+							`result with "${strParams[p1][1]}, ${params.badRegStr[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with values who can not convert to string as "str" parameter ' +
+				'and with values who can not convert to string as "regExp" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.notset) {
+						assert.isFalse(helpLib.str.test(strParams[p1][0], params.notset[p2][0]),
+							`result with "${strParams[p1][1]}, ${params.notset[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+		});
+
+		describe('checking "testList" function', () => {
+			it('function instance', () => {
+				assert.isFunction(helpLib.str.testList, 'function "testList" is not added or is not a function');
+			});
+
+			let params = getParams();
+
+			params.findReg = [
+				[[/^$/, /\s$/, /\s\n/], `(array) [/^$/, /\\s$/, /\\s\\n/]`, /(^$)|(\s$)|(\s\n)/],
+				[[/^[tT]/, /\d/, /^\-?0x/], `(array) [/^[tT]/, /\\d/, /^\\-?0x/]`, /(^[tT])|(\d)|(^\-?0x)/],
+				[[/[Nn]a[Nn]/, /-?[Ii]\w{7}/], `(array) [/[Nn]a[Nn]/, /-?[Ii]\\w{7}/]`, /([Nn]a[Nn])|(-?[Ii]\w{7})/],
+				[[/^([\("'#])\w+([\)"'])?$/], `(array) [/^([\\("'#])\\w+([\\)"'])?$/]`, /^([\("'#])\w+([\)"'])?$/],
+				[[/\{[^\}]*\}$/], `(array) [/\\{[^\\}]*\\}$/]`, /\{[^\}]*\}$/],
+				[[/obj/, /ret/, /\)\s+=>/], `(array) [/obj/, /ret/, /\\)\\s+=>/]`, /(obj)|(ret)|(\)\s+=>)/],
+				[[/^(fal)\w{2}$/, /^(tr)\w{2}$/], `(array) [/^(fal)\\w{2}$/, /^(tr)\\w{2}$/]`, /(^(fal)\w{2}$)|(^(tr)\w{2}$)/]
+			];
+
+			params.notFindReg = [
+				[[/\?/, /^[BbWw]/], `(array) [/\\?/, /^[BbWw]/]`],
+				[[/^\s\d/, /\d[az]$/], `(array) [/^\\s\\d/, /\\d[az]$/]`],
+				[[/\+[Ii]\w{7}/, /oBj/, /reT/, /\)=>/], `(array) [/\\+[Ii]\\w{7}/, /oBj/, /reT/, /\\)=>/]`],
+				[[/^(fal)\w{3,}$/, /^(tr)\w{3,}$/], `(array) [/^(fal)\\w{3,}$/, /^(tr)\\w{3,}$/]`]
+			];
+
+			params.findRegStr = [
+				[['^$', '\\s$', '\\s\\n'], `(array) ['^$', '\\s$', '\\s\\n']`, /(^$)|(\s$)|(\s\n)/],
+				[['^[tT]', '\\d', '^\\-?0x'], `(array) ['^[tT]', '\\d', '^\\-?0x']`, /(^[tT])|(\d)|(^\-?0x)/],
+				[['[Nn]a[Nn]', '-?[Ii]\\w{7}'], `(array) ['[Nn]a[Nn]', '-?[Ii]\\w{7}']`, /([Nn]a[Nn])|(-?[Ii]\w{7})/],
+				[['^([\\("\'#])\\w+([\\)"\'])?$'], `(array) ['^([\\("\\'#])\\w+([\\)"\\'])?$']`, /^([\("'#])\w+([\)"'])?$/],
+				[['\\{[^\\}]*\\}$'], `(array) ['\\{[^\\}]*\\}$']`, /\{[^\}]*\}$/],
+				[['obj', 'ret', '\\)\\s+=>'], `(array) ['obj', 'ret', '\\)\\s+=>']`, /(obj)|(ret)|(\)\s+=>)/],
+				[['^(fal)\\w{2}$', '^(tr)\\w{2}$'], `(array) ['^(fal)\\w{2}$', '^(tr)\\w{2}$']`, /(^(fal)\w{2}$)|(^(tr)\w{2}$)/]
+			];
+
+			params.notFindRegStr = [
+				[['\\?', '^[BbWw]'], `(array) ['\\?', '^[BbWw]']`],
+				[['^\\s\\d', '\\d[az]$'], `(array) ['^\\s\\d', '\\d[az]$']`],
+				[['\\+[Ii]\\w{7}', 'oBj', 'reT', '\\)=>'], `(array) ['\\+[Ii]\\w{7}', 'oBj', 'reT', '\\)=>']`],
+				[['^(fal)\\w{3,}$', '^(tr)\\w{3,}$'] ,`(array) ['^(fal)\\w{3,}$', '^(tr)\\w{3,}$']`]
+			];
+
+			params.badRegStr = [
+				[['^('], `(array) ['^(']`],
+				[['^[tT', '[tT]{'], `(array) ['^[tT', '[tT]{']`],
+				[['esT)', '(?tT)'], `(array) ['esT)', '(?tT)']`]
+			];
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and with list of regular expressions who must find something as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					let regRes = false;
+					for(let p2 in params.findReg) {
+						let res = params.findReg[p2][2].test(strParams[p1][2]);
+						regRes = regRes === false && res ? true : regRes;
+
+						assert.strictEqual(helpLib.str.testList(strParams[p1][0], params.findReg[p2][0]), res,
+							`result with "${strParams[p1][1]}, ${params.findReg[p2][1]}" parameters is incorrect`);
+
+						for(let p3 in params.notFindReg) {
+							let param1 = params.notFindReg[p3][1].replace(/^\(array\) \[(.*)\]$/, '$1');
+							let param2 = params.findReg[p2][1].replace(/^\(array\) \[(.*)\]$/, '$1');
+
+							assert.strictEqual(helpLib.str.testList(strParams[p1][0], params.notFindReg[p3][0].concat(params.findReg[p2][0])), res,
+								`result with "${strParams[p1][1]}, (array) [${param1}, ${param2}]" parameters is incorrect`);
+						}
+					}
+
+					assert.isTrue(regRes, `not one of the search options are not triggered with "${strParams[p1][1]}" as "str" parameter`);
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and with list of regular expressions who not must find something as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.notFindReg) {
+						assert.isFalse(helpLib.str.testList(strParams[p1][0], params.notFindReg[p2][0]),
+							`result with "${strParams[p1][1]}, ${params.notFindReg[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and with list of strings with regular expressions who must find something as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					let regRes = false;
+					for(let p2 in params.findRegStr) {
+						let res = params.findRegStr[p2][2].test(strParams[p1][2]);
+						regRes = regRes == false && res ? true : regRes;
+
+						assert.strictEqual(helpLib.str.testList(strParams[p1][0], params.findRegStr[p2][0]), res,
+							`result with "${strParams[p1][1]}, ${params.findRegStr[p2][1]}" parameters is incorrect`);
+
+						let badParams = params.notFindRegStr.concat(params.badRegStr);
+						for(let p3 in badParams) {
+							let param1 = badParams[p3][1].replace(/^\(array\) \[(.*)\]$/, '$1');
+							let param2 = params.findReg[p2][1].replace(/^\(array\) \[(.*)\]$/, '$1');
+
+							assert.strictEqual(helpLib.str.testList(strParams[p1][0], badParams[p3][0].concat(params.findReg[p2][0])), res,
+								`result with "${strParams[p1][1]}, (array) [${param1}, ${param2}]" parameters is incorrect`);
+						}
+					}
+
+					assert.isTrue(regRes, `not one of the search options are not triggered with "${strParams[p1][1]}" as "str" parameter`);
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and with list of strings with regular expressions who not must find something as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.notFindRegStr) {
+						assert.isFalse(helpLib.str.testList(strParams[p1][0], params.notFindRegStr[p2][0]),
+							`result with "${strParams[p1][1]}, ${params.notFindRegStr[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and with list of values who can convert to string as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.bool);
+
+				for(let p1 in strParams) {
+					let regRes = false;
+					for(let p2 in strParams) {
+						let res = (new RegExp(strParams[p1][2])).test(strParams[p2][2]);
+						regRes = regRes == false && res ? true : regRes;
+
+						assert.strictEqual(helpLib.str.testList(strParams[p2][0], [strParams[p1][0]]), res,
+							`result with "${strParams[p2][1]}, (array) [${strParams[p1][1]}]" parameters is incorrect`);
+					}
+
+					assert.isTrue(regRes, `none of the string did not match the search option "${strParams[p1][1]}" as "regExp" parameter`);
+				}
+			});
+
+			it('call without parameters or with null or undefined values', () => {
+				assert.isFalse(helpLib.str.testList(), 'result without parameter is incorrect');
+
+				assert.isFalse(helpLib.str.testList(undefined), 'result with "undefined" parameter is incorrect');
+				assert.isFalse(helpLib.str.testList(undefined, undefined), 'result with "undefined, undefined" parameters is incorrect');
+
+				assert.isFalse(helpLib.str.testList(null), 'result with "null" parameter is incorrect');
+				assert.isFalse(helpLib.str.testList(null, null), 'result with "null, null" parameters is incorrect');
+			});
+
+			it('call with values who can not convert to string as "str" parameter ' +
+				'and with list of some regular expressions as "list" parameter', () => {
+				for(let p in params.notset) {
+					assert.isFalse(helpLib.str.testList(params.notset[p][0], [/^.*$/]),
+						`result with "${params.notset[p][1]}, (array) [/^.*$/]" parameters is incorrect`);
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and with list of strings with invalid regular expressions as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.badRegStr) {
+						assert.isFalse(helpLib.str.testList(strParams[p1][0], params.badRegStr[p2][0]),
+							`result with "${strParams[p1][1]}, ${params.badRegStr[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with values who can not convert to string as "str" parameter ' +
+				'and with list of values who can not convert to string as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.notset) {
+						assert.isFalse(helpLib.str.testList(strParams[p1][0], [params.notset[p2][0]]),
+							`result with "${strParams[p1][1]}, (array) [${params.notset[p2][1]}]" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with values who can not convert to string as "str" parameter ' +
+				'and with values who can not convert to list as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.bool);
+				let notListParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.obj, params.bool, params.notset);
+
+				for(let p1 in strParams) {
+					for(let p2 in notListParams) {
+						assert.isFalse(helpLib.str.testList(strParams[p1][0], notListParams[p2][0]),
+							`result with "${strParams[p1][1]}, ${notListParams[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+		});
+
+		describe('checking "isEmail" function', () => {
+			it('function instance', () => {
+				assert.isFunction(helpLib.str.isEmail, 'function "isEmail" is not added or is not a function');
+			});
+
+			let params = getParams();
+
+			params.email = [
+				['email@example.com', `(string) 'email@example.com'`],
+				['Email@example.name', `(string) 'Email@example.name'`],
+				['eMail@example.museum', `(string) 'eMail@example.museum'`],
+				['emAil@example-one.com', `(string) 'emAil@example-one.com'`],
+				['EMAIL@example.co.jp', `(string) 'EMAIL@example.co.jp'`],
+				['email@Subdomain.example.com', `(string) 'email@Subdomain.example.com'`],
+				['email@subdomain.EXAMPLE.com.ru', `(string) 'email@subdomain.EXAMPLE.com.ru'`],
+				['email@subdomain.example.E.RU', `(string) 'email@subdomain.example.E.RU'`],
+				['email@example.рф', `(string) 'email@example.рф'`],
+				['email@КИРИЛЛИЦА.рф', `(string) 'email@КИРИЛЛИЦА.рф'`],
+				['email@кириллица.КОМ.РФ', `(string) 'email@кириллица.КОМ.РФ'`],
+				['email@1.example.com', `(string) 'email@1.example.com'`],
+				['email@1.кириллица.com', `(string) 'email@1.кириллица.com'`],
+				['email@[127.0.0.1]', `(string) 'email@[127.0.0.1]'`],
+				['email@[8.8.8.8]', `(string) 'email@[8.8.8.8]'`],
+				['email@[123.123.123.123]', `(string) 'email@[123.123.123.123]'`],
+				['email@127.0.0.1', `(string) 'email@127.0.0.1'`],
+				['email@8.8.8.8', `(string) 'email@8.8.8.8'`],
+				['email@123.123.123.123', `(string) 'email@123.123.123.123'`],
+
+				['x@example.com', `(string) 'x@example.com'`],
+				['мыло@кириллица.ком.рф', `(string) 'мыло@кириллица.ком.рф'`],
+				['firstname.lastname@example.com', `(string) 'firstname.lastname@example.com'`],
+				['very.common.mail@example.com', `(string) 'very.common.mail@example.com'`],
+				['тест.тест.мыло@кириллица.ком.рф', `(string) 'тест.тест.мыло@кириллица.ком.рф'`],
+				['fully-qualified-domain@example.com', `(string) 'fully-qualified-domain@example.com'`],
+				['example-indeed@strange-example.com', `(string) 'example-indeed@strange-example.com'`],
+				['тест-мыло@кириллица.ком.рф', `(string) 'тест-мыло@кириллица.ком.рф'`],
+				['example_indeed@example.com', `(string) 'example_indeed@example.com'`],
+				['fully_qualified-domain@example.com', `(string) 'fully_qualified-domain@example.com'`],
+				['мыло_тест-мыло@кириллица.ком.рф', `(string) 'мыло_тест-мыло@кириллица.ком.рф'`],
+				['other.email-with-hyphen@example.com', `(string) 'other.email-with-hyphen@example.com'`],
+				['other.email-with-hyphen.example@example.com', `(string) 'other.email-with-hyphen.example@example.com'`],
+				['мыло.тест-мыло.кириллица@кириллица.ком.рф', `(string) 'мыло.тест-мыло.кириллица@кириллица.ком.рф'`],
+
+				['firstname+lastname@example.com', `(string) 'firstname+lastname@example.com'`],
+				['user.name+tag+sorting@example.com', `(string) 'user.name+tag+sorting@example.com'`],
+				['user-name+tag+sorting@example.com', `(string) 'user-name+tag+sorting@example.com'`],
+				['user_name+tag+sorting@example.com', `(string) 'user_name+tag+sorting@example.com'`],
+				['user+tag-sorting@example.com', `(string) 'user+tag-sorting@example.com'`],
+				['user+tag_sorting@example.com', `(string) 'user+tag_sorting@example.com'`],
+				['user+тег-сортировка@example.com', `(string) 'user+тег-сортировка@example.com'`],
+				['пользователь+тег_сортировка@кириллица.ком.рф', `(string) 'пользователь+тег_сортировка@кириллица.ком.рф'`],
+				['disposable.style.email.with+symbol@example.com', `(string) 'disposable.style.email.with+symbol@example.com'`],
+
+				['_______@example.com', `(string) '_______@example.com'`],
+				['1234567890@example.com', `(string) '1234567890@example.com'`],
+				['1234567890@кириллица.ком.рф', `(string) '1234567890@кириллица.ком.рф'`],
+				['firstname`lastname`@example.com', `(string) 'firstname\`lastname\'@example.com'`],
+				['firstname\'lastname\'@example.com', `(string) 'firstname'lastname'@example.com'`],
+				['имя\'фамилия\'@кириллица.ком.рф', `(string) 'имя'фамилия'@кириллица.ком.рф'`],
+				['mailhost!username@example.org', `(string) 'mailhost!username@example.org'`],
+				['user%example.com@example.org', `(string) 'user%example.com@example.org'`],
+				['user{example}#hash@example.org', `(string) 'user{example}#hash@example.org'`],
+				['!#$%&\'*+-/=?^_`{|}~@example.org', `(string) '!#$%&\'*+-/=?^_\`{|}~@example.org'`]
+			];
+
+			params.notEmail = [
+				['email@mailserver', `(string) 'email@mailserver'`],
+				['email@s.example', `(string) 'email@s.example'`],
+				['email@кириллица', `(string) 'example@кириллица'`],
+				['email@1example.com', `(string) 'email@1example.com'`],
+				['example@example.co1', `(string) 'example@example.co1'`],
+				['email@1кириллица.рф', `(string) 'email@1кириллица.рф'`],
+				['email@кириллица.р1', `(string) 'email@кириллица.р1'`],
+				['email@[2001:0db8:11a3:09d7:1f34:8a2e:07a0:765d]', `(string) 'email@[2001:0db8:11a3:09d7:1f34:8a2e:07a0:765d]'`],
+				['email@[::ffff:192.0.2.1]', `(string) 'email@[::ffff:192.0.2.1]'`],
+				['email@2001:0db8:11a3:09d7:1f34:8a2e:07a0:765d', `(string) 'email@2001:0db8:11a3:09d7:1f34:8a2e:07a0:765d'`],
+				['email@::ffff:192.0.2.1', `(string) 'email@::ffff:192.0.2.1'`],
+				['email@its_not_allow.example.com', `(string) 'email@its_not_allow.example.com'`],
+				['email@не_правильно.кириллица.рф', `(string) 'email@не_правильно.кириллица.рф'`],
+
+				['@example.com', `(string) '@example.com'`],
+				[' email@example.com', `(string) ' email@example.com'`],
+				['email@example.com ', `(string) 'email@example.com '`],
+				['" "@example.com', `(string) '" "@example.com'`],
+				['"email"@example.com', `(string) '"email"@example.com'`],
+				['email."test"@example.com', `(string) 'email."test"@example.com'`],
+				['"почта"@кириллица.ком.рф', `(string) '"почта"@кириллица.ком.рф'`],
+				['почта."тег"@кириллица.ком.рф', `(string) 'почта."тег"@кириллица.ком.рф'`],
+				['.user@example.com', `(string) '.user@example.com'`],
+				['+user@example.com', `(string) '+user@example.com'`],
+				['user+tag.sorting@example.com', `(string) 'user+tag.sorting@example.com'`],
+				['.пользователь@кириллица.ком.рф', `(string) '.пользователь@кириллица.ком.рф'`],
+				['+пользователь@кириллица.ком.рф', `(string) '+пользователь@кириллица.ком.рф'`],
+				['пользователь+тег.сортировка@кириллица.ком.рф', `(string) 'пользователь+тег.сортировка@кириллица.ком.рф'`],
+
+				['Abc.example.com', `(string) 'Abc.example.com'`],
+				['почта.кириллица.ком.рф', `(string) 'почта.кириллица.ком.рф'`],
+				['A@@example.com', `(string) 'A@@example.com'`],
+				['почта@@кириллица.ком.рф', `(string) 'почта@@кириллица.ком.рф'`],
+				['A@b@c@example.com', `(string) 'A@b@c@example.com'`],
+				['почт@а@кириллица.ком.рф', `(string) 'почт@а@кириллица.ком.рф'`],
+				['this not allowed@example.com', `(string) 'this not allowed@example.com'`],
+				['почта не корректно@кириллица.ком.рф', `(string) 'почта не корректно@кириллица.ком.рф'`],
+				['firstname(lastname)@example.com', `(string) 'firstname(lastname)@example.com'`],
+				['email(firstname)lastname@example.com', `(string) 'email(firstname)lastname@example.com'`],
+				['имя(фамилия)@кириллица.ком.рф', `(string) 'имя(фамилия)@кириллица.ком.рф'`],
+				['почта(имя)фамилия@кириллица.ком.рф', `(string) 'почта(имя)фамилия@кириллица.ком.рф'`],
+
+				['ab(c)d,e:f;g<h>i[j\k]l@example.com', `(string) 'ab(c)d,e:f;g<h>i[j\k]l@example.com'`],
+				['1234567890123456789012345678901234567890123456789012345678901234+x@example.com',
+					`(string) '1234567890123456789012345678901234567890123456789012345678901234+x@example.com'`]
+			];
+
+			it('call with parameters who can convert to string and who is containing email', () => {
+				for(let p in params.email) {
+					assert.isTrue(helpLib.str.isEmail(params.email[p][0]), `result with "${params.email[p][1]}" parameter is incorrect`);
+				}
+			});
+
+			it('call with parameters who can convert to string and who not containing email', () => {
+				let neParams = params.notEmail.concat(params.strE, params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p in neParams) {
+					assert.isFalse(helpLib.str.isEmail(neParams[p][0]), `result with "${neParams[p][1]}" parameter is incorrect`);
+				}
+			});
+
+			it('call with parameters who can not convert to string', () => {
+				for(let p in params.notset) {
+					assert.isFalse(helpLib.str.isEmail(params.notset[p][0]),
+						`result with "${params.notset[p][1]}" parameter is incorrect`);
+				}
+			});
+		});
+
+		describe('checking "clear" function', () => {
+			it('function instance', () => {
+				assert.isFunction(helpLib.str.clear, 'function "clear" is not added or is not a function');
+			});
+
+			let params = getParams();
+
+			params.findReg = [
+				[/\s/, `(RegExp) /\\s/`, /\s/g], [/\s\n/, `(RegExp) /\\s\\n/`, /\s\n/g],
+				[/[tT]/, `(RegExp) /[tT]/`, /[tT]/g], [/esT$/, `(RegExp) /esT$/`, /esT$/g],
+				[/\d/, `(RegExp) /\\d/`, /\d/g], [/^\-?0x/, `(RegExp) /^\\-?0x/`, /^\-?0x/g],
+				[/[Nn]a[Nn]/, `(RegExp) /[Nn]a[Nn]/`, /[Nn]a[Nn]/g], [/-?[Ii]\w{7}/, `(RegExp) /-?[Ii]\\w{7}/`, /-?[Ii]\w{7}/g],
+				[/^([\("'#])\w+([\)"'])?$/, `(RegExp) /^([\\("'#])\\w+([\\)"'])?$/`, /^([\("'#])\w+([\)"'])?$/g],
+				[/\{[^\}]*\}$/, `(RegExp) /\\{[^\\}]*\\}$/`, /\{[^\}]*\}$/g],
+				[/(obj)|(ret)|(\)\s+=>)/, `(RegExp) /(obj)|(ret)|(\\)\\s+=>)/`, /(obj)|(ret)|(\)\s+=>)/g],
+				[/^((fal)|(tr))\w{2}$/, `(RegExp) /^(fal)|(tr)\w{2}$/`, /^((fal)|(tr))\w{2}$/g]
+			];
+
+			params.notFindReg = [
+				[/\?/, `(RegExp) /\\?/`], [/^[BbWw]/, `(RegExp) /^[BbWw]/`],
+				[/^\s\d/, `(RegExp) /^\\s\\d/`], [/\d[az]$/, `(RegExp) /\\d[az]$/`],
+				[/\+[Ii]\w{7}/, `(RegExp) /\\+[Ii]\\w{7}/`],
+				[/(oBj)|(reT)|(\)=>)/, `(RegExp) /(oBj)|(reT)|(\\)=>)/`],
+				[/^((fal)|(tr))\w{3,}$/, `(RegExp) /^((fal)|(tr))\\w{3,}$/`]
+			];
+
+			params.findRegStr = [
+				['\\s', `(string) '\\s'`, /\s/g], ['\\s\\n', `(string) '\\s\\n'`, /\s\n/g],
+				['[tT]', `(string) '[tT]'`, /[tT]/g], ['esT$', `(string) 'esT$'`, /esT$/g],
+				['\\d', `(string) '\\d'`, /\d/g], ['^\\-?0x', `(string) '^\\-?0x'`, /^\-?0x/g],
+				['[Nn]a[Nn]', `(string) '[Nn]a[Nn]'`, /[Nn]a[Nn]/g], ['-?[Ii]\\w{7}', `(string) '-?[Ii]\\w{7}'`, /-?[Ii]\w{7}/g],
+				['^([\\("\'#])\\w+([\\)"\'])?$', `(string) '^([\\("'#])\\w+([\\)"'])?$'`, /^([\("'#])\w+([\)"'])?$/g],
+				['\\{[^\\}]*\\}$', `(string) '\\{[^\\}]*\\}$'`, /\{[^\}]*\}$/g],
+				['(obj)|(ret)|(\\)\\s+=>)', `(string) '(obj)|(ret)|(\\)\\s+=>)'`, /(obj)|(ret)|(\)\s+=>)/g],
+				['^((fal)|(tr))\\w{2}$', `(string) '^((fal)|(tr))\\w{2}$'`, /^((fal)|(tr))\w{2}$/g]
+			];
+
+			params.notFindRegStr = [
+				['\\?', `(RegExp) '\\?'`], ['^[BbWw]', `(RegExp) '^[BbWw]'`],
+				['^\\s\\d', `(RegExp) '^\\s\\d'`], ['\\d[az]$', `(RegExp) '\\d[az]$'`],
+				['\\+[Ii]\\w{7}', `(RegExp) '\\+[Ii]\\w{7}'`],
+				['(oBj)|(reT)|(\\)=>)', `(RegExp) '(oBj)|(reT)|(\\)=>)'`],
+				['^((fal)|(tr))\\w{3,}$', `(RegExp) '^((fal)|(tr))\\w{3,}$'`]
+			];
+
+			params.badRegStr = [
+				['^[tT', `(string) '^[tT'`], ['[tT]{', `(string) '[tT]{'`],
+				['esT)', `(string) 'esT)'`], ['(?tT)', `(string) '(?tT)'`]
+			];
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and regular expression who must find something as "regExp" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					let regRes = false;
+					for(let p2 in params.findReg) {
+						let res = strParams[p1][2].replace(params.findReg[p2][2], '');
+						regRes = regRes === false && (strParams[p1][2].length == 0 || res !== strParams[p1][2]) ? true : regRes;
+
+						assert.strictEqual(helpLib.str.clear(strParams[p1][0], params.findReg[p2][0]), res,
+							`result with "${strParams[p1][1]}, ${params.findReg[p2][1]}" parameters is incorrect`);
+					}
+
+					assert.isTrue(regRes, `not one of the search options are not triggered with "${strParams[p1][1]}" as "str" parameter`);
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and regular expression who not must find something as "regExp" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.notFindReg) {
+						assert.strictEqual(helpLib.str.clear(strParams[p1][0], params.notFindReg[p2][0]), strParams[p1][2],
+							`result with "${strParams[p1][1]}, ${params.notFindReg[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and string with regular expression who must find something as "regExp" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					let regRes = false;
+					for(let p2 in params.findRegStr) {
+						let res = strParams[p1][2].replace(params.findRegStr[p2][2], '');
+						regRes = regRes === false && (strParams[p1][2].length == 0 || res !== strParams[p1][2]) ? true : regRes;
+
+						assert.strictEqual(helpLib.str.clear(strParams[p1][0], params.findRegStr[p2][0]), res,
+							`result with "${strParams[p1][1]}, ${params.findRegStr[p2][1]}" parameters is incorrect`);
+					}
+
+					assert.isTrue(regRes, `not one of the search options are not triggered with "${strParams[p1][1]}" as "str" parameter`);
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and string with regular expression who not must find something as "regExp" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.notFindRegStr) {
+						assert.strictEqual(helpLib.str.clear(strParams[p1][0], params.notFindRegStr[p2][0]), strParams[p1][2],
+							`result with "${strParams[p1][1]}, ${params.notFindRegStr[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" and "regExp" parameters', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.bool);
+
+				for(let p1 in strParams) {
+					let regRes = false;
+					for(let p2 in strParams) {
+						let res = strParams[p2][2].replace(new RegExp(strParams[p1][2], 'g'), '');
+						regRes = regRes === false && (strParams[p2][2].length == 0 || res !== strParams[p2][2]) ? true : regRes;
+
+						assert.strictEqual(helpLib.str.clear(strParams[p2][0], strParams[p1][0]), res,
+							`result with "${strParams[p2][1]}, ${strParams[p1][1]}" parameters is incorrect`);
+					}
+
+					assert.isTrue(regRes, `none of the string did not match the search option "${strParams[p1][1]}" as "regExp" parameter`);
+				}
+			});
+
+			it('call without parameters or with null or undefined values', () => {
+				assert.strictEqual(helpLib.str.clear(), '', 'result without parameter is incorrect');
+
+				assert.strictEqual(helpLib.str.clear(undefined), '', 'result with "undefined" parameter is incorrect');
+				assert.strictEqual(helpLib.str.clear(undefined, undefined), '', 'result with "undefined, undefined" parameters is incorrect');
+
+				assert.strictEqual(helpLib.str.clear(null), '', 'result with "null" parameter is incorrect');
+				assert.strictEqual(helpLib.str.clear(null, null), '', 'result with "null, null" parameters is incorrect');
+			});
+
+			it('call with values who can not convert to string as "str" parameter and some "regExp" parameter', () => {
+				for(let p in params.notset) {
+					assert.strictEqual(helpLib.str.clear(params.notset[p][0], /^.*$/), '',
+						`result with "${params.notset[p][1]}, (RegExp) /^.*$/" parameters is incorrect`);
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and string with invalid regular expression as "regExp" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.badRegStr) {
+						assert.strictEqual(helpLib.str.clear(strParams[p1][0], params.badRegStr[p2][0]), strParams[p1][2],
+							`result with "${strParams[p1][1]}, ${params.badRegStr[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with values who can not convert to string as "str" parameter ' +
+				'and with values who can not convert to string as "regExp" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.notset) {
+						assert.strictEqual(helpLib.str.clear(strParams[p1][0], params.notset[p2][0]), strParams[p1][2],
+							`result with "${strParams[p1][1]}, ${params.notset[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+		});
+
+		describe('checking "clearList" function', () => {
+			it('function instance', () => {
+				assert.isFunction(helpLib.str.clearList, 'function "clearList" is not added or is not a function');
+			});
+
+			let params = getParams();
+
+			params.findReg = [
+				[[/\s/, /\s\n/], `(array) [/\\s/, /\\s\\n/]`, /(\s)|(\s\n)/g],
+				[[/[tT]/, /^\-?0x/, /\d/], `(array) [/[tT]/, /^\\-?0x/, /\\d/]`, /([tT])|(^\-?0x)|(\d)/g],
+				[[/[Nn]a[Nn]/, /-?[Ii]\w{7}/], `(array) [/[Nn]a[Nn]/, /-?[Ii]\\w{7}/]`, /([Nn]a[Nn])|(-?[Ii]\w{7})/g],
+				[[/^([\("'#])\w+([\)"'])?$/], `(array) [/^([\\("'#])\\w+([\\)"'])?$/]`, /^([\("'#])\w+([\)"'])?$/g],
+				[[/\{[^\}]*\}$/], `(array) [/\\{[^\\}]*\\}$/]`, /\{[^\}]*\}$/g],
+				[[/obj/, /ret/, /\)\s+=>/], `(array) [/obj/, /ret/, /\\)\\s+=>/]`, /(obj)|(ret)|(\)\s+=>)/g],
+				[[/^(fal)\w{2}$/, /^(tr)\w{2}$/], `(array) [/^(fal)\\w{2}$/, /^(tr)\\w{2}$/]`, /(^(fal)\w{2}$)|(^(tr)\w{2}$)/g]
+			];
+
+			params.notFindReg = [
+				[[/\?/, /^[BbWw]/], `(array) [/\\?/, /^[BbWw]/]`],
+				[[/^\s\d/, /\d[az]$/], `(array) [/^\\s\\d/, /\\d[az]$/]`],
+				[[/\+[Ii]\w{7}/, /oBj/, /reT/, /\)=>/], `(array) [/\\+[Ii]\\w{7}/, /oBj/, /reT/, /\\)=>/]`],
+				[[/^(fal)\w{3,}$/, /^(tr)\w{3,}$/], `(array) [/^(fal)\\w{3,}$/, /^(tr)\\w{3,}$/]`]
+			];
+
+			params.findRegStr = [
+				[['\\s', '\\s\\n'], `(array) ['\\s', '\\s\\n']`, /(\s)|(\s\n)/g],
+				[['[tT]', '^\\-?0x', '\\d'], `(array) ['[tT]', '^\\-?0x', '\\d']`, /([tT])|(^\-?0x)|(\d)/g],
+				[['[Nn]a[Nn]', '-?[Ii]\\w{7}'], `(array) ['[Nn]a[Nn]', '-?[Ii]\\w{7}']`, /([Nn]a[Nn])|(-?[Ii]\w{7})/g],
+				[['^([\\("\'#])\\w+([\\)"\'])?$'], `(array) ['^([\\("\\'#])\\w+([\\)"\\'])?$']`, /^([\("'#])\w+([\)"'])?$/g],
+				[['\\{[^\\}]*\\}$'], `(array) ['\\{[^\\}]*\\}$']`, /\{[^\}]*\}$/g],
+				[['obj', 'ret', '\\)\\s+=>'], `(array) ['obj', 'ret', '\\)\\s+=>']`, /(obj)|(ret)|(\)\s+=>)/g],
+				[['^(fal)\\w{2}$', '^(tr)\\w{2}$'], `(array) ['^(fal)\\w{2}$', '^(tr)\\w{2}$']`, /(^(fal)\w{2}$)|(^(tr)\w{2}$)/g]
+			];
+
+			params.notFindRegStr = [
+				[['\\?', '^[BbWw]'], `(array) ['\\?', '^[BbWw]']`],
+				[['^\\s\\d', '\\d[az]$'], `(array) ['^\\s\\d', '\\d[az]$']`],
+				[['\\+[Ii]\\w{7}', 'oBj', 'reT', '\\)=>'], `(array) ['\\+[Ii]\\w{7}', 'oBj', 'reT', '\\)=>']`],
+				[['^(fal)\\w{3,}$', '^(tr)\\w{3,}$'] ,`(array) ['^(fal)\\w{3,}$', '^(tr)\\w{3,}$']`]
+			];
+
+			params.badRegStr = [
+				[['^('], `(array) ['^(']`],
+				[['^[tT', '[tT]{'], `(array) ['^[tT', '[tT]{']`],
+				[['esT)', '(?tT)'], `(array) ['esT)', '(?tT)']`]
+			];
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and list of regular expressions who must find something as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					let regRes = false;
+					for(let p2 in params.findReg) {
+						let res = strParams[p1][2].replace(params.findReg[p2][2], '');
+						regRes = regRes === false && (strParams[p1][2].length == 0 || res !== strParams[p1][2]) ? true : regRes;
+
+						assert.strictEqual(helpLib.str.clearList(strParams[p1][0], params.findReg[p2][0]), res,
+							`result with "${strParams[p1][1]}, ${params.findReg[p2][1]}" parameters is incorrect`);
+
+						for(let p3 in params.notFindReg) {
+							let param1 = params.notFindReg[p3][1].replace(/^\(array\) \[(.*)\]$/, '$1');
+							let param2 = params.findReg[p2][1].replace(/^\(array\) \[(.*)\]$/, '$1');
+
+							assert.strictEqual(helpLib.str.clearList(strParams[p1][0], params.notFindReg[p3][0].concat(params.findReg[p2][0])), res,
+								`result with "${strParams[p1][1]}, (array) [${param1}, ${param2}]" parameters is incorrect`);
+						}
+					}
+
+					assert.isTrue(regRes, `not one of the search options are not triggered with "${strParams[p1][1]}" as "str" parameter`);
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and list of regular expressions who not must find something as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.notFindReg) {
+						assert.strictEqual(helpLib.str.clearList(strParams[p1][0], params.notFindReg[p2][0]), strParams[p1][2],
+							`result with "${strParams[p1][1]}, ${params.notFindReg[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and list of strings with regular expressions who must find something as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					let regRes = false;
+					for(let p2 in params.findRegStr) {
+						let res = strParams[p1][2].replace(params.findRegStr[p2][2], '');
+						regRes = regRes === false && (strParams[p1][2].length == 0 || res !== strParams[p1][2]) ? true : regRes;
+
+						assert.strictEqual(helpLib.str.clearList(strParams[p1][0], params.findRegStr[p2][0]), res,
+							`result with "${strParams[p1][1]}, ${params.findRegStr[p2][1]}" parameters is incorrect`);
+
+						let badParams = params.notFindRegStr.concat(params.badRegStr);
+						for(let p3 in badParams) {
+							let param1 = badParams[p3][1].replace(/^\(array\) \[(.*)\]$/, '$1');
+							let param2 = params.findReg[p2][1].replace(/^\(array\) \[(.*)\]$/, '$1');
+
+							assert.strictEqual(helpLib.str.clearList(strParams[p1][0], badParams[p3][0].concat(params.findReg[p2][0])), res,
+								`result with "${strParams[p1][1]}, (array) [${param1}, ${param2}]" parameters is incorrect`);
+						}
+					}
+
+					assert.isTrue(regRes, `not one of the search options are not triggered with "${strParams[p1][1]}" as "str" parameter`);
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and list of strings with regular expressions who not must find something as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.notFindRegStr) {
+						assert.strictEqual(helpLib.str.clearList(strParams[p1][0], params.notFindRegStr[p2][0]), strParams[p1][2],
+							`result with "${strParams[p1][1]}, ${params.notFindRegStr[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and with list of values who can convert to string as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.bool);
+
+				for(let p1 in strParams) {
+					let regRes = false;
+					for(let p2 in strParams) {
+						let res = strParams[p2][2].replace(new RegExp(strParams[p1][2], 'g'), '');
+						regRes = regRes === false && (strParams[p2][2].length == 0 || res !== strParams[p2][2]) ? true : regRes;
+
+						assert.strictEqual(helpLib.str.clearList(strParams[p2][0], [strParams[p1][0]]), res,
+							`result with "${strParams[p2][1]}, (array) [${strParams[p1][1]}]" parameters is incorrect`);
+					}
+
+					assert.isTrue(regRes, `none of the string did not match the search option "${strParams[p1][1]}" as "regExp" parameter`);
+				}
+			});
+
+			it('call without parameters or with null or undefined values', () => {
+				assert.strictEqual(helpLib.str.clearList(), '', 'result without parameter is incorrect');
+
+				assert.strictEqual(helpLib.str.clearList(undefined), '', 'result with "undefined" parameter is incorrect');
+				assert.strictEqual(helpLib.str.clearList(undefined, undefined), '', 'result with "undefined, undefined" parameters is incorrect');
+
+				assert.strictEqual(helpLib.str.clearList(null), '', 'result with "null" parameter is incorrect');
+				assert.strictEqual(helpLib.str.clearList(null, null), '', 'result with "null, null" parameters is incorrect');
+			});
+
+			it('call with values who can not convert to string as "str" parameter ' +
+				'and with list of some regular expressions as "list" parameter', () => {
+				for(let p in params.notset) {
+					assert.strictEqual(helpLib.str.clearList(params.notset[p][0], [/^.*$/]), '',
+						`result with "${params.notset[p][1]}, (array) [/^.*$/]" parameters is incorrect`);
+				}
+			});
+
+			it('call with parameters who can convert to string as "str" parameter ' +
+				'and with list of strings with invalid regular expressions as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.func, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.badRegStr) {
+						assert.strictEqual(helpLib.str.clearList(strParams[p1][0], params.badRegStr[p2][0]), strParams[p1][2],
+							`result with "${strParams[p1][1]}, ${params.badRegStr[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with values who can not convert to string as "str" parameter ' +
+				'and with list of values who can not convert to string as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.bool);
+
+				for(let p1 in strParams) {
+					for(let p2 in params.notset) {
+						assert.strictEqual(helpLib.str.clearList(strParams[p1][0], params.notset[p2][0]), strParams[p1][2],
+							`result with "${strParams[p1][1]}, ${params.notset[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with values who can not convert to string as "str" parameter ' +
+				'and with values who can not convert to list as "list" parameter', () => {
+				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.arr, params.obj, params.bool);
+				let notListParams = params.strE.concat(params.strT, params.strN, params.strS,
+					params.num, params.obj, params.bool, params.notset);
+
+				for(let p1 in strParams) {
+					for(let p2 in notListParams) {
+						assert.strictEqual(helpLib.str.clearList(strParams[p1][0], notListParams[p2][0]), strParams[p1][2],
+							`result with "${strParams[p1][1]}, ${notListParams[p2][1]}" parameters is incorrect`);
+					}
 				}
 			});
 		});
