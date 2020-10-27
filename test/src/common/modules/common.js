@@ -286,48 +286,6 @@ exports.testCommon = (describe, it, assert, helpLib) => {
 				}
 			});
 
-			it('call without parameters or with null or undefined values', () => {
-				for(let p in params.unset) {
-					assert.isFalse(helpLib.isInstance.apply(helpLib, params.unset[p][0]), `result ${params.unset[p][0]} is incorrect`);
-				}
-			});
-
-			it('call with not a object as "obj" parameter and some "cls" parameter', () => {
-				let notObjParams = params.strE.concat(params.strNE, params.numE, params.numNE,
-					params.func, params.boolE, params.boolNE, params.notset);
-				let clsParams = [
-					[String, `(object) String`], ['string', `(string) 'string'`], ['', `(string) ''`],
-					[Number, `(object) Number`], ['number', `(string) 'number'`], [1, `(number) 1`],
-					[Boolean, `(object) Boolean`], ['boolean', `(string) 'boolean'`], [false, `(boolean) false`],
-					[null, `null`], ['null', `(string) 'null'`], [undefined, `undefined`], ['undefined', `(string) 'undefined'`],
-					[NaN, `NaN`], ['NaN', `(string) 'NaN'`], [Infinity, `Infinity`], ['Infinity', `(string) 'Infinity'`],
-					[Object, `(object) Object`], [new Object(), `(object) new Object()`],
-					['object', `(string) 'object'`], [{}, `(object) {}`],
-					[Function, `(object) Function`], [new Function(), `(function) new Function()`],
-					['function', `(string) 'function'`], [function(){}, `(function) function(){}`]
-				];
-
-				for(let p1 in notObjParams) {
-					for(let p2 in clsParams) {
-						assert.isFalse(helpLib.isInstance(notObjParams[p1][0], clsParams[p2][0]),
-							`result with "${notObjParams[p1][1]}, ${clsParams[p2][1]}" parameters is incorrect`);
-					}
-				}
-			});
-
-			it('call with a object as "obj" parameter and invalid values as "cls" parameter', () => {
-				let invalidParams = params.numE.concat(params.numNE, params.boolE, params.boolNE, params.notset);
-				let objParams = params.obj.concat(params.objE, params.objNE, params.arrE, params.arrNE,
-					params.objDate, params.objTest, params.objSTest);
-
-				for(let p1 in objParams) {
-					for(let p2 in invalidParams) {
-						assert.isFalse(helpLib.isInstance(objParams[p1][0], invalidParams[p2][0]),
-							`result with "${objParams[p1][1]}, ${invalidParams[p2][1]}" parameters is incorrect`);
-					}
-				}
-			});
-
 			it('checking the object instance to the classes, objects and string with name of classes ' +
 				'who not included in extends chain', () => {
 				let allParams = [
@@ -368,6 +326,48 @@ exports.testCommon = (describe, it, assert, helpLib) => {
 							assert.isFalse(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][2][p3][0], true),
 								`result with "${allParams[p1][1][p2][1]}, ${allParams[p1][2][p3][1]}" parameters is incorrect`);
 						}
+					}
+				}
+			});
+
+			it('call without parameters or with null or undefined values', () => {
+				for(let p in params.unset) {
+					assert.isFalse(helpLib.isInstance.apply(helpLib, params.unset[p][0]), `result ${params.unset[p][0]} is incorrect`);
+				}
+			});
+
+			it('call with not a object as "obj" parameter and some "cls" parameter', () => {
+				let notObjParams = params.strE.concat(params.strNE, params.numE, params.numNE,
+					params.func, params.boolE, params.boolNE, params.notset);
+				let clsParams = [
+					[String, `(object) String`], ['string', `(string) 'string'`], ['', `(string) ''`],
+					[Number, `(object) Number`], ['number', `(string) 'number'`], [1, `(number) 1`],
+					[Boolean, `(object) Boolean`], ['boolean', `(string) 'boolean'`], [false, `(boolean) false`],
+					[null, `null`], ['null', `(string) 'null'`], [undefined, `undefined`], ['undefined', `(string) 'undefined'`],
+					[NaN, `NaN`], ['NaN', `(string) 'NaN'`], [Infinity, `Infinity`], ['Infinity', `(string) 'Infinity'`],
+					[Object, `(object) Object`], [new Object(), `(object) new Object()`],
+					['object', `(string) 'object'`], [{}, `(object) {}`],
+					[Function, `(object) Function`], [new Function(), `(function) new Function()`],
+					['function', `(string) 'function'`], [function(){}, `(function) function(){}`]
+				];
+
+				for(let p1 in notObjParams) {
+					for(let p2 in clsParams) {
+						assert.isFalse(helpLib.isInstance(notObjParams[p1][0], clsParams[p2][0]),
+							`result with "${notObjParams[p1][1]}, ${clsParams[p2][1]}" parameters is incorrect`);
+					}
+				}
+			});
+
+			it('call with a object as "obj" parameter and invalid values as "cls" parameter', () => {
+				let invalidParams = params.numE.concat(params.numNE, params.boolE, params.boolNE, params.notset);
+				let objParams = params.obj.concat(params.objE, params.objNE, params.arrE, params.arrNE,
+					params.objDate, params.objTest, params.objSTest);
+
+				for(let p1 in objParams) {
+					for(let p2 in invalidParams) {
+						assert.isFalse(helpLib.isInstance(objParams[p1][0], invalidParams[p2][0]),
+							`result with "${objParams[p1][1]}, ${invalidParams[p2][1]}" parameters is incorrect`);
 					}
 				}
 			});
