@@ -19,37 +19,110 @@ exports.testCommon = (describe, it, assert, helpLib) => {
 		return;
 	}
 
+	/**
+	 * Creates a set of parameters for tests
+	 * @returns {object} A set of parameters
+	 */
+	function getParams() {
+		return {
+			strE: [
+				['', `(string) ''`], [' ', `(string) ' '`], ['  ', `(string) '  '`],
+
+				['\n', `(string) '\\n'`], [' \n', `(string) ' \\n'`], ['\n  ', `(string) '\\n  '`],
+				['\t', `(string) '\\t'`], [' \t', `(string) ' \\t'`], ['\t  ', `(string) '\\t  '`],
+				['\n\n', `(string) '\\n\\n'`], [' \n\n', `(string) ' \\n\\n'`], ['\n\n  ', `(string) '\\n\\n  '`],
+				['\t\t', `(string) '\\t\\t'`], [' \t\t', `(string) ' \\t\\t'`], ['\t\t  ', `(string) '\\t\\t  '`],
+				['\t\n', `(string) '\\t\\n'`], [' \n\t', `(string) ' \\n\\t'`],
+				['\t\n ', `(string) '\\t\\n '`], [' \n\t', `(string) ' \\n\\t'`],
+				['\t \n', `(string) '\\t \\n'`], [' \n \t ', `(string) ' \\n \\t '`],
+
+				['\u00A0', `(string) '\\u00A0'`], [' \u00A0', `(string) ' \\u00A0'`], ['\u00A0 ', `(string) '\\u00A0 '`],
+				['\u00A0\u00A0', `(string) '\\u00A0\\u00A0'`], [' \u00A0\u00A0', `(string) ' \\u00A0\\u00A0'`],
+				['\u00A0\u00A0 ', `(string) '\\u00A0\\u00A0 '`], ['\u00A0 \u00A0', `(string) '\\u00A0 \\u00A0'`],
+				[' \u00A0 \u00A0 ', `(string) ' \\u00A0 \\u00A0 '`],
+
+				['\t\u00A0', `(string) '\\t\\u00A0'`], ['\u00A0\t', `(string) '\\u00A0\\t'`],
+				['\t \u00A0', `(string) '\\t \\u00A0'`], ['\u00A0 \t', `(string) '\\u00A0 \\t'`],
+				['\n\u00A0', `(string) '\\n\\u00A0'`], ['\u00A0\n', `(string) '\\u00A0\\n'`],
+				['\n \u00A0', `(string) '\\n \\u00A0'`], ['\u00A0 \n', `(string) '\\u00A0 \\n'`]
+			],
+
+			strNE: [
+				['0', `(string) '0'`], [' 0 ', `(string) ' 0 '`],
+				['\t1', `(string) '\\t1'`], ['\n1', `(string) '\\n1'`], ['\u00A01', `(string) '\\u00A01'`],
+				['test', `(string) 'test'`], [' test ', `(string) ' test '`]
+			],
+
+			numE: [[0, `(number) 0`], [-0, `(number) -0`], [NaN, `NaN`]],
+
+			numNE: [
+				[1, `(number) 1`], [-1, `(number) -1`],
+				[100, `(number) 100`], [-100, `(number) -100`],
+				[5.55, `(number) 5.55`], [-5.55, `(number) -5.55`],
+
+				[Infinity, `Infinity`], [-Infinity, `-Infinity`]
+			],
+
+			arrE: [[[], `(array) []`], [new Array(), `(array) new Array()`], [new Array(1), `(array) new Array(1)`]],
+
+			arrNE: [
+				[[0], `(array) [0]`], [[1], `(array) [1]`], [[1, 2], `(array) [1, 2]`],
+
+				[[''], `(array) ['']`], [[' '], `(array) [' ']`],
+				[['', ''], `(array) ['', '']`], [[' ', ' '], `(array) [' ', ' ']`],
+				[['test'], `(array) ['test']`], [[' test '], `(array) [' test ']`],
+				[['test', 'test'], `(array) ['test', 'test']`], [[' test ', ' test '], `(array) [' test ', ' test ']`],
+
+				[[null], `(array) [null]`], [[undefined], `(array) [undefined]`]
+			],
+
+			objE: [
+				[{}, `(object) {}`], [new Object(), `(object) new Object()`],
+				[new (class {init() {return 'test';}}), `(object) new (class {init() {return 'test';}})`]
+			],
+
+			objNE: [
+				[{test: 'test'}, `(object) {test: 'test'}`], [{test: ' test '}, `(object) {test: ' test '}`],
+				[{toString: () => ''}, `(object) {toString: () => ''}`], [{toString: () => ' '}, `(object) {toString: () => ' '}`],
+				[{toString: () => 'test'}, `(object) {toString: () => 'test'}`],
+				[{toString: () => ' test '}, `(object) {toString: () => ' test '}`],
+				[new (class {constructor() {this.a = 'test';}}), `(object) new (class {constructor() {this.a = 'test';}})`]
+			],
+
+			func: [
+				[() => {}, `(function) () => {}`],
+				[() => 'test', `(function) () => 'test'`, `() => 'test'`],
+				[function() {}, `(function) function() {}`, `function() {}`],
+				[function() {return 'test';}, `(function) function() {return 'test';}`, `function() {return 'test';}`]
+			],
+
+			boolE: [[false, `(bool) false`]],
+			boolNE: [[true, `(bool) true`]],
+			notset: [[undefined, `undefined`], [null, `null`]]
+		};
+	}
+
 	describe('Test common library', () => {
 		describe('checking "isSet" function', () => {
 			it('function instance', () => {
 				assert.isFunction(helpLib.isSet, 'function "isSet" is not added or is not a function');
 			});
 
+			let params = getParams();
+
 			it('call with parameters who must exist', () => {
-				assert.isTrue(helpLib.isSet(true), 'result with "(bool) true" parameter is incorrect');
-				assert.isTrue(helpLib.isSet(false), 'result with "(bool) false" parameter is incorrect');
+				let setParams = params.strE.concat(params.strNE, params.numE, params.numNE,
+					params.arrE, params.arrNE, params.objE, params.objNE, params.func, params.boolE, params.boolNE);
 
-				assert.isTrue(helpLib.isSet(0), 'result with "(number) 0" parameter is incorrect');
-				assert.isTrue(helpLib.isSet(1), 'result with "(number) 1" parameter is incorrect');
-
-				assert.isTrue(helpLib.isSet(''), 'result with "(string) \'\'" parameter is incorrect');
-				assert.isTrue(helpLib.isSet('test'), 'result with "(string) \'test\'" parameter is incorrect');
-
-				assert.isTrue(helpLib.isSet([]), 'result with "(array) []" parameter is incorrect');
-				assert.isTrue(helpLib.isSet(['test']), 'result with "(array) [\'test\']" parameter is incorrect');
-
-				assert.isTrue(helpLib.isSet({}), 'result with "(object) {}" parameter is incorrect');
-				assert.isTrue(helpLib.isSet({test: 'test'}), 'result with "(object) {test: \'test\'}" parameter is incorrect');
-
-				assert.isTrue(helpLib.isSet(() => {}), 'result with "function" parameter is incorrect');
-
-				assert.isTrue(helpLib.isSet(NaN), 'result with "NaN" parameter is incorrect');
-				assert.isTrue(helpLib.isSet(Infinity), 'result with "Infinity" parameter is incorrect');
+				for(let p in setParams) {
+					assert.isTrue(helpLib.isSet(setParams[p][0]), `result with "${setParams[p][1]}" parameter is incorrect`);
+				}
 			});
 
 			it('call with parameters who must not exist', () => {
-				assert.isFalse(helpLib.isSet(undefined), 'result with "undefined" parameter is incorrect');
-				assert.isFalse(helpLib.isSet(null), 'result with "null" parameter is incorrect');
+				for(let p in params.notset) {
+					assert.isFalse(helpLib.isSet(params.notset[p][0]), `result with "${params.notset[p][1]}" parameter is incorrect`);
+				}
 			});
 		});
 
@@ -58,31 +131,20 @@ exports.testCommon = (describe, it, assert, helpLib) => {
 				assert.isFunction(helpLib.isScalar, 'function "isScalar" is not added or is not a function');
 			});
 
+			let params = getParams();
+
 			it('call with scalar parameters', () => {
-				assert.isTrue(helpLib.isScalar(true), 'result with "(bool) true" parameter is incorrect');
-				assert.isTrue(helpLib.isScalar(false), 'result with "(bool) false" parameter is incorrect');
-
-				assert.isTrue(helpLib.isScalar(0), 'result with "(number) 0" parameter is incorrect');
-				assert.isTrue(helpLib.isScalar(1), 'result with "(number) 1" parameter is incorrect');
-
-				assert.isTrue(helpLib.isScalar(''), 'result with "(string) \'\'" parameter is incorrect');
-				assert.isTrue(helpLib.isScalar('test'), 'result with "(string) \'test\'" parameter is incorrect');
-
-				assert.isTrue(helpLib.isScalar(NaN), 'result with "NaN" parameter is incorrect');
-				assert.isTrue(helpLib.isScalar(Infinity), 'result with "Infinity" parameter is incorrect');
+				let scalarParams = params.strE.concat(params.strNE, params.numE, params.numNE, params.boolE, params.boolNE);
+				for(let p in scalarParams) {
+					assert.isTrue(helpLib.isScalar(scalarParams[p][0]), `result with "${scalarParams[p][1]}" parameter is incorrect`);
+				}
 			});
 
 			it('call with not scalar parameters', () => {
-				assert.isFalse(helpLib.isScalar([]), 'result with "(array) []" parameter is incorrect');
-				assert.isFalse(helpLib.isScalar(['test']), 'result with "(array) [\'test\'])" parameter is incorrect');
-
-				assert.isFalse(helpLib.isScalar({}), 'result with "(object) {}" parameter is incorrect');
-				assert.isFalse(helpLib.isScalar({test: 'test'}), 'result with "(object) {test: \'test\'}" parameter is incorrect');
-
-				assert.isFalse(helpLib.isScalar(() => {}), 'result with "function" parameter is incorrect');
-
-				assert.isFalse(helpLib.isScalar(undefined), 'result with "undefined" parameter is incorrect');
-				assert.isFalse(helpLib.isScalar(null), 'result with "null" parameter is incorrect');
+				let notScalarParams = params.arrE.concat(params.arrE, params.arrNE, params.objE, params.objNE, params.func, params.notset);
+				for(let p in notScalarParams) {
+					assert.isFalse(helpLib.isScalar(notScalarParams[p][0]), `result with "${notScalarParams[p][1]}" parameter is incorrect`);
+				}
 			});
 		});
 
@@ -91,36 +153,20 @@ exports.testCommon = (describe, it, assert, helpLib) => {
 				assert.isFunction(helpLib.isEmpty, 'function "isEmpty" is not added or is not a function');
 			});
 
+			let params = getParams();
+
 			it('call with parameters who must be empty', () => {
-				assert.isTrue(helpLib.isEmpty(false), 'result with "(bool) false" parameter is incorrect');
-				assert.isTrue(helpLib.isEmpty(0), 'result with "(number) 0" parameter is incorrect');
-				assert.isTrue(helpLib.isEmpty(''), 'result with "(string) \'\'" parameter is incorrect');
-				assert.isTrue(helpLib.isEmpty('  '), 'result with "(string) \'  \'" parameter is incorrect');
-				assert.isTrue(helpLib.isEmpty("\n"), 'result with "(string) \'\n\'" parameter is incorrect');
-				assert.isTrue(helpLib.isEmpty("\t"), 'result with "(string) \'\t\'" parameter is incorrect');
-				assert.isTrue(helpLib.isEmpty("\n \t \n"), 'result with "(string) \'\n \t \n\'" parameter is incorrect');
-
-				assert.isTrue(helpLib.isEmpty([]), 'result with "(array) []" parameter is incorrect');
-				assert.isTrue(helpLib.isEmpty({}), 'result with "(object) {}" parameter is incorrect');
-
-				assert.isTrue(helpLib.isEmpty(NaN), 'result with "NaN" parameter is incorrect');
-				assert.isTrue(helpLib.isEmpty(undefined), 'result with "undefined" parameter is incorrect');
-				assert.isTrue(helpLib.isEmpty(null), 'result with "null" parameter is incorrect');
+				let emptyParams = params.strE.concat(params.numE, params.arrE, params.objE, params.boolE, params.notset);
+				for(let p in emptyParams) {
+					assert.isTrue(helpLib.isEmpty(emptyParams[p][0]), `result with "${emptyParams[p][1]}" parameter is incorrect`);
+				}
 			});
 
 			it('call with parameters who must not be empty', () => {
-				assert.isFalse(helpLib.isEmpty(true), 'result with "(bool) true" parameter is incorrect');
-				assert.isFalse(helpLib.isEmpty(1), 'result with "(number) 1" parameter is incorrect');
-				assert.isFalse(helpLib.isEmpty(-1), 'result with "(number) -1" parameter is incorrect');
-				assert.isFalse(helpLib.isEmpty('test'), 'result with "(string) \'test\'" parameter is incorrect');
-				assert.isFalse(helpLib.isEmpty('0'), 'result with "(string) \'0\'" parameter is incorrect');
-				assert.isFalse(helpLib.isEmpty('  1  '), 'result with "(string) \'  1  \'" parameter is incorrect');
-
-				assert.isFalse(helpLib.isEmpty(['test']), 'result with "(array) [\'test\'])" parameter is incorrect');
-				assert.isFalse(helpLib.isEmpty({test: 'test'}), 'result with "(object) {test: \'test\'}" parameter is incorrect');
-				assert.isFalse(helpLib.isEmpty(() => {}), 'result with "function" parameter is incorrect');
-
-				assert.isFalse(helpLib.isEmpty(Infinity), 'result with "Infinity" parameter is incorrect');
+				let notEmptyParams = params.strNE.concat(params.numNE, params.arrNE, params.objNE, params.boolNE, params.func);
+				for(let p in notEmptyParams) {
+					assert.isFalse(helpLib.isEmpty(notEmptyParams[p][0]), `result with "${notEmptyParams[p][1]}" parameter is incorrect`);
+				}
 			});
 		});
 
@@ -129,253 +175,201 @@ exports.testCommon = (describe, it, assert, helpLib) => {
 				assert.isFunction(helpLib.isInstance, 'function "isInstance" is not added or is not a function');
 			});
 
-			function Test(a) {this.a = a;}
-			class STest extends Test {};
+			function Test(a) {this.a = a;};
+			class STest extends Test {constructor(a, b) {super(a); this.b = b;}};
 
-			it('checking the object instance to the current class', () => {
-				assert.isTrue(helpLib.isInstance({}, {}),
-					'result with "(object) {}, (object) {}" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance({}, {test: 'test'}),
-					'result with "(object) {}, (object) {test: \'test\'}" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance({}, Object),
-					'result with "(object) {}, (object) Object" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance({}, new Object()),
-					'result with "(object) {}, (object) new Object()" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance({}, 'Object'),
-					'result with "(object) {}, (string) \'Object\'" parameters is incorrect');
+			let params = getParams();
 
-				assert.isTrue(helpLib.isInstance({test: 'test'}, {}),
-					'result with "(object) {test: \'test\'}, (object) {}" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance({test: 'test'}, new Object()),
-					'result with "(object) {test: \'test\'}, (object) new Object()" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance({test: 'test'}, 'Object'),
-					'result with "(object) {test: \'test\'}, (string) \'Object\'" parameters is incorrect');
+			params.obj = [
+				[{}, `(object) {}`], [new Object(), `(object) new Object()`],
+				[{test: 'test'}, `(object) {test: 'test'}`],
+				[{toString: () => 'test'}, `(object) {toString: () => 'test'}`]
+			];
 
-				assert.isTrue(helpLib.isInstance(new Object(), {}),
-					'result with "(object) new Object(), (object) {}" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Object(), {test: 'test'}),
-					'result with "(object) {}, (object) {test: \'test\'}" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Object(), Object),
-					'result with "(object) new Object(), (object) Object" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Object(), new Object()),
-					'result with "(object) new Object(), (object) new Object()" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Object(), 'Object'),
-					'result with "(object) new Object(), (string) \'Object\'" parameters is incorrect');
+			params.objDate = [[new Date(), `(object) new Date()`], [new Date('1995-12-17T03:24:00'), `(object) new Date('1995-12-17T03:24:00')`]];
+			params.objTest = [[new Test(), `(object) new Test()`], [new Test(1), `(object) new Test(1)`]];
 
-				assert.isTrue(helpLib.isInstance(new Date(), Date),
-					'result with "(object) new Date(), (object) Date" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Date(), new Date()),
-					'result with "(object) new Date(), (object) new Date()" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Date(), new Date('1995-12-17T03:24:00')),
-					'result with "(object) new Date(), (object) new Date(\'1995-12-17T03:24:00\')" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Date(), 'Date'),
-					'result with "(object) new Date(), (string) \'Date\'" parameters is incorrect');
+			params.objSTest = [
+				[new STest(), `(object) new STest()`], [new STest(100), `(object) new STest(100)`],
+				[new STest(10, 20), `(object) new STest(10, 20)`]
+			];
 
-				assert.isTrue(helpLib.isInstance(new Date('1995-12-17T03:24:00'), Date),
-					'result with "(object) new Date(\'1995-12-17T03:24:00\'), (object) Date" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Date('1995-12-17T03:24:00'), new Date()),
-					'result with "(object) new Date(\'1995-12-17T03:24:00\'), (object) new Date()" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Date('1995-12-17T03:24:00'), 'Date'),
-					'result with "(object) new Date(\'1995-12-17T03:24:00\'), (string) \'Date\'" parameters is incorrect');
+			params.unset = [
+				[[], `without parameters`],
+				[[null], `with "null" parameter`], [[null, null], `with "null, null" parameters`],
+				[[null, null, null], `with "null, null, null" parameters`],
+				[[undefined], `with "undefined" parameter`], [[undefined, undefined], `with "undefined, undefined" parameters`],
+				[[undefined, undefined, undefined], `with "undefined, undefined, undefined" parameters`]
+			];
+
+			it('checking the object instance to the current class, ' +
+				'to the object of current class or to the string with name of current class', () => {
+				let allParams = [
+					[Object, params.obj], [Array, params.arrE.concat(params.arrNE)],
+					[Date, params.objDate], [Test, params.objTest], [STest, params.objSTest]
+				];
+
+				for(let p1 in allParams) {
+					for(let p2 in allParams[p1][1]) {
+						for(let p3 in allParams[p1][1]) {
+							assert.isTrue(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][0]),
+								`result with "${allParams[p1][1][p2][1]}, (object) ${allParams[p1][0].name}" parameters is incorrect`);
+							assert.isTrue(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][0].name),
+								`result with "${allParams[p1][1][p2][1]}, (string) ${allParams[p1][0].name}" parameters is incorrect`);
+							assert.isTrue(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][1][p3][0]),
+								`result with "${allParams[p1][1][p2][1]}, ${allParams[p1][1][p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
 			});
 
-			it('checking the object instance to the parent classes', () => {
-				assert.isTrue(helpLib.isInstance(new Date(), {}),
-					'result with "(object) new Date(), (object) {}" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Date(), {test: 'test'}),
-					'result with "(object) new Date(), (object) {test: \'test\'}" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Date(), Object),
-					'result with "(object) new Date(), (object) Object" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Date(), new Object()),
-					'result with "(object) new Date(), (object) new Object()" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Date(), 'Object'),
-					'result with "(object) new Date(), (string) \'Object\'" parameters is incorrect');
+			it('checking the object instance only in first level of the extends chain to the current class, ' +
+				'to the object of current class or to the string with name of current class', () => {
+				let allParams = [
+					[Object, params.obj], [Array, params.arrE.concat(params.arrNE)],
+					[Date, params.objDate], [Test, params.objTest], [STest, params.objSTest]
+				];
 
-
-				assert.isTrue(helpLib.isInstance(new Date('1995-12-17T03:24:00'), {}),
-					'result with "(object) new Date(\'1995-12-17T03:24:00\'), (object) {}" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Date('1995-12-17T03:24:00'), {test: 'test'}),
-					'result with "(object) new Date(\'1995-12-17T03:24:00\'), (object) {test: \'test\'}" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Date('1995-12-17T03:24:00'), Object),
-					'result with "(object) new Date(\'1995-12-17T03:24:00\'), (object) Object" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Date('1995-12-17T03:24:00'), new Object()),
-					'result with "(object) new Date(\'1995-12-17T03:24:00\'), (object) new Object()" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Date('1995-12-17T03:24:00'), 'Object'),
-					'result with "(object) new Date(\'1995-12-17T03:24:00\'), (string) \'Object\'" parameters is incorrect');
+				for(let p1 in allParams) {
+					for(let p2 in allParams[p1][1]) {
+						for(let p3 in allParams[p1][1]) {
+							assert.isTrue(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][0], true),
+								`result with "${allParams[p1][1][p2][1]}, (object) ${allParams[p1][0].name}" parameters is incorrect`);
+							assert.isTrue(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][0].name, true),
+								`result with "${allParams[p1][1][p2][1]}, (string) ${allParams[p1][0].name}" parameters is incorrect`);
+							assert.isTrue(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][1][p3][0], true),
+								`result with "${allParams[p1][1][p2][1]}, ${allParams[p1][1][p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
 			});
 
-			it('checking the object instance of custom class to the current class or parent classes', () => {
-				assert.isTrue(helpLib.isInstance(new Test(1), {}),
-					'result with "(object) new Test(1), (object) {}" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Test(1), Test),
-					'result with "(object) new Test(1), (object) Test" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Test(1), Object),
-					'result with "(object) new Test(1), (object) Object" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Test(1), new Test(2)),
-					'result with "(object) new Test(1), (object) new Test(2)" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Test(1), 'Test'),
-					'result with "(object) new Test(1), (string) \'Test\'" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new Test(1), 'Object'),
-					'result with "(object) new Test(1), (string) \'Object\'" parameters is incorrect');
+			it('checking the object instance to the parent classes, ' +
+				'to the objects of parent classes or to the strings with name of parent classes', () => {
+				let allParams = [
+					[Object, params.arrE.concat(params.arrNE, params.objDate, params.objTest, params.objSTest), params.obj],
+					[Test, params.objSTest, params.objTest]
+				];
 
-				assert.isTrue(helpLib.isInstance(new STest(1), Test),
-					'result with "(object) new STest(1), (object) Test" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new STest(1), STest),
-					'result with "(object) new STest(1), (object) STest" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new STest(1), Object),
-					'result with "(object) new STest(1), (object) Object" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new STest(1), new Test(2)),
-					'result with "(object) new STest(1), (object) new Test(2)" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new STest(1), new STest(2)),
-					'result with "(object) new STest(1), (object) new STest(2)" parameters is incorrect');
-				assert.isTrue(helpLib.isInstance(new STest(1), new Object()),
-					'result with "(object) new STest(1), (object) new Object()" parameters is incorrect');
+				for(let p1 in allParams) {
+					for(let p2 in allParams[p1][1]) {
+						for(let p3 in allParams[p1][2]) {
+							assert.isTrue(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][0]),
+								`result with "${allParams[p1][1][p2][1]}, (object) ${allParams[p1][0].name}" parameters is incorrect`);
+							assert.isTrue(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][0].name),
+								`result with "${allParams[p1][1][p2][1]}, (string) ${allParams[p1][0].name}" parameters is incorrect`);
+							assert.isTrue(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][2][p3][0]),
+								`result with "${allParams[p1][1][p2][1]}, ${allParams[p1][2][p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
+			});
+
+			it('checking the object instance only in first level of the extends chain to the parent classes, ' +
+				'to the objects of parent classes or to the strings with name of parent classes', () => {
+				let allParams = [
+					[Object, params.arrE.concat(params.arrNE, params.objDate, params.objTest, params.objSTest), params.obj],
+					[Test, params.objSTest, params.objTest]
+				];
+
+				for(let p1 in allParams) {
+					for(let p2 in allParams[p1][1]) {
+						for(let p3 in allParams[p1][2]) {
+							assert.isFalse(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][0], true),
+								`result with "${allParams[p1][1][p2][1]}, (object) ${allParams[p1][0].name}" parameters is incorrect`);
+							assert.isFalse(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][0].name, true),
+								`result with "${allParams[p1][1][p2][1]}, (string) ${allParams[p1][0].name}" parameters is incorrect`);
+							assert.isFalse(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][2][p3][0], true),
+								`result with "${allParams[p1][1][p2][1]}, ${allParams[p1][2][p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
 			});
 
 			it('call without parameters or with null or undefined values', () => {
-				assert.isFalse(helpLib.isInstance(), 'result without parameters is incorrect');
-
-				assert.isFalse(helpLib.isInstance(undefined),
-					'result with "undefined" parameter is incorrect');
-				assert.isFalse(helpLib.isInstance(undefined, undefined),
-					'result with "undefined, undefined" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(undefined, undefined, undefined),
-					'result with "undefined, undefined, undefined" parameters is incorrect');
-
-				assert.isFalse(helpLib.isInstance(null), 'result with "null" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(null, null), 'result with "null, null" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(null, null, null), 'result with "null, null, null" parameters is incorrect');
+				for(let p in params.unset) {
+					assert.isFalse(helpLib.isInstance.apply(helpLib, params.unset[p][0]), `result ${params.unset[p][0]} is incorrect`);
+				}
 			});
 
-			it('call with incorrect "obj" parameter', () => {
-				assert.isFalse(helpLib.isInstance(true, {}), 'result with "(bool) true, (object) {}" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(true, Boolean), 'result with "(bool) true, (object) Boolean" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(true, 'boolean'), 'result with "(bool) true, (string) \'boolean\'" parameters is incorrect');
+			it('call with not a object as "obj" parameter and some "cls" parameter', () => {
+				let notObjParams = params.strE.concat(params.strNE, params.numE, params.numNE,
+					params.func, params.boolE, params.boolNE, params.notset);
+				let clsParams = [
+					[String, `(object) String`], ['string', `(string) 'string'`], ['', `(string) ''`],
+					[Number, `(object) Number`], ['number', `(string) 'number'`], [1, `(number) 1`],
+					[Boolean, `(object) Boolean`], ['boolean', `(string) 'boolean'`], [false, `(boolean) false`],
+					[null, `null`], ['null', `(string) 'null'`], [undefined, `undefined`], ['undefined', `(string) 'undefined'`],
+					[NaN, `NaN`], ['NaN', `(string) 'NaN'`], [Infinity, `Infinity`], ['Infinity', `(string) 'Infinity'`],
+					[Object, `(object) Object`], [new Object(), `(object) new Object()`],
+					['object', `(string) 'object'`], [{}, `(object) {}`],
+					[Function, `(object) Function`], [new Function(), `(function) new Function()`],
+					['function', `(string) 'function'`], [function(){}, `(function) function(){}`]
+				];
 
-				assert.isFalse(helpLib.isInstance(0, {}), 'result with "(number) 0, (object) {}" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(0, Number), 'result with "(number) 0, (object) Number" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(0, 'number'), 'result with "(number) 0, (string) \'number\'" parameters is incorrect');
-
-				assert.isFalse(helpLib.isInstance('', {}), 'result with "(object) \'\', (object) {}" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance('', String), 'result with "(object) \'\', (object) String" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance('', 'string'), 'result with "(object) \'\', (string) \'string\'" parameters is incorrect');
-
-				assert.isFalse(helpLib.isInstance(() => {}, {}),
-					'result with "function, (object) {}" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(() => {}, Function),
-					'result with "function, (object) Function" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(() => {}, new Function()),
-					'result with "function, (object) new Function()" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(() => {}, 'function'),
-					'result with "function, (string) \'function\'" parameters is incorrect');
-
-				assert.isFalse(helpLib.isInstance(new Function(), {}),
-					'result with "(object) new Function(), (object) {}" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new Function(), Function),
-					'result with "(object) new Function(), (object) Function" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new Function(), new Function()),
-					'result with "(object) new Function(), (object) new Function()" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new Function(), 'function'),
-					'result with "(object) new Function(), (string) \'function\'" parameters is incorrect');
-
-				assert.isFalse(helpLib.isInstance(NaN, {}), 'result with "NaN, (object) {}" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(NaN, NaN), 'result with "NaN, NaN" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(NaN, Number), 'result with "NaN, (object) Number" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(NaN, 'number'), 'result with "NaN, (string) \'number\'" parameters is incorrect');
-
-				assert.isFalse(helpLib.isInstance(Infinity, {}), 'result with "Infinity, (object) {}" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(Infinity, Infinity), 'result with "Infinity, Infinity" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(Infinity, Number), 'result with "Infinity, (object) Number" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(Infinity, 'number'), 'result with "Infinity, (string) \'number\'" parameters is incorrect');
-
-				assert.isFalse(helpLib.isInstance(undefined, {}),
-					'result with "undefined, (object) {}" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(undefined, undefined),
-					'result with "undefined, undefined" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(undefined, 'undefined'),
-					'result with "undefined, (string) \'undefined\'" parameters is incorrect');
-
-				assert.isFalse(helpLib.isInstance(null, {}), 'result with "null, (object) {}" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(null, null), 'result with "null, null" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(null, 'null'), 'result with "null, (string) \'null\'" parameters is incorrect');
+				for(let p1 in notObjParams) {
+					for(let p2 in clsParams) {
+						assert.isFalse(helpLib.isInstance(notObjParams[p1][0], clsParams[p2][0]),
+							`result with "${notObjParams[p1][1]}, ${clsParams[p2][1]}" parameters is incorrect`);
+					}
+				}
 			});
 
-			it('checking the object instance to the classes who not included in extends chain', () => {
-				assert.isFalse(helpLib.isInstance({}, Array),
-					'result with "(object) {}, (object) Array" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance({}, () => {}),
-					'result with "(object) {}, function" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance({}, undefined),
-					'result with "(object) {}, undefined" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance({}, null),
-					'result with "(object) {}, null" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance({}, NaN),
-					'result with "(object) {}, NaN" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance({}, Infinity),
-					'result with "(object) {}, Infinity" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance({}, new Array()),
-					'result with "(object) {}, (object) new Array()" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance({}, 'Array'),
-					'result with "(object) {}, (string) \'Array\'" parameters is incorrect');
+			it('call with a object as "obj" parameter and invalid values as "cls" parameter', () => {
+				let invalidParams = params.numE.concat(params.numNE, params.boolE, params.boolNE, params.notset);
+				let objParams = params.obj.concat(params.objE, params.objNE, params.arrE, params.arrNE,
+					params.objDate, params.objTest, params.objSTest);
 
-				assert.isFalse(helpLib.isInstance(new Object(), Array),
-					'result with "(object) new Object(), (object) Array" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new Object(), new Array()),
-					'result with "(object) new Object(), (object) new Array()" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new Object(), 'Array'),
-					'result with "(object) new Object(), (string) \'Array\'" parameters is incorrect');
+				for(let p1 in objParams) {
+					for(let p2 in invalidParams) {
+						assert.isFalse(helpLib.isInstance(objParams[p1][0], invalidParams[p2][0]),
+							`result with "${objParams[p1][1]}, ${invalidParams[p2][1]}" parameters is incorrect`);
+					}
+				}
 			});
 
-			it('checking the object instance to the parent classes only in first level of extends chain', () => {
-				assert.isTrue(helpLib.isInstance([], [], true),
-					'result with "(array) [], (array) [], (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance([], {}, true),
-					'result with "(array) [], (object) {}, (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance([], Object, true),
-					'result with "(array) [], (object) Object, (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance([], new Object(), true),
-					'result with "(array) [], (object) new Object(), (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance([], 'Object', true),
-					'result with "(array) [], (string) \'Object\', (bool) true" parameters is incorrect');
+			it('checking the object instance to the classes, objects and string with name of classes ' +
+				'who not included in extends chain', () => {
+				let allParams = [
+					[Array, params.obj.concat(params.objDate, params.objTest, params.objSTest), params.arrE.concat(params.arrNE)],
+					[Date, params.obj.concat(params.arrE, params.arrNE, params.objTest, params.objSTest), params.objDate],
+					[STest, params.objTest, params.objSTest]
+				];
 
-				assert.isTrue(helpLib.isInstance(new Array(), [], true),
-					'result with "(array) new Array(), (array) [], (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new Array(), {}, true),
-					'result with "(array) new Array(), (object) {}, (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new Array(), Object, true),
-					'result with "(array) new Array(), (object) Object, (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new Array(), new Object(), true),
-					'result with "(array) new Array(), (object) new Object(), (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new Array(), 'Object', true),
-					'result with "(array) new Array(), (string) \'Object\', (bool) true" parameters is incorrect');
+				for(let p1 in allParams) {
+					for(let p2 in allParams[p1][1]) {
+						for(let p3 in allParams[p1][2]) {
+							assert.isFalse(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][0]),
+								`result with "${allParams[p1][1][p2][1]}, (object) ${allParams[p1][0].name}" parameters is incorrect`);
+							assert.isFalse(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][0].name),
+								`result with "${allParams[p1][1][p2][1]}, (string) ${allParams[p1][0].name}" parameters is incorrect`);
+							assert.isFalse(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][2][p3][0]),
+								`result with "${allParams[p1][1][p2][1]}, ${allParams[p1][2][p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
 			});
 
-			it('checking the object instance of custom class to the classes who not included in extends chain', () => {
-				assert.isFalse(helpLib.isInstance(new Test(1), STest),
-					'result with "(object) new Test(1), (object) STest" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new Test(1), new STest(1)),
-					'result with "(object) new Test(1), (object) new STest(1)" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new Test(1), 'STest'),
-					'result with "(object) new Test(1), (string) \'STest\'" parameters is incorrect');
-			});
+			it('checking the object instance only in first level of the extends chain to the classes, ' +
+				'objects and string with name of classes who not included in extends chain', () => {
+				let allParams = [
+					[Array, params.obj.concat(params.objDate, params.objTest, params.objSTest), params.arrE.concat(params.arrNE)],
+					[Date, params.obj.concat(params.arrE, params.arrNE, params.objTest, params.objSTest), params.objDate],
+					[STest, params.objTest, params.objSTest]
+				];
 
-			it('checking the object instance of custom class to the parent classes only in first level of extends chain', () => {
-				assert.isTrue(helpLib.isInstance(new STest(1), STest, true),
-					'result with "(object) new STest(1), (object) STest, (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new STest(1), {}, true),
-					'result with "(object) new STest(1), (object) {}, (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new STest(1), Object, true),
-					'result with "(object) new STest(1), (object) Object, (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new STest(1), Test, true),
-					'result with "(object) new STest(1), (object) Test, (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new STest(1), new Object(), true),
-					'result with "(object) new STest(1), (object) new Object(), (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new STest(1), new Test(), true),
-					'result with "(object) new STest(1), (object) new Test(), (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new STest(1), 'Object', true),
-					'result with "(object) new STest(1), (string) \'Object\', (bool) true" parameters is incorrect');
-				assert.isFalse(helpLib.isInstance(new STest(1), 'Test', true),
-					'result with "(object) new STest(1), (string) \'Test\', (bool) true" parameters is incorrect');
+				for(let p1 in allParams) {
+					for(let p2 in allParams[p1][1]) {
+						for(let p3 in allParams[p1][2]) {
+							assert.isFalse(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][0], true),
+								`result with "${allParams[p1][1][p2][1]}, (object) ${allParams[p1][0].name}" parameters is incorrect`);
+							assert.isFalse(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][0].name, true),
+								`result with "${allParams[p1][1][p2][1]}, (string) ${allParams[p1][0].name}" parameters is incorrect`);
+							assert.isFalse(helpLib.isInstance(allParams[p1][1][p2][0], allParams[p1][2][p3][0], true),
+								`result with "${allParams[p1][1][p2][1]}, ${allParams[p1][2][p3][1]}" parameters is incorrect`);
+						}
+					}
+				}
 			});
 		});
 	});
