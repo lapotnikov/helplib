@@ -1,5 +1,5 @@
 /**
- * Testing "num" library to work with strings
+ * Testing "num" library to work with numbers
  * @author Artyom Lapotnikov <lapotnikov@gmail.com>
  * @copyright Artyom Lapotnikov
  * @license MIT

@@ -132,8 +132,9 @@ const $moduleNamespace$ = (helpLib) => {
 							fillRet(prop[0], prop[1]);
 						}
 					} else if(collection === 'Set') {
-						for(let prop of obj) {
-							fillRet(null, prop);
+						let objArr = obj.values();
+						for(let i of objArr) {
+							fillRet(i, objArr[i]);
 						}
 					}
 				}
@@ -145,15 +146,15 @@ const $moduleNamespace$ = (helpLib) => {
 
 	function objTypify(obj, defCallback, collectionCallback, weakCollectionCallback) {
 		if(helpLib.obj.is(obj)) {
-			if(helpLib.isInstance(obj,' Set')) {
+			if(helpLib.isInstance(obj,' Set') && collectionCallback !== undefined) {
 				collectionCallback('Set');
-			} else if(helpLib.isInstance(obj,' Map')) {
+			} else if(helpLib.isInstance(obj,' Map') && collectionCallback !== undefined) {
 				collectionCallback('Map');
-			} else if(helpLib.isInstance(obj,' WeakSet')) {
+			} else if(helpLib.isInstance(obj,' WeakSet') && weakCollectionCallback !== undefined) {
 				weakCollectionCallback('WeakSet');
-			} else if(helpLib.isInstance(obj,' WeakMap')) {
+			} else if(helpLib.isInstance(obj,' WeakMap') && weakCollectionCallback !== undefined) {
 				weakCollectionCallback('WeakMap');
-			} else {
+			} else if(defCallback !== undefined) {
 				defCallback('Object');
 			}
 		}
