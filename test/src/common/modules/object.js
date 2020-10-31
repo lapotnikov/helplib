@@ -638,9 +638,11 @@ exports.testObj = (describe, it, assert, helpLib) => {
 					for(let p2 in objParams[p1][1]) {
 						let res = helpLib.obj.copy(objParams[p1][1][p2][0]);
 						let arrRes = objParams[p1][0] === Object ? Object.values(res) : Array.from(res.values());
+						let equalRes = Array.isArray(objParams[p1][1][p2][0]) ? Object.assign({}, objParams[p1][1][p2][0]) : res;
 
 						assert.instanceOf(res, objParams[p1][0], `result with "${objParams[p1][1][p2][1]}" parameter is not a object`);
 						assert.notStrictEqual(res, objParams[p1][1][p2][0], `result with "${objParams[p1][1][p2][1]}" parameter is not a copy`);
+						assert.deepEqual(res, equalRes, `result with "${objParams[p1][1][p2][1]}" parameter is incorrect`);
 						assert.deepEqual(arrRes, objParams[p1][1][p2][2], `result with "${objParams[p1][1][p2][1]}" parameter is incorrect`);
 					}
 				}
@@ -657,6 +659,101 @@ exports.testObj = (describe, it, assert, helpLib) => {
 						`result with "${params.notObj[p][1]}" parameter is incorrect`);
 				}
 			});
+		});
+
+		describe('checking "merge" function', () => {
+			it('function instance', () => {
+				assert.isFunction(helpLib.obj.merge, 'function "merge" is not added or is not a function');
+			});
+
+			function toObject(item, type) {
+				let ret = {};
+				switch(type) {
+					case Object: Object.keys(item).forEach((key) => ret[key] = item[key]); break;
+					case Set: ret = Object.assign({}, Array.from(item.values())); break;
+					case Map: Array.from(item.keys()).forEach((key) => ret[key] = item.get(key)); break;
+				}
+
+				return ret;
+			}
+
+			function merge(obj1, obj2, type) {
+				if(type === Set) {
+					obj1 = new Set(Object.values(obj1));
+					Object.values(obj2).forEach((val) => obj1.add(val));
+					return toObject(obj1, Set);
+				} else {
+					return Object.assign({}, obj1, obj2);
+				}
+			}
+
+			let params = getParams();
+
+			it('call with a object as first parameter', () => {
+				let objParams = [
+					[Object, Object, params.obj], [Set, Set, params.set], [Map, Map, params.map],
+					[Object, null, params.wmap.concat(params.wset)]
+				];
+
+				for(let p1 in objParams) {
+					for(let p2 in objParams[p1][2]) {
+						let res = helpLib.obj.merge(objParams[p1][2][p2][0]);
+						let objRes = toObject(objParams[p1][2][p2][0], objParams[p1][1]);
+
+						assert.instanceOf(res, objParams[p1][0], `result with "${objParams[p1][2][p2][1]}" parameter is not a object`);
+						assert.deepEqual(toObject(res, objParams[p1][1]), objRes, `result with "${objParams[p1][2][p2][1]}" parameter is incorrect`);
+						assert.deepEqual(Object.values(toObject(res, objParams[p1][1])), Object.values(objRes),
+							`result with "${objParams[p1][2][p2][1]}" parameter is incorrect`);
+					}
+				}
+			});
+
+			it('call with a object as first and second parameters', () => {
+				let objParams = [
+					[Object, Object, params.obj], [Set, Set, params.set], [Map, Map, params.map],
+					[Object, null, params.wmap.concat(params.wset)]
+				];
+
+				for(let p1 in objParams) {
+					let item1 = objParams[p1];
+					let params1 = item1[2];
+
+					for(let p2 in params1) {
+						let res1 = helpLib.obj.merge(params1[p2][0]);
+						let objRes1 = toObject(params1[p2][0], item1[1]);
+
+						assert.instanceOf(res1, item1[0], `result with "${params1[p2][1]}" parameter is not a object`);
+						assert.deepEqual(toObject(res1, item1[1]), objRes1, `result with "${params1[p2][1]}" parameter is incorrect`);
+						assert.deepEqual(Object.values(toObject(res1, item1[1])), Object.values(objRes1),
+							`result with "${params1[p2][1]}" parameter is incorrect`);
+
+						for(let p3 in objParams) {
+							let item2 = objParams[p3];
+							let params2 = item2[2];
+
+							for(let p4 in params2) {
+								let res2 = helpLib.obj.merge(params1[p2][0], params2[p4][0]);
+								let objRes2 = merge(objRes1, toObject(params2[p4][0], item2[1]), item1[1]);
+
+								console.log(params1[p2][1], params2[p4][1], toObject(params2[p4][0], item2[1]), objRes2);
+								assert.instanceOf(res2, item1[0],
+									`result with "${params1[p2][1]}, ${params2[p4][1]}" parameters is not a object`);
+								assert.deepEqual(toObject(res2, item1[1]), objRes2,
+									`result with "${params1[p2][1]}, ${params2[p4][1]}" parameters is incorrect`);
+								assert.deepEqual(Object.values(toObject(res2, item1[1])), Object.values(objRes2),
+									`result with "${params1[p2][1]}, ${params2[p4][1]}" parameters is incorrect`);
+							}
+						}
+					}
+				}
+			});
+
+			/*it('call with not a object parameters', () => {
+				for(let p in params.notObj) {
+					assert.deepEqual(helpLib.obj.merge(params.notObj[p][0]), {},
+						`result with "${params.notObj[p][1]}" parameter is incorrect`);
+				}
+			});*/
 		});
 	});
 };

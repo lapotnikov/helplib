@@ -110,8 +110,8 @@ const $moduleNamespace$ = (helpLib) => {
 				case 'Map': ret.set(prop, value); break;
 			}
 		};
-
-		for(let i of objList) {
+		
+		for(let i in objList) {
 			let obj = objList[i];
 			objTypify(obj,
 				() => {
@@ -122,7 +122,7 @@ const $moduleNamespace$ = (helpLib) => {
 					}
 				},
 				(className) =>  {
-					if(i === 0) {
+					if(i == 0) {
 						collection = className;
 						ret = className === 'Set' ? new Set() : new Map();
 					}
@@ -131,9 +131,9 @@ const $moduleNamespace$ = (helpLib) => {
 						for(let prop of obj) {
 							fillRet(prop[0], prop[1]);
 						}
-					} else if(collection === 'Set') {
-						let objArr = obj.values();
-						for(let i of objArr) {
+					} else {
+						let objArr = Array.from(obj.values());
+						for(let i in objArr) {
 							fillRet(i, objArr[i]);
 						}
 					}
