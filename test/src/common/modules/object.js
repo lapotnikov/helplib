@@ -82,9 +82,10 @@ exports.testObj = (describe, it, assert, helpLib) => {
 				[new Map(undefined), `(object) new Map(undefined)`, []],
 				[new Map([[null, 'test1'], [undefined, 'test2']]), `(object) new Map([[null, 'test1'], [undefined, 'test2']])`, [`test1`, `test2`]],
 				[new Map([[null, 'test1'], [null, 'test2']]), `(object) new Map([[null, 'test1'], [null, 'test2']])`, [`test2`]],
-				[new Map([[0, 1], [1, 2], [2, 3]]), `(object) new Map([[0, 1], [1, 2], [2, 3]])`, [1, 2, 3]],
-				[new Map([[0, 1], [1, 2], [1, 3]]), `(object) new Map([[0, 1], [1, 2], [1, 3]])`, [1, 3]],
-				[new Map(new Map([[0, 1], [1, 2]])), `(object) new Map(new Map([[0, 1], [1, 2]]))`, [1, 2]]
+				[new Map([['0', 1], ['1', 2], ['2', 3]]), `(object) new Map([['0', 1], ['1', 2], ['2', 3]])`, [1, 2, 3]],
+				[new Map([['0', 1], ['1', 2], ['1', 3]]), `(object) new Map([['0', 1], ['1', 2], ['1', 3]])`, [1, 3]],
+				[new Map([['p1', 'testM1'], ['p2', 'testM2']]), `(object) new Map([['p1', 'testM1'], ['p2', 'testM2']])`, ['testM1', 'testM2']],
+				[new Map(new Map([['0', 1], ['1', 2]])), `(object) new Map(new Map([['0', 1], ['1', 2]]))`, [1, 2]]
 			],
 
 			wmap: [
@@ -568,13 +569,13 @@ exports.testObj = (describe, it, assert, helpLib) => {
 			});
 
 			it('call without parameters or with null or undefined values', () => {
-				assert.isUndefined(helpLib.obj.forEach(), {}, 'result without parameter is incorrect');
+				assert.isUndefined(helpLib.obj.forEach(), 'result without parameter is incorrect');
 
-				assert.isUndefined(helpLib.obj.forEach(undefined), {}, 'result with "undefined" parameter is incorrect');
-				assert.isUndefined(helpLib.obj.forEach(undefined, undefined), {},
+				assert.isUndefined(helpLib.obj.forEach(undefined), 'result with "undefined" parameter is incorrect');
+				assert.isUndefined(helpLib.obj.forEach(undefined, undefined),
 					'result with "undefined, undefined" parameters is incorrect');
 
-				assert.isUndefined(helpLib.obj.forEach(null), {}, 'result with "null" parameter is incorrect');
+				assert.isUndefined(helpLib.obj.forEach(null), 'result with "null" parameter is incorrect');
 				assert.isUndefined(helpLib.obj.forEach(null, null), 'result with "null, null" parameters is incorrect');
 			});
 
@@ -687,35 +688,9 @@ exports.testObj = (describe, it, assert, helpLib) => {
 				}
 			}
 
-			let params = getParams();
-
-			it('call with a object as first parameter', () => {
-				let objParams = [
-					[Object, Object, params.obj], [Set, Set, params.set], [Map, Map, params.map],
-					[Object, null, params.wmap.concat(params.wset)]
-				];
-
-				for(let p1 in objParams) {
-					for(let p2 in objParams[p1][2]) {
-						let res = helpLib.obj.merge(objParams[p1][2][p2][0]);
-						let objRes = toObject(objParams[p1][2][p2][0], objParams[p1][1]);
-
-						assert.instanceOf(res, objParams[p1][0], `result with "${objParams[p1][2][p2][1]}" parameter is not a object`);
-						assert.deepEqual(toObject(res, objParams[p1][1]), objRes, `result with "${objParams[p1][2][p2][1]}" parameter is incorrect`);
-						assert.deepEqual(Object.values(toObject(res, objParams[p1][1])), Object.values(objRes),
-							`result with "${objParams[p1][2][p2][1]}" parameter is incorrect`);
-					}
-				}
-			});
-
-			it('call with a object as first and second parameters', () => {
-				let objParams = [
-					[Object, Object, params.obj], [Set, Set, params.set], [Map, Map, params.map],
-					[Object, null, params.wmap.concat(params.wset)]
-				];
-
-				for(let p1 in objParams) {
-					let item1 = objParams[p1];
+			function checkWithThreeParameters(pramsList1, pramsList2, pramsList3) {
+				for(let p1 in pramsList1) {
+					let item1 = pramsList1[p1];
 					let params1 = item1[2];
 
 					for(let p2 in params1) {
@@ -723,37 +698,112 @@ exports.testObj = (describe, it, assert, helpLib) => {
 						let objRes1 = toObject(params1[p2][0], item1[1]);
 
 						assert.instanceOf(res1, item1[0], `result with "${params1[p2][1]}" parameter is not a object`);
-						assert.deepEqual(toObject(res1, item1[1]), objRes1, `result with "${params1[p2][1]}" parameter is incorrect`);
-						assert.deepEqual(Object.values(toObject(res1, item1[1])), Object.values(objRes1),
+						assert.deepEqual(toObject(res1, item1[0]), objRes1, `result with "${params1[p2][1]}" parameter is incorrect`);
+						assert.deepEqual(Object.values(toObject(res1, item1[0])), Object.values(objRes1),
 							`result with "${params1[p2][1]}" parameter is incorrect`);
 
-						for(let p3 in objParams) {
-							let item2 = objParams[p3];
+						for(let p3 in pramsList2) {
+							let item2 = pramsList2[p3];
 							let params2 = item2[2];
 
 							for(let p4 in params2) {
 								let res2 = helpLib.obj.merge(params1[p2][0], params2[p4][0]);
 								let objRes2 = merge(objRes1, toObject(params2[p4][0], item2[1]), item1[1]);
 
-								console.log(params1[p2][1], params2[p4][1], toObject(params2[p4][0], item2[1]), objRes2);
 								assert.instanceOf(res2, item1[0],
 									`result with "${params1[p2][1]}, ${params2[p4][1]}" parameters is not a object`);
-								assert.deepEqual(toObject(res2, item1[1]), objRes2,
+								assert.deepEqual(toObject(res2, item1[0]), objRes2,
 									`result with "${params1[p2][1]}, ${params2[p4][1]}" parameters is incorrect`);
-								assert.deepEqual(Object.values(toObject(res2, item1[1])), Object.values(objRes2),
+								assert.deepEqual(Object.values(toObject(res2, item1[0])), Object.values(objRes2),
 									`result with "${params1[p2][1]}, ${params2[p4][1]}" parameters is incorrect`);
+
+								for(let p5 in pramsList3) {
+									let item3 = pramsList3[p5];
+									let params3 = item3[2];
+
+									for(let p6 in params3) {
+										let res3 = helpLib.obj.merge(params1[p2][0], params2[p4][0], params3[p6][0]);
+										let objRes3 = merge(objRes2, toObject(params3[p6][0], item3[1]), item1[1]);
+
+										assert.instanceOf(res3, item1[0],
+											`result with "${params1[p2][1]}, ${params2[p4][1]}, ${params3[p6][1]}" parameters is not a object`);
+										assert.deepEqual(toObject(res3, item1[0]), objRes3,
+											`result with "${params1[p2][1]}, ${params2[p4][1]}, ${params3[p6][1]}" parameters is incorrect`);
+										assert.deepEqual(Object.values(toObject(res3, item1[0])), Object.values(objRes3),
+											`result with "${params1[p2][1]}, ${params2[p4][1]}, ${params3[p6][1]}" parameters is incorrect`);
+									}
+								}
 							}
 						}
 					}
 				}
+			}
+
+			let params = getParams();
+
+			it('call with a object as first parameter, with a object as first and second parameters, ' +
+				'with a object as first, second and third parameters', function() {
+				this.timeout(20000);
+
+				let objParams = [
+					[Object, Object, params.obj], [Set, Set, params.set], [Map, Map, params.map],
+					[Object, null, params.wmap.concat(params.wset)]
+				];
+
+				checkWithThreeParameters(objParams, objParams, objParams);
 			});
 
-			/*it('call with not a object parameters', () => {
-				for(let p in params.notObj) {
-					assert.deepEqual(helpLib.obj.merge(params.notObj[p][0]), {},
-						`result with "${params.notObj[p][1]}" parameter is incorrect`);
-				}
-			});*/
+			it('call without parameters or with null or undefined values', () => {
+				assert.deepEqual(helpLib.obj.merge(), {}, 'result without parameter is incorrect');
+
+				assert.deepEqual(helpLib.obj.merge(undefined), {}, 'result with "undefined" parameter is incorrect');
+				assert.deepEqual(helpLib.obj.merge(undefined, undefined), {},
+					'result with "undefined, undefined" parameters is incorrect');
+
+				assert.deepEqual(helpLib.obj.merge(null), {}, 'result with "null" parameter is incorrect');
+				assert.deepEqual(helpLib.obj.merge(null, null), {}, 'result with "null, null" parameters is incorrect');
+			});
+
+			it('call with not a object as first parameter, with not a object as first and second parameters, ' +
+				'with not a object as first, second and third parameters', function() {
+				this.timeout(20000);
+				checkWithThreeParameters([[Object, null, params.notObj]], [[Object, null, params.notObj]], [[Object, null, params.notObj]]);
+			});
+
+			it('call with not a object as first parameter, with not a object as first parameter and a object as second parameter, ' +
+				'with not a object as first parameter and a object as second and third parameters', function() {
+				this.timeout(20000);
+
+				let objParams = [
+					[Object, Object, params.obj], [Set, Set, params.set], [Map, Map, params.map],
+					[Object, null, params.wmap.concat(params.wset)]
+				];
+
+				checkWithThreeParameters([[Object, null, params.notObj]], objParams, objParams);
+			});
+
+			it('call with a object as first parameter and not a object as second parameter, ' +
+				'with a object as first and third parameters and not a object as second parameter', function() {
+				this.timeout(20000);
+
+				let objParams = [
+					[Object, Object, params.obj], [Set, Set, params.set], [Map, Map, params.map],
+					[Object, null, params.wmap.concat(params.wset)]
+				];
+
+				checkWithThreeParameters(objParams, [[Object, null, params.notObj]], objParams);
+			});
+
+			it('call with a object as first and second parameters and not a object as third parameter', function() {
+				this.timeout(20000);
+
+				let objParams = [
+					[Object, Object, params.obj], [Set, Set, params.set], [Map, Map, params.map],
+					[Object, null, params.wmap.concat(params.wset)]
+				];
+
+				checkWithThreeParameters(objParams, objParams, [[Object, null, params.notObj]]);
+			});
 		});
 	});
 };
