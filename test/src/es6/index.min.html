@@ -17,7 +17,10 @@
 		<script src="../common/modules/common.js" type="text/javascript"></script>
 		<script src="../common/modules/string.js" type="text/javascript"></script>
 		<script src="../common/modules/number.js" type="text/javascript"></script>
+		<script src="../common/modules/object.js" type="text/javascript"></script>
+		<script src="../common/modules/array.js" type="text/javascript"></script>
 		<script src="../common/modules/function.js" type="text/javascript"></script>
+		<script src="../common/modules/date.js" type="text/javascript"></script>
   </head>
 
   <body>
@@ -34,7 +37,10 @@
 		testCommon(describe, it, chai.assert, helpLib);
 		testStr(describe, it, chai.assert, helpLib);
 		testNum(describe, it, chai.assert, helpLib);
+		testObj(describe, it, chai.assert, helpLib);
+		testArr(describe, it, chai.assert, helpLib);
 		testFunc(describe, it, chai.assert, helpLib);
+		testDate(describe, it, chai.assert, helpLib);
 
 		mocha.run();
 	</script>
