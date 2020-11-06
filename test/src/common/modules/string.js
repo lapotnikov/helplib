@@ -194,7 +194,7 @@ exports.testStr = (describe, it, assert, helpLib) => {
 
 				for(let p in strParams) {
 					assert.strictEqual(helpLib.str.check(strParams[p][0], null), strParams[p][2],
-						`result with "${strParams[p][1]}" parameter is incorrect`);
+						`result with "${strParams[p][1]}, null" parameters is incorrect`);
 				}
 			});
 
@@ -218,7 +218,7 @@ exports.testStr = (describe, it, assert, helpLib) => {
 			it('call with values who can not convert to string as "str" parameter and some "defValue" parameter', () => {
 				for(let p in params.notset) {
 					assert.strictEqual(helpLib.str.check(params.notset[p][0], null), null,
-						`result with "${params.notset[p][1]}" parameter is incorrect`);
+						`result with "${params.notset[p][1]}, null" parameters is incorrect`);
 				}
 			});
 		});

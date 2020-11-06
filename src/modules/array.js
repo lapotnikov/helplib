@@ -4,16 +4,17 @@ const $moduleNamespace$ = (helpLib) => {
 		return Object.prototype.toString.call(arr) === '[object Array]' ? true : false;
 	});
 
-	helpLib.regHelper('arr', 'check', null, function(arr, defValue = []) {
-		return this.arr.is(arr) ? arr : defValue;
-	});
-
-	helpLib.regHelper('arr', 'toArray', null, function(val) {
-		try {
-			return Array.from(val);
-		} catch(excep) {
-			return [];
+	helpLib.regHelper('arr', 'check', {obj: 'is, toArray', str: 'is'}, function(arr, defValue = []) {
+		let ret = defValue;
+		if(this.arr.is(arr)) {
+			ret = arr;
+		} else if(this.obj.is(arr)) {
+			ret = this.obj.toArray(arr);
+		} else if(this.str.is(arr)) {
+			ret = Array.from(arr);
 		}
+
+		return ret;
 	});
 
 	helpLib.regHelper('arr', 'exist', null, function(arr, val) {
@@ -26,14 +27,16 @@ const $moduleNamespace$ = (helpLib) => {
 
 	helpLib.regHelper('arr', 'proection', {'.': 'isSet', str: 'trim', obj: 'is, isMap'}, function(arr, field) {
 		let ret = [];
-		arr = this.arr.check(arr);
 		field = this.str.trim(field);
 
-		for(let itm of arr) {
-			if(this.obj.is(itm)) {
-				let val = this.obj.isMap(itm) ? itm.get(field) : itm[field];
-				if(this.isSet(val)) {
-					ret.push(val);
+		if(field.length > 0) {
+			arr = this.arr.check(arr);
+			for(let itm of arr) {
+				if(this.obj.is(itm)) {
+					let val = this.obj.isMap(itm) ? itm.get(field) : itm[field];
+					if(this.isSet(val)) {
+						ret.push(val);
+					}
 				}
 			}
 		}
@@ -43,12 +46,12 @@ const $moduleNamespace$ = (helpLib) => {
 
 	helpLib.regHelper('arr', 'shuffle', null, function(arr) {
 		arr = this.arr.copy(arr);
-		return list.sort(() => {
+		return arr.sort(() => {
 			return Math.random() - 0.5;
 		});
 	});
 
-	helpLib.regHelper('arr', 'random', {num: 'check'}, function(arr, count) {
+	helpLib.regHelper('arr', 'random', {num: 'check'}, function(arr, count = 1) {
 		let ret = [];
 		arr = this.arr.copy(arr);
 		count = Math.floor(this.num.check(count));
@@ -64,18 +67,18 @@ const $moduleNamespace$ = (helpLib) => {
 	});
 
 	helpLib.regHelper('arr', 'unique', null, function(arr) {
-		arr = this.arr.check(arr);
-		return arr.filter((elem, index, array) => {
-			return index == array.indexOf(elem);
-		});
+		arr = new Set(this.arr.check(arr));
+		return Array.from(arr.values());
 	});
 
-	helpLib.regHelper('arr', 'toNumberArray', {num: 'is, check'}, function(arr, isAllConvert = false) {
+	helpLib.regHelper('arr', 'toNumberArray', {num: 'check'}, function(arr, isAllConvert = false) {
 		let ret = [];
 		arr = this.arr.check(arr);
 
 		for(var itm of arr) {
-			if(isAllConvert || this.num.is(itm)) {
+			if(isAllConvert == false && typeof itm === 'number' && Number.isFinite(itm)) {
+				ret.push(itm);
+			} else if(isAllConvert) {
 				ret.push(this.num.check(itm));
 			}
 		}

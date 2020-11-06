@@ -277,11 +277,11 @@ exports.testObj = (describe, it, assert, helpLib) => {
 				}
 			});
 
-			it('call with a object as "str" parameter and some "defValue" parameter', () => {
+			it('call with a object as "obj" parameter and some "defValue" parameter', () => {
 				let objParams = params.obj.concat(params.set, params.wset, params.map, params.wmap);
 				for(let p in objParams) {
 					assert.strictEqual(helpLib.obj.check(objParams[p][0], null), objParams[p][0],
-						`result with "${objParams[p][1]}" parameter is incorrect`);
+						`result with "${objParams[p][1]}, null" parameters is incorrect`);
 				}
 			});
 
@@ -303,10 +303,10 @@ exports.testObj = (describe, it, assert, helpLib) => {
 				}
 			});
 
-			it('call with not a object as "str" parameter and some "defValue" parameter', () => {
+			it('call with not a object as "obj" parameter and some "defValue" parameter', () => {
 				for(let p in params.notObj) {
 					assert.isNull(helpLib.obj.check(params.notObj[p][0], null),
-						`result with "${params.notObj[p][1]}" parameter is incorrect`);
+						`result with "${params.notObj[p][1]}, null" parameters is incorrect`);
 				}
 			});
 		});
