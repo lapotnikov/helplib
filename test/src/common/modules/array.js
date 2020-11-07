@@ -432,6 +432,64 @@ exports.testArr = (describe, it, assert, helpLib) => {
 			});
 		});
 
+		describe('checking "shuffle" function', () => {
+			it('function instance', () => {
+				assert.isFunction(helpLib.arr.shuffle, 'function "shuffle" is not added or is not a function');
+			});
+
+			let params = getParams();
+			let arr = params.arrVal[0];
+			let func = params.funcVal[0];
+			let obj1 = params.obj1Val[0];
+			let obj2 = params.obj2Val[0];
+
+			params.checkArr = [
+				[[Infinity, -Infinity, 0, 1, 2, 3, 4, 5, 6, 7], `(array) [Infinity, -Infinity, 0, 1, 2, 3, 4, 5, 6, 7]`],
+				[[0, 0.1, 0.01, 0.001, 0.0001, 1, 1.1, 1.01, 1.001, 1.0001], `(array) [0, 0.1, 0.01, 0.001, 0.0001, 1, 1.1, 1.01, 1.001, 1.0001]`],
+				[[0, 1, 2, 3, 4, '0', '1', '2', '3', '4'], `(array) [0, 1, 2, 3, 4, '0', '1', '2', '3', '4']`],
+				[['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9'], `(array) ['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9']`],
+				[['tst', ' tst', 'tst ', 't st', 'ts t', ' tst ', '\ttst', 'tst\t', '\ntst', 'tst\n'],
+					`(array) ['tst', ' tst', 'tst ', 't st', 'ts t', ' tst ', '\\ttst', 'tst\\t', '\\ntst', 'tst\\n']`],
+				[[arr, func, obj1, obj2, 1, -1, 'tst', ' tst', null, undefined],
+					`(array) [${arr}, ${func}, ${obj1}, ${obj2}, 1, -1, 'tst', ' tst', null, undefined]`]
+			];
+
+			it('call with a values who can convert to array as "arr" parameter', () => {
+				let arrParams = params.arr.concat(params.toArr);
+				for(let p in arrParams) {
+					let res = helpLib.arr.shuffle(arrParams[p][0]);
+
+					assert.notStrictEqual(res, arrParams[p][0], `result with "${arrParams[p][1]}" parameter is an "arr" parameter`);
+					assert.sameMembers(res, arrParams[p][2], `result with "${arrParams[p][1]}" parameter is incorrect`);
+				}
+
+				for(let p in params.checkArr) {
+					let resList = [];
+					for(let i = 0; i < 10; i++) {
+						let res = helpLib.arr.shuffle(params.checkArr[p][0]);
+
+						assert.notStrictEqual(res, params.checkArr[p][0],
+							`result with "${params.checkArr[p][1]}" parameter is an "arr" parameter`);
+						assert.sameMembers(res, params.checkArr[p][0],
+							`result with "${params.checkArr[p][1]}" parameter is incorrect`);
+
+						for(let resItm of resList) {
+							assert.notSameOrderedMembers(res, resItm, `result with "${params.checkArr[p][1]}" is appeared twice`);
+						}
+
+						resList.push(res);
+					}
+				}
+			});
+
+			it('call with a values who can not convert to array as "arr" parameter', () => {
+				for(let p in params.notArr) {
+					assert.deepEqual(helpLib.arr.shuffle(params.notArr[p][0]), [],
+						`result with "${params.notArr[p][1]}" parameter is incorrect`);
+				}
+			});
+		});
+
 		describe('checking "unique" function', () => {
 			it('function instance', () => {
 				assert.isFunction(helpLib.arr.unique, 'function "unique" is not added or is not a function');

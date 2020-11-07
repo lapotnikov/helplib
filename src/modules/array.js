@@ -51,21 +51,6 @@ const $moduleNamespace$ = (helpLib) => {
 		});
 	});
 
-	helpLib.regHelper('arr', 'random', {num: 'check'}, function(arr, count = 1) {
-		let ret = [];
-		arr = this.arr.copy(arr);
-		count = Math.floor(this.num.check(count));
-
-		while(count > 0 && arr.length > 0) {
-			let i = Math.floor(Math.random() * arr.length);
-			ret.push(arr[i]);
-			arr.splice(i, 1);
-			count--;
-		}
-
-		return ret;
-	});
-
 	helpLib.regHelper('arr', 'unique', null, function(arr) {
 		arr = new Set(this.arr.check(arr));
 		return Array.from(arr.values());
