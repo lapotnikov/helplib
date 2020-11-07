@@ -352,14 +352,18 @@ exports.testArr = (describe, it, assert, helpLib) => {
 				let arrParams = params.arr.concat(params.toArr);
 				for(let p1 in params.isSetFields) {
 					for(let p2 in arrParams) {
-						let res = [];
+						let res = helpLib.arr.proection(arrParams[p2][0], params.isSetFields[p1][0]);
+						let deepRes = [];
+
 						for(let item of arrParams[p2][2]) {
 							if(item !== null && typeof item === 'object' && item[params.isSetFields[p1][2]] !== undefined) {
-								res.push(params.isSetFields[p1][3]);
+								deepRes.push(params.isSetFields[p1][3]);
 							}
 						}
 
-						assert.deepEqual(helpLib.arr.proection(arrParams[p2][0], params.isSetFields[p1][0]), res,
+						assert.notStrictEqual(res, arrParams[p2][0],
+							`result with "${arrParams[p2][1]}, ${params.isSetFields[p1][1]}" parameters is an "arr" parameter`);
+						assert.deepEqual(res, deepRes,
 							`result with "${arrParams[p2][1]}, ${params.isSetFields[p1][1]}" parameters is incorrect`);
 					}
 				}
@@ -370,7 +374,11 @@ exports.testArr = (describe, it, assert, helpLib) => {
 				let arrParams = params.arr.concat(params.toArr);
 				for(let p1 in arrParams) {
 					for(let p2 in params.notSetFields) {
-						assert.deepEqual(helpLib.arr.proection(arrParams[p1][0], params.notSetFields[p2][0]), [],
+						let res = helpLib.arr.proection(arrParams[p1][0], params.notSetFields[p2][0]);
+
+						assert.notStrictEqual(res, arrParams[p1][0],
+							`result with "${arrParams[p1][1]}, ${params.notSetFields[p2][1]}" parameters is an "arr" parameter`);
+						assert.deepEqual(res, [],
 							`result with "${arrParams[p1][1]}, ${params.notSetFields[p2][1]}" parameters is incorrect`);
 					}
 				}
@@ -379,7 +387,10 @@ exports.testArr = (describe, it, assert, helpLib) => {
 			it('call with a values who can convert to array as "arr" parameter and without "field" parameter', () => {
 				let arrParams = params.arr.concat(params.toArr);
 				for(let p in arrParams) {
-					assert.deepEqual(helpLib.arr.proection(arrParams[p][0]), [], `result with "${arrParams[p][1]}" parameter is incorrect`);
+					let res = helpLib.arr.proection(arrParams[p][0]);
+
+					assert.notStrictEqual(res, arrParams[p][0], `result with "${arrParams[p][1]}" parameter is an "arr" parameter`);
+					assert.deepEqual(res, [], `result with "${arrParams[p][1]}" parameter is incorrect`);
 				}
 			});
 
@@ -460,8 +471,11 @@ exports.testArr = (describe, it, assert, helpLib) => {
 			it('call with a values who can convert to array as "arr" parameter', () => {
 				let arrParams = params.arr.concat(params.toArr);
 				for(let p in arrParams) {
-					let res = arrParams[p][3] ? arrParams[p][2] : Array.from((new Set(arrParams[p][2])).values());
-					assert.deepEqual(helpLib.arr.unique(arrParams[p][0]), res, `result with "${arrParams[p][1]}" parameter is incorrect`);
+					let res = helpLib.arr.unique(arrParams[p][0]);
+					let deepRes = arrParams[p][3] ? arrParams[p][2] : Array.from((new Set(arrParams[p][2])).values());
+
+					assert.notStrictEqual(res, arrParams[p][0], `result with "${arrParams[p][1]}" parameter is an "arr" parameter`);
+					assert.deepEqual(res, deepRes, `result with "${arrParams[p][1]}" parameter is incorrect`);
 				}
 			});
 
@@ -498,16 +512,20 @@ exports.testArr = (describe, it, assert, helpLib) => {
 			it('call with a values who can convert to array as "arr" parameter and negative value as "isAllConvert" parameter', () => {
 				let arrParams = params.arr.concat(params.toArr);
 				for(let p in arrParams) {
-					let res = arrParams[p].length > 3 ? arrParams[p][2] : [];
+					let res = helpLib.arr.toNumberArray(arrParams[p][0], false);
+					let deepRes = arrParams[p].length > 3 ? arrParams[p][2] : [];
+
 					if(arrParams[p].length == 3) {
 						for(let item of arrParams[p][2]) {
 							if(typeof item === 'number' && Number.isFinite(item)) {
-								res.push(item);
+								deepRes.push(item);
 							}
 						}
 					}
 
-					assert.deepEqual(helpLib.arr.toNumberArray(arrParams[p][0], false), res,
+					assert.notStrictEqual(res, arrParams[p][0],
+						`result with "${arrParams[p][1]}, (bool) false" parameters is an "arr" parameter`);
+					assert.deepEqual(res, deepRes,
 						`result with "${arrParams[p][1]}, (bool) false" parameters is incorrect`);
 				}
 			});
@@ -515,20 +533,24 @@ exports.testArr = (describe, it, assert, helpLib) => {
 			it('call with a values who can convert to array as "arr" parameter and positive value as "isAllConvert" parameter', () => {
 				let arrParams = params.arr.concat(params.toArr);
 				for(let p in arrParams) {
-					let res = arrParams[p].length > 3 ? arrParams[p][3] : [];
+					let res = helpLib.arr.toNumberArray(arrParams[p][0], true);
+					let deepRes = arrParams[p].length > 3 ? arrParams[p][3] : [];
+
 					if(arrParams[p].length == 3) {
 						for(let item of arrParams[p][2]) {
 							switch(typeof item) {
-								case 'number': Number.isFinite(item) ? res.push(item) : res.push(0); break;
+								case 'number': Number.isFinite(item) ? deepRes.push(item) : deepRes.push(0); break;
 								case 'string': item.trim() > 0 ?
-									(isFinite(Number(item.trim())) ? res.push(Number(item.trim())) : res.push(0)) : res.push(0);
+									(isFinite(Number(item.trim())) ? deepRes.push(Number(item.trim())) : deepRes.push(0)) : deepRes.push(0);
 								break;
-								default: res.push(0);
+								default: deepRes.push(0);
 							}
 						}
 					}
 
-					assert.deepEqual(helpLib.arr.toNumberArray(arrParams[p][0], true), res,
+					assert.notStrictEqual(res, arrParams[p][0],
+						`result with "${arrParams[p][1]}, (bool) true" parameters is an "arr" parameter`);
+					assert.deepEqual(res, deepRes,
 						`result with "${arrParams[p][1]}, (bool) true" parameters is incorrect`);
 				}
 			});
@@ -536,17 +558,19 @@ exports.testArr = (describe, it, assert, helpLib) => {
 			it('call with a values who can convert to array as "arr" parameter and without "isAllConvert" parameter', () => {
 				let arrParams = params.arr.concat(params.toArr);
 				for(let p in arrParams) {
-					let res = arrParams[p].length > 3 ? arrParams[p][2] : [];
+					let res = helpLib.arr.toNumberArray(arrParams[p][0]);
+					let deepRes = arrParams[p].length > 3 ? arrParams[p][2] : [];
+
 					if(arrParams[p].length == 3) {
 						for(let item of arrParams[p][2]) {
 							if(typeof item === 'number' && Number.isFinite(item)) {
-								res.push(item);
+								deepRes.push(item);
 							}
 						}
 					}
 
-					assert.deepEqual(helpLib.arr.toNumberArray(arrParams[p][0]), res,
-						`result with "${arrParams[p][1]}" parameter is incorrect`);
+					assert.notStrictEqual(res, arrParams[p][0], `result with "${arrParams[p][1]}" parameter is an "arr" parameter`);
+					assert.deepEqual(res, deepRes, `result with "${arrParams[p][1]}" parameter is incorrect`);
 				}
 			});
 

@@ -613,8 +613,10 @@ exports.testObj = (describe, it, assert, helpLib) => {
 			it('call with a object parameters', () => {
 				let objParams = params.obj.concat(params.set, params.wset, params.map, params.wmap);
 				for(let p in objParams) {
-					assert.deepEqual(helpLib.obj.toArray(objParams[p][0]), objParams[p][2],
-						`result with "${objParams[p][1]}" parameter is incorrect`);
+					let res = helpLib.obj.toArray(objParams[p][0]);
+
+					assert.notStrictEqual(res, objParams[p][0], `result with "${objParams[p][1]}" parameter is an "obj" parameter`);
+					assert.deepEqual(res, objParams[p][2], `result with "${objParams[p][1]}" parameter is incorrect`);
 				}
 			});
 
@@ -698,6 +700,7 @@ exports.testObj = (describe, it, assert, helpLib) => {
 						let objRes1 = toObject(params1[p2][0], item1[1]);
 
 						assert.instanceOf(res1, item1[0], `result with "${params1[p2][1]}" parameter is not a object`);
+						assert.notStrictEqual(res1, params1[p2][0], `result with "${params1[p2][1]}" parameter is an first parameter`);
 						assert.deepEqual(toObject(res1, item1[0]), objRes1, `result with "${params1[p2][1]}" parameter is incorrect`);
 						assert.deepEqual(Object.values(toObject(res1, item1[0])), Object.values(objRes1),
 							`result with "${params1[p2][1]}" parameter is incorrect`);
@@ -712,6 +715,10 @@ exports.testObj = (describe, it, assert, helpLib) => {
 
 								assert.instanceOf(res2, item1[0],
 									`result with "${params1[p2][1]}, ${params2[p4][1]}" parameters is not a object`);
+								assert.notStrictEqual(res2, params1[p2][0],
+									`result with "${params1[p2][1]}, ${params2[p4][1]}" parameters is an first parameter`);
+								assert.notStrictEqual(res2, params2[p4][0],
+									`result with "${params1[p2][1]}, ${params2[p4][1]}" parameters is an second parameter`);
 								assert.deepEqual(toObject(res2, item1[0]), objRes2,
 									`result with "${params1[p2][1]}, ${params2[p4][1]}" parameters is incorrect`);
 								assert.deepEqual(Object.values(toObject(res2, item1[0])), Object.values(objRes2),
@@ -727,6 +734,12 @@ exports.testObj = (describe, it, assert, helpLib) => {
 
 										assert.instanceOf(res3, item1[0],
 											`result with "${params1[p2][1]}, ${params2[p4][1]}, ${params3[p6][1]}" parameters is not a object`);
+										assert.notStrictEqual(res3, params1[p2][0],
+											`result with "${params1[p2][1]}, ${params2[p4][1]}, ${params3[p6][1]}" parameters is an first parameter`);
+										assert.notStrictEqual(res3, params2[p4][0],
+											`result with "${params1[p2][1]}, ${params2[p4][1]}, ${params3[p6][1]}" parameters is an second parameter`);
+										assert.notStrictEqual(res3, params3[p6][0],
+											`result with "${params1[p2][1]}, ${params2[p4][1]}, ${params3[p6][1]}" parameters is an third parameter`);
 										assert.deepEqual(toObject(res3, item1[0]), objRes3,
 											`result with "${params1[p2][1]}, ${params2[p4][1]}, ${params3[p6][1]}" parameters is incorrect`);
 										assert.deepEqual(Object.values(toObject(res3, item1[0])), Object.values(objRes3),
