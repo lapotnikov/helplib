@@ -756,7 +756,7 @@ exports.testObj = (describe, it, assert, helpLib) => {
 
 			it('call with a object as first parameter, with a object as first and second parameters, ' +
 				'with a object as first, second and third parameters', function() {
-				this.timeout(20000);
+				this.timeout(30000);
 
 				let objParams = [
 					[Object, Object, params.obj], [Set, Set, params.set], [Map, Map, params.map],
@@ -779,13 +779,13 @@ exports.testObj = (describe, it, assert, helpLib) => {
 
 			it('call with not a object as first parameter, with not a object as first and second parameters, ' +
 				'with not a object as first, second and third parameters', function() {
-				this.timeout(20000);
+				this.timeout(30000);
 				checkWithThreeParameters([[Object, null, params.notObj]], [[Object, null, params.notObj]], [[Object, null, params.notObj]]);
 			});
 
 			it('call with not a object as first parameter, with not a object as first parameter and a object as second parameter, ' +
 				'with not a object as first parameter and a object as second and third parameters', function() {
-				this.timeout(20000);
+				this.timeout(30000);
 
 				let objParams = [
 					[Object, Object, params.obj], [Set, Set, params.set], [Map, Map, params.map],
@@ -797,7 +797,7 @@ exports.testObj = (describe, it, assert, helpLib) => {
 
 			it('call with a object as first parameter and not a object as second parameter, ' +
 				'with a object as first and third parameters and not a object as second parameter', function() {
-				this.timeout(20000);
+				this.timeout(30000);
 
 				let objParams = [
 					[Object, Object, params.obj], [Set, Set, params.set], [Map, Map, params.map],
@@ -808,7 +808,7 @@ exports.testObj = (describe, it, assert, helpLib) => {
 			});
 
 			it('call with a object as first and second parameters and not a object as third parameter', function() {
-				this.timeout(20000);
+				this.timeout(30000);
 
 				let objParams = [
 					[Object, Object, params.obj], [Set, Set, params.set], [Map, Map, params.map],

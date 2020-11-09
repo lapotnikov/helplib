@@ -25,8 +25,7 @@ exports.testDate = (describe, it, assert, helpLib) => {
 	 */
 	function getParams() {
 		let time1 = (new Date(1970, 0, 1)).getTime();
-		let time2 = (new Date(2020, 0, 20)).getTime();
-		let time3 = (new Date(2020, 0, 20, 15, 15, 15)).getTime();
+		let time2 = (new Date(2020, 0, 20, 15, 15, 15)).getTime();
 		return {
 			date: [
 				[new Date(), `(object) new Date()`, (new Date()).getTime() - 1000, (new Date()).getTime()],
@@ -42,7 +41,7 @@ exports.testDate = (describe, it, assert, helpLib) => {
 				[new Date('1970-01-01'), `(object) new Date('1970-01-01')`, 0, 0],
 				[new Date('2020-01-20'), `(object) new Date('2020-01-20')`, 1579478400000, 1579478400000],
 				[new Date('1970-01-01T00:00:00'), `(object) new Date('1970-01-01T00:00:00')`, time1, time1],
-				[new Date('2020-01-20T15:15:15'), `(object) new Date('2020-01-20T15:15:15')`, time3, time3],
+				[new Date('2020-01-20T15:15:15'), `(object) new Date('2020-01-20T15:15:15')`, time2, time2],
 				[new Date('Jan 01 1970 03:00:00 GMT+0300'), `(object) new Date('Jan 01 1970 03:00:00 GMT+0300')`, 0, 0],
 				[new Date('Jan 01 1970 00:00:00 GMT+0000'), `(object) new Date('Jan 01 1970 00:00:00 GMT+0000')`, 0, 0],
 				[new Date('Jan 01 1970 00:00:00 GMT+0300'), `(object) new Date('Jan 01 1970 00:00:00 GMT+0300')`, -10800000, -10800000],
@@ -51,20 +50,18 @@ exports.testDate = (describe, it, assert, helpLib) => {
 				[new Date('Jan 20 2020 15:15:15 GMT+0000'), `(object) new Date('Jan 20 2020 15:15:15 GMT+0000')`, 1579533315000, 1579533315000],
 
 				[new Date(1970, 0, 1), `(object) new Date(2020, 01, 20, 15, 15, 15)`, time1, time1],
-				[new Date(2020, 0, 20, 15, 15, 15), `(object) new Date(2020, 01, 20, 15, 15, 15)`, time3, time3]
+				[new Date(2020, 0, 20, 15, 15, 15), `(object) new Date(2020, 01, 20, 15, 15, 15)`, time2, time2]
 			],
 
 			strDate: [
 				['1970-01-01', `(string) '1970-01-01'`, 0, 0],
 				['2020-01-20', `(string) '2020-01-20'`, 1579478400000, 1579478400000],
 				['1970-01-01T00:00:00', `(string) '1970-01-01T00:00:00'`, time1, time1],
-				['2020-01-20T15:15:15', `(string) '2020-01-20T15:15:15'`, time3, time3],
+				['2020-01-20T15:15:15', `(string) '2020-01-20T15:15:15'`, time2, time2],
 
-				[' 1970-01-01', `(string) ' 1970-01-01'`, time1, time1], ['2020-01-20 ', `(string) '2020-01-20 '`, time2, time2],
-				['\t1970-01-01', `(string) '\\t1970-01-01'`, time1, time1], ['2020-01-20\t', `(string) '2020-01-20\\t'`, time2, time2],
-				['\n1970-01-01', `(string) '\\n1970-01-01'`, time1, time1], ['2020-01-20\n', `(string) '2020-01-20\\n'`, time2, time2],
-
-				['Jan 1970', `(string) 'Jan 1970'`, time1, time1], ['Jan 01 1970', `(string) 'Jan 01 1970'`, time1, time1],
+				[' 1970-01-01', `(string) ' 1970-01-01'`, 0, 0], ['2020-01-20 ', `(string) '2020-01-20 '`, 1579478400000, 1579478400000],
+				['\t1970-01-01', `(string) '\\t1970-01-01'`, 0, 0], ['2020-01-20\t', `(string) '2020-01-20\\t'`, 1579478400000, 1579478400000],
+				['\n1970-01-01', `(string) '\\n1970-01-01'`, 0, 0], ['2020-01-20\n', `(string) '2020-01-20\\n'`, 1579478400000, 1579478400000],
 
 				['Jan 01 1970 03:00:00 GMT+0300', `(string) 'Jan 01 1970 03:00:00 GMT+0300'`, 0, 0],
 				['Jan 01 1970 00:00:00 GMT+0000', `(string) 'Jan 01 1970 00:00:00 GMT+0000'`, 0, 0],

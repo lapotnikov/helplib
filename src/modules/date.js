@@ -8,14 +8,14 @@ const $moduleNamespace$ = (helpLib) => {
 		return false;
 	});
 
-	helpLib.regHelper('date', 'check', {'.': 'isInstance', str: 'is', num: 'isFinite, check'}, function(date, defValue = new Date()) {
+	helpLib.regHelper('date', 'check', {'.': 'isInstance', str: 'is, trim', num: 'isFinite, check'}, function(date, defValue = new Date()) {
 		if(this.isInstance(date, 'Date', true)) {
 			return isNaN(date) ? defValue : date;
 		} else if(this.num.isFinite(date)) {
 			date = new Date(this.num.check(date));
 			return isNaN(date) ? defValue : date;
 		} else if(this.str.is(date)) {
-			date = new Date(date);
+			date = new Date(this.str.trim(date));
 			return isNaN(date) ? defValue : date;
 		} else {
 			return defValue;
