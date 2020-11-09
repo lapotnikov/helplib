@@ -875,7 +875,7 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				}
 			});
 
-			it('call with values who can not convert to string as "str" parameter ' +
+			it('call with values who can convert to string as "str" parameter ' +
 				'and with list of values who can not convert to string as "list" parameter', () => {
 				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
 					params.num, params.arr, params.obj, params.bool);
@@ -888,7 +888,7 @@ exports.testStr = (describe, it, assert, helpLib) => {
 				}
 			});
 
-			it('call with values who can not convert to string as "str" parameter ' +
+			it('call with values who can convert to string as "str" parameter ' +
 				'and with values who can not convert to list as "list" parameter', () => {
 				let strParams = params.strE.concat(params.strT, params.strN, params.strS,
 					params.num, params.arr, params.obj, params.bool);
