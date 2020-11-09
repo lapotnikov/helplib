@@ -10,8 +10,6 @@ const $moduleNamespace$ = (helpLib) => {
 			ret = arr;
 		} else if(this.obj.is(arr)) {
 			ret = this.obj.toArray(arr);
-		} else if(this.str.is(arr)) {
-			ret = Array.from(arr);
 		}
 
 		return ret;

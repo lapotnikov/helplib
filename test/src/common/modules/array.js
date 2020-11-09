@@ -130,18 +130,17 @@ exports.testArr = (describe, it, assert, helpLib) => {
 				],
 
 				[new WeakSet(), `(object) new WeakSet()`, []], [new WeakSet([{}, {}]), `(object) new WeakSet([{}, {}])`, []],
-				[new WeakMap(), `(object) new WeakMap()`, []], [new WeakMap([[{}, 1], [{}, 2]]), `(object) new WeakMap([[{}, 1], [{}, 2]])`, []],
-
-				['', `(string) ''`, []], [' ', `(string) ' '`, [' ']], ['1', `(string) '1'`, ['1']], ['123', `(string) '123'`, ['1', '2', '3']],
-				['test', `(string) 'test'`, ['t', 'e', 's', 't']], ['test test', `(string) 'test test'`, ['t', 'e', 's', 't', ' ', 't', 'e', 's', 't']],
-				['[]', `(string) '[]'`, ['[', ']']], ['new Array()', `(string) 'new Array()'`, ['n', 'e', 'w', ' ', 'A', 'r', 'r', 'a', 'y', '(', ')']]
+				[new WeakMap(), `(object) new WeakMap()`, []], [new WeakMap([[{}, 1], [{}, 2]]), `(object) new WeakMap([[{}, 1], [{}, 2]])`, []]
 			],
 
 			notArr: [
-				[0, `(number) 0`, []], [1, `(number) 1`], [-1, `(number) -1`], [NaN, `NaN`], [Infinity, `Infinity`],
+				[0, `(number) 0`], [1, `(number) 1`], [-1, `(number) -1`], [NaN, `NaN`], [Infinity, `Infinity`],
+
+				['', `(string) ''`], [' ', `(string) ' '`], ['123', `(string) '123'`], ['test', `(string) 'test'`],
+				['[]', `(string) '[]'`], ['new Array()', `(string) 'new Array()'`],
+
 				[() => {}, `(function) () => {}`], [function() {}, `(function) function() {}`], [new Function(), `(function) new Function()`],
-				[false, `(bool) false`], [true, `(bool) true`],
-				[undefined, `undefined`], [null, `null`]
+				[false, `(bool) false`], [true, `(bool) true`], [undefined, `undefined`], [null, `null`]
 			],
 
 			arrVal: [arr, `(array) [${arr}]`],
@@ -239,9 +238,7 @@ exports.testArr = (describe, it, assert, helpLib) => {
 
 			params.vals = [
 				[1, `(number) 1`], [3, `(number) 3`], ['1', `(string) '1'`], ['test', `(string) 'test'`], ['test3', `(string) 'test3'`],
-				['t', `(string) 't'`], ['A', `(string) 'A'`], [' ', `(string) ' '`], ['(', `(string) '('`],
-				[null, `null`], [undefined, `undefined`], [NaN, `NaN`], [Infinity, `Infinity`],
-				params.arrVal, params.funcVal, params.obj1Val, params.obj2Val
+				[null, `null`], [undefined, `undefined`], params.arrVal, params.funcVal, params.obj1Val, params.obj2Val
 			];
 
 			it('call with a values who can convert to array as "arr" parameter and some value as "val" parameter', () => {
@@ -250,7 +247,7 @@ exports.testArr = (describe, it, assert, helpLib) => {
 					let regRes = false;
 					for(let p2 in arrParams) {
 						let res = arrParams[p2][2].indexOf(params.vals[p1][0]) >= 0 ? true : false;
-						regRes = regRes === false && (res || arrParams[p2][2].length == 0) ? true : regRes;
+						regRes = regRes === false && res ? true : regRes;
 
 						assert.strictEqual(helpLib.arr.exist(arrParams[p2][0], params.vals[p1][0]), res,
 							`result with "${arrParams[p2][1]}, ${params.vals[p1][1]}" parameters is incorrect`);
