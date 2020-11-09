@@ -51,7 +51,7 @@ const $moduleNamespace$ = (helpLib) => {
 		}
 
 		str = this.str.check(str, '');
-		list = this.arr.check(list);
+		list = this.arr.sCheck(list);
 		let listSize = list.length;
 
 		for(let i = 0; i < listSize; i++) {
@@ -97,7 +97,7 @@ const $moduleNamespace$ = (helpLib) => {
 	helpLib.regHelper('str', 'clearList', {arr: 'check'}, function(str, list) {
 		str = this.str.check(str, '');
 		if(str.length > 0) {
-			list = this.arr.check(list);
+			list = this.arr.sCheck(list);
 			let listSize = list.length;
 
 			for(let i = 0; i < listSize; i++) {

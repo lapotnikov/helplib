@@ -4,12 +4,18 @@ const $moduleNamespace$ = (helpLib) => {
 		return Object.prototype.toString.call(arr) === '[object Array]' ? true : false;
 	});
 
+	helpLib.regHelper('arr', 'sCheck', null, function(arr, defValue = []) {
+		return this.arr.is(arr) ? arr : defValue;
+	});
+
 	helpLib.regHelper('arr', 'check', {obj: 'is, toArray', str: 'is'}, function(arr, defValue = []) {
 		let ret = defValue;
 		if(this.arr.is(arr)) {
 			ret = arr;
 		} else if(this.obj.is(arr)) {
 			ret = this.obj.toArray(arr);
+		} else if(this.str.is(arr)) {
+			ret = Array.from(arr);
 		}
 
 		return ret;

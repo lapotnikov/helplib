@@ -130,17 +130,18 @@ exports.testArr = (describe, it, assert, helpLib) => {
 				],
 
 				[new WeakSet(), `(object) new WeakSet()`, []], [new WeakSet([{}, {}]), `(object) new WeakSet([{}, {}])`, []],
-				[new WeakMap(), `(object) new WeakMap()`, []], [new WeakMap([[{}, 1], [{}, 2]]), `(object) new WeakMap([[{}, 1], [{}, 2]])`, []]
+				[new WeakMap(), `(object) new WeakMap()`, []], [new WeakMap([[{}, 1], [{}, 2]]), `(object) new WeakMap([[{}, 1], [{}, 2]])`, []],
+
+				['', `(string) ''`, []], [' ', `(string) ' '`, [' ']], ['1', `(string) '1'`, ['1']], ['123', `(string) '123'`, ['1', '2', '3']],
+				['test', `(string) 'test'`, ['t', 'e', 's', 't']], ['test test', `(string) 'test test'`, ['t', 'e', 's', 't', ' ', 't', 'e', 's', 't']],
+				['[]', `(string) '[]'`, ['[', ']']], ['new Array()', `(string) 'new Array()'`, ['n', 'e', 'w', ' ', 'A', 'r', 'r', 'a', 'y', '(', ')']]
 			],
 
 			notArr: [
-				[0, `(number) 0`], [1, `(number) 1`], [-1, `(number) -1`], [NaN, `NaN`], [Infinity, `Infinity`],
-
-				['', `(string) ''`], [' ', `(string) ' '`], ['123', `(string) '123'`], ['test', `(string) 'test'`],
-				['[]', `(string) '[]'`], ['new Array()', `(string) 'new Array()'`],
-
+				[0, `(number) 0`, []], [1, `(number) 1`], [-1, `(number) -1`], [NaN, `NaN`], [Infinity, `Infinity`],
 				[() => {}, `(function) () => {}`], [function() {}, `(function) function() {}`], [new Function(), `(function) new Function()`],
-				[false, `(bool) false`], [true, `(bool) true`], [undefined, `undefined`], [null, `null`]
+				[false, `(bool) false`], [true, `(bool) true`],
+				[undefined, `undefined`], [null, `null`]
 			],
 
 			arrVal: [arr, `(array) [${arr}]`],
@@ -168,6 +169,55 @@ exports.testArr = (describe, it, assert, helpLib) => {
 				let notArrParams = params.toArr.concat(params.notArr);
 				for(let p in notArrParams) {
 					assert.isFalse(helpLib.arr.is(notArrParams[p][0]), `result with "${notArrParams[p][1]}" parameter is incorrect`);
+				}
+			});
+		});
+
+		describe('checking "sCheck" function', () => {
+			it('function instance', () => {
+				assert.isFunction(helpLib.arr.sCheck, 'function "sCheck" is not added or is not a function');
+			});
+
+			let params = getParams();
+
+			it('call with a array parameters', () => {
+				for(let p in params.arr) {
+					assert.strictEqual(helpLib.arr.sCheck(params.arr[p][0]), params.arr[p][0],
+						`result with "${params.arr[p][1]}" parameter is incorrect`);
+				}
+			});
+
+			it('call with a array parameters and some "defValue" parameter', () => {
+				for(let p in params.arr) {
+					assert.strictEqual(helpLib.arr.sCheck(params.arr[p][0], null), params.arr[p][0],
+						`result with "${params.arr[p][1]}, null" parameters is incorrect`);
+				}
+			});
+
+			it('call without parameters or with null or undefined values', () => {
+				assert.deepEqual(helpLib.arr.sCheck(), [], 'result without parameter is incorrect');
+
+				assert.deepEqual(helpLib.arr.sCheck(undefined), [], 'result with "undefined" parameter is incorrect');
+				assert.deepEqual(helpLib.arr.sCheck(undefined, undefined), [],
+					'result with "undefined, undefined" parameters is incorrect');
+
+				assert.deepEqual(helpLib.arr.sCheck(null), [], 'result with "null" parameter is incorrect');
+				assert.isNull(helpLib.arr.sCheck(null, null), 'result with "null, null" parameters is incorrect');
+			});
+
+			it('call with not a array parameters', () => {
+				let notArrParams = params.toArr.concat(params.notArr);
+				for(let p in notArrParams) {
+					assert.deepEqual(helpLib.arr.sCheck(notArrParams[p][0]), [],
+						`result with "${notArrParams[p][1]}" parameter is incorrect`);
+				}
+			});
+
+			it('call with not a array parameters and some "defValue" parameter', () => {
+				let notArrParams = params.toArr.concat(params.notArr);
+				for(let p in notArrParams) {
+					assert.isNull(helpLib.arr.sCheck(notArrParams[p][0], null),
+						`result with "${notArrParams[p][1]}, null" parameters is incorrect`);
 				}
 			});
 		});
@@ -238,6 +288,7 @@ exports.testArr = (describe, it, assert, helpLib) => {
 
 			params.vals = [
 				[1, `(number) 1`], [3, `(number) 3`], ['1', `(string) '1'`], ['test', `(string) 'test'`], ['test3', `(string) 'test3'`],
+				['t', `(string) 't'`], ['A', `(string) 'A'`], [' ', `(string) ' '`], ['(', `(string) '('`],
 				[null, `null`], [undefined, `undefined`], params.arrVal, params.funcVal, params.obj1Val, params.obj2Val
 			];
 

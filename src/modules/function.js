@@ -12,7 +12,7 @@ const $moduleNamespace$ = (helpLib) => {
 		scope = this.isSet(scope) ? scope : null;
 		scope = this.obj.is(scope) || this.func.is(scope) ? scope : null;
 
-		return this.func.is(callback) ? callback.apply(scope, this.arr.check(args)) : false;
+		return this.func.is(callback) ? callback.apply(scope, this.arr.sCheck(args)) : false;
 	});
 
 	helpLib.regHelper('func', 'saveApply', {'.': 'isSet', arr: 'check', obj: 'is'}, function(scope, callback, errorCallback = function() {}, args = []) {
@@ -20,7 +20,7 @@ const $moduleNamespace$ = (helpLib) => {
 		scope = this.obj.is(scope) || this.func.is(scope) ? scope : null;
 
 		try {
-			return this.func.is(callback) ? callback.apply(scope, this.arr.check(args)) : false;
+			return this.func.is(callback) ? callback.apply(scope, this.arr.sCheck(args)) : false;
 		} catch(excep) {
 			return this.func.is(errorCallback) ? errorCallback.call(scope, excep) : false;
 		}
