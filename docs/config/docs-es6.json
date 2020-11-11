@@ -1,0 +1,9 @@
+{
+	"eng": "es6",
+
+	"path": {
+		"buildConf": "docs/config/build-es6.json",
+		"jsDocConf": "docs/config/jsdoc-es6.json",
+		"root": "docs/dist/es6"
+	}
+}

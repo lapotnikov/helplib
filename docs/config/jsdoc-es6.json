@@ -1,0 +1,23 @@
+{
+	"recurseDepth": 10,
+	"sourceType": "module",
+
+	"plugins": [],
+
+	"opts": {
+		"private": true,
+		"sort": false,
+		"encoding": "utf8",
+		"destination": "./api/es6"
+	},
+
+	"tags": {
+		"allowUnknownTags": true,
+		"dictionaries": ["jsdoc","closure"]
+	},
+
+	"templates": {
+		"cleverLinks": false,
+		"monospaceLinks": false
+	}
+}

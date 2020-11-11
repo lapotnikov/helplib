@@ -1,0 +1,15 @@
+{
+	"namespace": "helpLib",
+	"eng": "node",
+	"min": false,
+
+	"dist": "main",
+	"modules": ["common", "string", "number", "object", "array", "function", "date"],
+
+	"path": {
+		"core": "src/helplib.js",
+		"modules": ["src/modules"],
+		"dist": "docs/dist/node",
+		"modulesDist": "docs/dist/node/modules"
+	}
+}

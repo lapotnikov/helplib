@@ -2,7 +2,7 @@
 	"name": "helplib",
 	"title": "helpLib",
 	"description": "",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"main": "dist/node/main.js",
 	"scripts": {
 		"build": "concurrently \"npm run build-node\" \"npm run build-es6\" \"npm run build-es6.min\"",
@@ -11,7 +11,10 @@
 		"build-es6.min": "npx gulp --gulpfile ./build/gulpfile.js --eng=es6 --min",
 		"test-node": "npx gulp --gulpfile ./test/gulpfile.js --eng=node",
 		"test-es6": "npx gulp --gulpfile ./test/gulpfile.js --eng=es6",
-		"test-es6.min": "npx gulp --gulpfile ./test/gulpfile.js --eng=es6 --min"
+		"test-es6.min": "npx gulp --gulpfile ./test/gulpfile.js --eng=es6 --min",
+		"docs": "concurrently \"npm run docs-node\" \"npm run docs-es6\"",
+		"docs-node": "npx gulp --gulpfile ./docs/gulpfile.js --eng=node",
+		"docs-es6": "npx gulp --gulpfile ./docs/gulpfile.js --eng=es6"
 	},
 	"devDependencies": {
 		"chai": "^4.2.0",

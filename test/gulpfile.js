@@ -42,7 +42,6 @@ if(fs.existsSync(configPath) == false || (fs.statSync(configPath)).isFile() == f
  */
 const conf = require(configPath);
 
-conf.moduleNamespace = `${conf.namespace}Module`;
 conf.eng = String(conf.eng).trim();
 conf.min = Boolean(argv.min !== null ? argv.min : conf.min);
 conf.testonly = Boolean(argv.testonly !== null ? argv.testonly : conf.testonly);

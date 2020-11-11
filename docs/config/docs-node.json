@@ -1,0 +1,9 @@
+{
+	"eng": "node",
+
+	"path": {
+		"buildConf": "docs/config/build-node.json",
+		"jsDocConf": "docs/config/jsdoc-node.json",
+		"root": "docs/dist/node"
+	}
+}
