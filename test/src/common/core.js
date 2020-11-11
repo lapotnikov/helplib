@@ -1,8 +1,9 @@
 /**
- * Testing core of helpLib
+ * Testing core of helpLib library
  * @author Artyom Lapotnikov <lapotnikov@gmail.com>
  * @copyright Artyom Lapotnikov
  * @license MIT
+ * @version 1.0.0
  */
 
 /**
@@ -49,7 +50,7 @@ exports.testCore = (describe, it, assert, helpLib) => {
 				assert.isFunction(helpLib.test1, 'function "test1" is not added or is not a function');
 				assert.isFunction(helpLib.test2, 'function "test2" is not added or is not a function');
 				assert.isFunction(helpLib.test3, 'function "test3" is not added or is not a function');
-				assert.isObject(helpLib.test, 'library "test" is not added');
+				assert.isObject(helpLib.test, 'module "test" is not added');
 				assert.isFunction(helpLib.test.test4, 'function "test.test4" is not added or is not a function');
 				assert.isFunction(helpLib.test.test5, 'function "test.test5" is not added or is not a function');
 				assert.isFunction(helpLib.test.test6, 'function "test.test6" is not added or is not a function');
@@ -120,34 +121,34 @@ exports.testCore = (describe, it, assert, helpLib) => {
 					'call with "regHelper" name which is reserved in current class');
 
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test1', {}, () => 1), TypeError, null,
-					'call with "test1" name which exist in common library');
+					'call with "test1" name which exist in common module');
 				assert.throws(helpLib.regHelper.bind(helpLib, 'test', 'test4', {}, () => 1), TypeError, null,
-					'call with "test4" name which exist in "test" library');
+					'call with "test4" name which exist in "test" module');
 			});
 
 			it('registration with bad dependence', () => {
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {'.': 'not_exist'}, () => 1), ReferenceError, null,
-					'call with dependence to "not_exist" function in common library');
+					'call with dependence to "not_exist" function in common module');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {'.': 'test1, test2, not_exist'}, () => 1), ReferenceError, null,
-					'call with dependence to "test1, test2, not_exist" functions in common library');
+					'call with dependence to "test1, test2, not_exist" functions in common module');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {'.': 'test1, test2, , not_exist'}, () => 1), ReferenceError, null,
-					'call with dependence to "test1, test2, , not_exist" functions in common library');
+					'call with dependence to "test1, test2, , not_exist" functions in common module');
 
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {'test': 'not_exist'}, () => 1), ReferenceError, null,
-					'call with dependence to "not_exist" function in "test" library');
+					'call with dependence to "not_exist" function in "test" module');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {'test': ' , not_exist'}, () => 1), ReferenceError, null,
-					'call with dependence to ", not_exist" functions in "test" library');
+					'call with dependence to ", not_exist" functions in "test" module');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {'test': ['test4', 'not_exist']}, () => 1), ReferenceError, null,
-					'call with dependence to "[\'test4\', \'not_exist\']" functions in "test" library');
+					'call with dependence to "[\'test4\', \'not_exist\']" functions in "test" module');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {'test': ['test4', '', 'not_exist']}, () => 1), ReferenceError, null,
-					'call with dependence to "[\'test4\', \'\', \'not_exist\']" functions in "test" library');
+					'call with dependence to "[\'test4\', \'\', \'not_exist\']" functions in "test" module');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {'test': ['test4', ' , not_exist']}, () => 1), ReferenceError, null,
-					'call with dependence to "[\'test4\', \' , not_exist\']" functions in "test" library');
+					'call with dependence to "[\'test4\', \' , not_exist\']" functions in "test" module');
 
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {'not_exist': 'not_exist'}, () => 1), ReferenceError, null,
-					'call with dependence to "not_exist" functions in "not_exist" library');
+					'call with dependence to "not_exist" functions in "not_exist" module');
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {'not_exist': 'test1'}, () => 1), ReferenceError, null,
-					'call with dependence to "test1" functions in "not_exist" library');
+					'call with dependence to "test1" functions in "not_exist" module');
 
 				assert.throws(helpLib.regHelper.bind(helpLib, '.', 'test', {'.': true}, () => 1), ReferenceError, null,
 					'call with incorrect dependence "(object) {\'.\': true}"');

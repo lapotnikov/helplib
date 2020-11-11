@@ -1,3 +1,11 @@
+/**
+ * Gulp tasks to build of nodejs library
+ * @author Artyom Lapotnikov <lapotnikov@gmail.com>
+ * @copyright Artyom Lapotnikov
+ * @license MIT
+ * @version 1.0
+ */
+
 const path = require('path');
 const stream = require('stream');
 const mergeStream = require('merge-stream');

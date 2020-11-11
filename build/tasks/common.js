@@ -1,3 +1,11 @@
+/**
+ * The common gulp tasks to build of all libraries
+ * @author Artyom Lapotnikov <lapotnikov@gmail.com>
+ * @copyright Artyom Lapotnikov
+ * @license MIT
+ * @version 1.0
+ */
+
 const rimraf = require('rimraf');
 
 /**

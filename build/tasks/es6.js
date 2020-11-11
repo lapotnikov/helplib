@@ -1,3 +1,11 @@
+/**
+ * Gulp tasks to build of browser library
+ * @author Artyom Lapotnikov <lapotnikov@gmail.com>
+ * @copyright Artyom Lapotnikov
+ * @license MIT
+ * @version 1.0
+ */
+
 const path = require('path');
 const stream = require('stream');
 const mergeStream = require('merge-stream');
@@ -64,7 +72,7 @@ exports.buildMain = (gulp, taskName, distPath, corePath, modulePathList, distFil
 				'$moduleNamespace$(core);' +
 			'})($namespace$);';
 	}
-	
+
 	content += "\r\n\r\n" + '$namespace$.init();';
 
 	gulp.task(taskName, () => {

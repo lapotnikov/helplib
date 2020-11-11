@@ -1,8 +1,9 @@
 /**
- * Testing common library of helpLib
+ * Testing common module of helpLib
  * @author Artyom Lapotnikov <lapotnikov@gmail.com>
  * @copyright Artyom Lapotnikov
  * @license MIT
+ * @version 1.0.0
  */
 
 /**
@@ -13,9 +14,9 @@ exports = typeof window !== 'undefined' ? window : exports;
 
 exports.testCommon = (describe, it, assert, helpLib) => {
 	/**
-	 * If common library is not exist in current version of helpLib, then we shouldn't test it
+	 * If common module is not exist in current version of helpLib, then we shouldn't test it
 	 */
-	if(helpLib.libList['_common'] === undefined) {
+	if(helpLib.modList['_common'] === undefined) {
 		return;
 	}
 
@@ -102,7 +103,7 @@ exports.testCommon = (describe, it, assert, helpLib) => {
 		};
 	}
 
-	describe('Test common library', () => {
+	describe('Test common module', () => {
 		describe('checking "isSet" function', () => {
 			it('function instance', () => {
 				assert.isFunction(helpLib.isSet, 'function "isSet" is not added or is not a function');

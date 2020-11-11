@@ -1,8 +1,9 @@
 /**
- * Testing "arr" library to work with arrays
+ * Testing "arr" module to work with arrays
  * @author Artyom Lapotnikov <lapotnikov@gmail.com>
  * @copyright Artyom Lapotnikov
  * @license MIT
+ * @version 1.0.0
  */
 
 /**
@@ -13,7 +14,7 @@ exports = typeof window !== 'undefined' ? window : exports;
 
 exports.testArr = (describe, it, assert, helpLib) => {
 	/**
-	 * If "arr" library is not exist in current version of helpLib, then we shouldn't test it
+	 * If "arr" module is not exist in current version of helpLib, then we shouldn't test it
 	 */
 	if(helpLib.arr === undefined) {
 		return;
@@ -151,7 +152,7 @@ exports.testArr = (describe, it, assert, helpLib) => {
 		};
 	}
 
-	describe('Test "arr" library', () => {
+	describe('Test "arr" module', () => {
 		describe('checking "is" function', () => {
 			it('function instance', () => {
 				assert.isFunction(helpLib.arr.is, 'function "is" is not added or is not a function');

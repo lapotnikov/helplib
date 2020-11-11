@@ -1,3 +1,11 @@
+/**
+ * The gulp cofiguration file to run building scripts
+ * @author Artyom Lapotnikov <lapotnikov@gmail.com>
+ * @copyright Artyom Lapotnikov
+ * @license MIT
+ * @version 1.0
+ */
+
 const path = require('path');
 const fs = require('fs');
 const minimist = require('minimist');
