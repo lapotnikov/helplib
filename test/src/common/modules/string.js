@@ -1,8 +1,9 @@
 /**
- * Testing "str" library to work with strings
+ * Testing "str" module to work with strings
  * @author Artyom Lapotnikov <lapotnikov@gmail.com>
  * @copyright Artyom Lapotnikov
  * @license MIT
+ * @version 1.0.0
  */
 
 /**
@@ -13,7 +14,7 @@ exports = typeof window !== 'undefined' ? window : exports;
 
 exports.testStr = (describe, it, assert, helpLib) => {
 	/**
-	 * If "str" library is not exist in current version of helpLib, then we shouldn't test it
+	 * If "str" module is not exist in current version of helpLib, then we shouldn't test it
 	 */
 	if(helpLib.str === undefined) {
 		return;
@@ -148,7 +149,7 @@ exports.testStr = (describe, it, assert, helpLib) => {
 		};
 	}
 
-	describe('Test "str" library', () => {
+	describe('Test "str" module', () => {
 		describe('checking "is" function', () => {
 			it('function instance', () => {
 				assert.isFunction(helpLib.str.is, 'function "is" is not added or is not a function');

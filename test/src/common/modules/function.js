@@ -1,8 +1,9 @@
 /**
- * Testing "fuc" library to work with functions
+ * Testing "fuc" module to work with functions
  * @author Artyom Lapotnikov <lapotnikov@gmail.com>
  * @copyright Artyom Lapotnikov
  * @license MIT
+ * @version 1.0.0
  */
 
 /**
@@ -13,7 +14,7 @@ exports = typeof window !== 'undefined' ? window : exports;
 
 exports.testFunc = (describe, it, assert, helpLib) => {
 	/**
-	 * If "func" library is not exist in current version of helpLib, then we shouldn't test it
+	 * If "func" module is not exist in current version of helpLib, then we shouldn't test it
 	 */
 	if(helpLib.func === undefined) {
 		return;
@@ -47,7 +48,7 @@ exports.testFunc = (describe, it, assert, helpLib) => {
 		};
 	}
 
-	describe('Test "fuc" library', () => {
+	describe('Test "fuc" module', () => {
 		describe('checking "is" function', () => {
 			it('function instance', () => {
 				assert.isFunction(helpLib.func.is, 'function "is" is not added or is not a function');

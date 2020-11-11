@@ -1,3 +1,11 @@
+/**
+ * Testing of nodejs assembly
+ * @author Artyom Lapotnikov <lapotnikov@gmail.com>
+ * @copyright Artyom Lapotnikov
+ * @license MIT
+ * @version 1.0
+ */
+
 const assert = require('chai').assert;
 const helpLib = require('../../dist/node/main.js');
 

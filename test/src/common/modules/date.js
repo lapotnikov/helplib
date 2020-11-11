@@ -1,8 +1,9 @@
 /**
- * Testing "date" library to work with dates
+ * Testing "date" module to work with dates
  * @author Artyom Lapotnikov <lapotnikov@gmail.com>
  * @copyright Artyom Lapotnikov
  * @license MIT
+ * @version 1.0.0
  */
 
 /**
@@ -13,7 +14,7 @@ exports = typeof window !== 'undefined' ? window : exports;
 
 exports.testDate = (describe, it, assert, helpLib) => {
 	/**
-	 * If "date" library is not exist in current version of helpLib, then we shouldn't test it
+	 * If "date" module is not exist in current version of helpLib, then we shouldn't test it
 	 */
 	if(helpLib.date === undefined) {
 		return;
@@ -125,7 +126,7 @@ exports.testDate = (describe, it, assert, helpLib) => {
 		};
 	}
 
-	describe('Test "date" library', () => {
+	describe('Test "date" module', () => {
 		describe('checking "is" function', () => {
 			it('function instance', () => {
 				assert.isFunction(helpLib.date.is, 'function "is" is not added or is not a function');

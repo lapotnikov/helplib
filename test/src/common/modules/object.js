@@ -1,8 +1,9 @@
 /**
- * Testing "obj" library to work with objects
+ * Testing "obj" module to work with objects
  * @author Artyom Lapotnikov <lapotnikov@gmail.com>
  * @copyright Artyom Lapotnikov
  * @license MIT
+ * @version 1.0.0
  */
 
 /**
@@ -13,7 +14,7 @@ exports = typeof window !== 'undefined' ? window : exports;
 
 exports.testObj = (describe, it, assert, helpLib) => {
 	/**
-	 * If "obj" library is not exist in current version of helpLib, then we shouldn't test it
+	 * If "obj" module is not exist in current version of helpLib, then we shouldn't test it
 	 */
 	if(helpLib.obj === undefined) {
 		return;
@@ -112,7 +113,7 @@ exports.testObj = (describe, it, assert, helpLib) => {
 		};
 	}
 
-	describe('Test "obj" library', () => {
+	describe('Test "obj" module', () => {
 		describe('checking "is" function', () => {
 			it('function instance', () => {
 				assert.isFunction(helpLib.obj.is, 'function "is" is not added or is not a function');

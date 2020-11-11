@@ -1,8 +1,9 @@
 /**
- * Testing "num" library to work with numbers
+ * Testing "num" module to work with numbers
  * @author Artyom Lapotnikov <lapotnikov@gmail.com>
  * @copyright Artyom Lapotnikov
  * @license MIT
+ * @version 1.0.0
  */
 
 /**
@@ -13,7 +14,7 @@ exports = typeof window !== 'undefined' ? window : exports;
 
 exports.testNum = (describe, it, assert, helpLib) => {
 	/**
-	 * If "num" library is not exist in current version of helpLib, then we shouldn't test it
+	 * If "num" module is not exist in current version of helpLib, then we shouldn't test it
 	 */
 	if(helpLib.num === undefined) {
 		return;
@@ -106,7 +107,7 @@ exports.testNum = (describe, it, assert, helpLib) => {
 		};
 	}
 
-	describe('Test "num" library', () => {
+	describe('Test "num" module', () => {
 		describe('checking "is" function', () => {
 			it('function instance', () => {
 				assert.isFunction(helpLib.num.is, 'function "is" is not added or is not a function');

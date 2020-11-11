@@ -1,3 +1,11 @@
+/**
+ * Gulp tasks to testing of browser library
+ * @author Artyom Lapotnikov <lapotnikov@gmail.com>
+ * @copyright Artyom Lapotnikov
+ * @license MIT
+ * @version 1.0
+ */
+
 const shell = require('gulp-shell');
 const open = require('gulp-open');
 const mergeStream = require('merge-stream');
