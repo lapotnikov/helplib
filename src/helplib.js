@@ -44,6 +44,7 @@ const $namespace$ = (() => {
 	/**
 	 * The core class of helLib library
 	 * <p>This class provides the addition, storage and execution of modules and their functions.
+	 * 
 	 * @private
 	 */
 	class HelpLib {

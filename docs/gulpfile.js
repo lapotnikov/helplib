@@ -55,6 +55,6 @@ if(fs.existsSync(conf.path.jsDocConf) == false || (fs.statSync(conf.path.jsDocCo
  */
 const tasks = require(`./tasks/common.js`);
 tasks.build(gulp, 'build', rootPath, conf);
-tasks.doc(gulp, 'doc', rootPath, conf);
+tasks.doc(gulp, 'doc', conf.path.root, conf);
 
 exports.default = gulp.series('build', 'doc');

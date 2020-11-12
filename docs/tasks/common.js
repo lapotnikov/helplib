@@ -24,7 +24,7 @@ exports.build = (gulp, taskName, rootPath, conf) => {
  */
 exports.doc = (gulp, taskName, rootPath, conf) => {
 	gulp.task(taskName, () => {
-		return gulp.src(`${conf.path.root}/**/*.js`, {read: false, cwd: rootPath})
+		return gulp.src(`${rootPath}/**/*.js`, {read: false, cwd: rootPath})
 			.pipe(jsdoc(require(conf.path.jsDocConf)))
 			.on('error', error => console.error(error));
 	});
