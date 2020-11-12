@@ -3,7 +3,8 @@
 
 	"path": {
 		"buildConf": "docs/config/build-node.json",
-		"jsDocConf": "docs/config/jsdoc-node.json",
-		"root": "docs/dist/node"
+		"jsDocConf": "docs/config/jsdoc.json",
+		"root": "docs/api/node",
+		"dist": "docs/dist/node"
 	}
 }

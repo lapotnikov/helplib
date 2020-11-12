@@ -8,6 +8,16 @@
 
 const shell = require('gulp-shell');
 const jsdoc = require('gulp-jsdoc3');
+const rimraf = require('rimraf');
+
+/**
+ * Create gulp task of cleaning directory
+ */
+exports.cleanDir = (gulp, taskName, path) => {
+	gulp.task(taskName, (callback) => {
+		rimraf(`${path}/*`, callback);
+	});
+};
 
 /**
  * Create gulp task for building of helpLib library with jsDoc
@@ -24,8 +34,8 @@ exports.build = (gulp, taskName, rootPath, conf) => {
  */
 exports.doc = (gulp, taskName, rootPath, conf) => {
 	gulp.task(taskName, () => {
-		return gulp.src(`${rootPath}/**/*.js`, {read: false, cwd: rootPath})
-			.pipe(jsdoc(require(conf.path.jsDocConf)))
+		return gulp.src(`${conf.path.dist}/**/*.js`, {read: false, cwd: rootPath})
+			.pipe(jsdoc(conf.jsDocConf))
 			.on('error', error => console.error(error));
 	});
 };

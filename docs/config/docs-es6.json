@@ -3,7 +3,8 @@
 
 	"path": {
 		"buildConf": "docs/config/build-es6.json",
-		"jsDocConf": "docs/config/jsdoc-es6.json",
-		"root": "docs/dist/es6"
+		"jsDocConf": "docs/config/jsdoc.json",
+		"root": "docs/api/es6",
+		"dist": "docs/dist/es6"
 	}
 }

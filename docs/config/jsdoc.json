@@ -7,8 +7,7 @@
 	"opts": {
 		"private": true,
 		"sort": false,
-		"encoding": "utf8",
-		"destination": "./api/es6"
+		"encoding": "utf8"
 	},
 
 	"tags": {
