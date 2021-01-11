@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-common.html">common</a></li><li><a href="module-date.html">date</a></li>
+					<li><a href="module-core.html">core</a></li><li><a href="module-common.html">common</a></li><li><a href="module-date.html">date</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="HelpLib.html">HelpLib</a></li>
+					<li><a href="module-core-HelpLib.html">core~HelpLib</a></li>
 				</ul>
 			</li>
 			
@@ -158,14 +158,31 @@
             
 <hr>
 <dt class="name" id="helpLib">
-    <h4 id="helpLib"><span class="type-signature">&lt;constant> </span>helpLib<span class="type-signature"> :<a href="HelpLib.html">HelpLib</a></span></h4>
+    <h4 id="helpLib"><span class="type-signature">&lt;constant> </span>helpLib<span class="type-signature"> :<a href="module-core-HelpLib.html">module:core~HelpLib</a></span></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        The object of HelpLib class
+        <p>Объект класса <a href="module-core-HelpLib.html">HelpLib</a>.
+<p>Все манипуляции с модулями и их функциями происходят через этот объект.
+С его помощью вы можете <a href="module-core-HelpLib.html#regHelper">создавать модули и добавлять к ним функции</a>,
+а также получать доступ к ним.
+<p>Объект может иметь два состояния: <b>инициализированное</b> и <b>неинициализированное</b>.<br/>
+Проверить состояние вы можете с помощью метода <a href="module-core-HelpLib.html#isInit">isInit</a>.
+<p><b>Инициализированное состояние</b> означает, что объект готов к работе.
+В него добавлены все модули и проверены зависимости между ними.
+Вы также можете добавлять или расширять модули инициализированного объекта.
+Но проверка зависимостей будет осуществляться в момент добавления функции модуля,
+что не позволит добавлять модули, которые будут иметь перекрестные зависимости.
+<p><b>Неинициализированный состояние</b> означает, что объект не может гарантировать корректную работу.
+Возможно, что некоторые модули еще не были добавлены, или еще не осуществлялась проверка зависимостей.
+Проверка зависимостей происходит в момент инициализации объекта, после добавления всех функций всех модулей,
+что дает возможность добавлять модули, которые будут иметь перекрестные зависимости.
+<p>Инициализация происходит автоматически после создания экземпляра класса и добавления всех модулей в него.
+Вы получаете уже готовый объект к работе, и никак не можете повлиять на этот процесс.<br/>
+Более подробную информацию о состояниях объекта вы можете получить <a href="module-core-HelpLib.html">здесь</a>.
     </div>
     
 
@@ -174,7 +191,7 @@
         <ul>
             <li>
                 
-<span class="param-type"><a href="HelpLib.html">HelpLib</a></span>
+<span class="param-type"><a href="module-core-HelpLib.html">module:core~HelpLib</a></span>
 
 
 
@@ -220,6 +237,67 @@
 
 	
 </dl>
+
+
+    
+        <h5>Examples</h5>
+        
+        <p class="code-caption">Cоздание и вызов функций без зависимостей</p>
+    
+    <pre class="sunlight-highlight-javascript">// создание модуля hi и добавление к нему функции hello
+helpLib.regHelper(&#x27;hi&#x27;, &#x27;hello&#x27;, null, () =&gt; &#x27;Hello&#x27;);
+// добавление функции welcome к модулю hi
+helpLib.regHelper(&#x27;hi&#x27;, &#x27;welcome&#x27;, null, (name) =&gt; &#x60;Hello ${name}&#x60;);
+
+// вызов функций hello и welcome модуля hi
+helpLib.hi.hello();                  // Hello
+helpLib.hi.welcome(&#x27;Alex&#x27;);          // Hello Alex</pre>
+
+        <p class="code-caption">Cоздание и вызов функций c зависимостями от других модулей</p>
+    
+    <pre class="sunlight-highlight-javascript">// создание модуля wish и добавление к нему функции goodDay
+// которая требует наличия функции welcome модуля hi
+helpLib.regHelper(&#x27;wish&#x27;, &#x27;goodDay&#x27;, {hi: &#x27;welcome&#x27;}, function(name) {
+    return this.hi.welcome(name) + &#x27;, have a nice day&#x27;;
+});
+
+// вызов функции goodDay модуля wish
+helpLib.wish.goodDay(&#x27;Alex&#x27;);        // Hello Alex, have a nice day</pre>
+
+        <p class="code-caption">Добавление модулей с перекрестными зависимостями в неинициализированный объект</p>
+    
+    <pre class="sunlight-highlight-javascript">// проверка состояния объекта
+helpLib.isInit();                    // false
+
+// создание модуля wish и добавление к нему функции goodDay
+// которая требует наличия функции welcome, еще не добавленного модуля hi
+helpLib.regHelper(&#x27;wish&#x27;, &#x27;goodDay&#x27;, {hi: &#x27;welcome&#x27;}, function(name) {
+    return this.hi.welcome(name) + &#x27;, have a nice day&#x27;;
+});
+
+// создание модуля hi и добавление к нему функции hello
+helpLib.regHelper(&#x27;hi&#x27;, &#x27;hello&#x27;, null, () =&gt; &#x27;Hello&#x27;);
+// добавление функции welcome к модулю hi
+helpLib.regHelper(&#x27;hi&#x27;, &#x27;welcome&#x27;, null, (name) =&gt; &#x60;Hello ${name}&#x60;);
+
+// инициализация объекта и проверка зависимостей
+helpLib.init();
+
+// вызов функции goodDay модуля wish
+helpLib.wish.goodDay(&#x27;Alex&#x27;);        // Hello Alex, have a nice day</pre>
+
+        <p class="code-caption">Добавление модулей с перекрестными зависимостями в инициализированный объект</p>
+    
+    <pre class="sunlight-highlight-javascript">// проверка состояния объекта
+helpLib.isInit();                    // true
+
+// создание модуля wish и добавление к нему функции goodDay
+// которая требует наличия функции welcome, еще не добавленного модуля hi
+helpLib.regHelper(&#x27;wish&#x27;, &#x27;goodDay&#x27;, {hi: &#x27;welcome&#x27;}, function(name) {
+    return this.hi.welcome(name) + &#x27;, have a nice day&#x27;;
+});
+
+// throw ReferenceError Not all dependencies are met for the helper function &quot;wish.goodDay&quot;</pre>
 
 
     
@@ -277,7 +355,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on 2020-11-12T01:34:04+03:00
+		on 2021-01-11T19:29:24+03:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
